@@ -1,0 +1,34 @@
+# Byte-compiled
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+logs/*.log
+
+# Screenshots & recordings
+assets/screenshots/*
+assets/sample_videos/*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Config overrides
+*.local.yaml
+
+# Distribution / build
+dist/
+build/
+*.egg-info/

@@ -1,0 +1,13 @@
+camera:
+  default_id: 0
+  resolution: [640, 480]
+  fps: 30
+  backend: "DShow"
+
+screenshots:
+  save_dir: "assets/screenshots"
+
+recording:
+  output_dir: "assets/sample_videos"
+  default_duration: 10
+  default_fps: 20
