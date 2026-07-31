@@ -15,19 +15,19 @@ except ImportError:  # pragma: no cover - fallback path
 
 # ----------------------------------------------------------------------
 # Colours (BGR for cv2, converted to RGB for PIL)
-# Monochrome design: white panels, dark text, light borders.
+# Monochrome design: white panels, black text, light borders.
 # ----------------------------------------------------------------------
 
 COLOR_PANEL = (255, 255, 255)
 COLOR_BORDER = (230, 230, 236)
-COLOR_TEXT = (30, 30, 34)
-COLOR_TEXT_DIM = (128, 128, 138)
+COLOR_TEXT = (0, 0, 0)
+COLOR_TEXT_DIM = (60, 60, 60)
 COLOR_OUTLINE = (0, 0, 0)
 
 _PANEL_RGB = (255, 255, 255)
 _BORDER_RGB = (230, 230, 236)
-_TEXT_RGB = (30, 30, 34)
-_DIM_RGB = (128, 128, 138)
+_TEXT_RGB = (0, 0, 0)
+_DIM_RGB = (60, 60, 60)
 
 
 # ----------------------------------------------------------------------
@@ -304,17 +304,8 @@ class HUD:
         self, canvas: Canvas, camera, mode: str
     ) -> None:
         m = self.MARGIN
-        canvas.panel(
-            m, m, canvas.width - 2 * m, self.BAR_HEIGHT,
-            radius=self.RADIUS,
-        )
-
-        cx = m + 22
-        cy = m + self.BAR_HEIGHT // 2
-
-        canvas.label(
-            cx, cy, "ASSISTIVE VISION", 15, "semibold", _TEXT_RGB, "lm",
-        )
+        title = "ASSISTIVE VISION"
+        title_w = canvas.text_width(title, 15, "semibold")
 
         cam_label = "N/A"
         res_label = "N/A"
@@ -323,53 +314,66 @@ class HUD:
             if hasattr(camera, "resolution"):
                 res_label = f"{camera.resolution[0]}x{camera.resolution[1]}"
 
-        dim_part = f"{cam_label}  |  {res_label}  |  FPS"
-        meta_x = cx + canvas.text_width("ASSISTIVE VISION", 15, "semibold") + 24
-        canvas.label(meta_x, cy, dim_part, 12, "regular", _DIM_RGB, "lm")
-        canvas.label(
-            meta_x + canvas.text_width(dim_part, 12) + 6, cy,
-            f"{self.avg_fps:.1f}", 12, "semibold", _TEXT_RGB, "lm",
-        )
+        meta = f"{cam_label}  |  {res_label}  |  FPS"
+        meta_w = canvas.text_width(meta, 12, "regular")
+        fps_w = canvas.text_width(f"{self.avg_fps:.1f}", 12, "semibold")
 
         chip_text = f"  {mode}  "
         chip_w = canvas.text_width(chip_text, 12, "semibold") + 10
-        chip_x = canvas.width - m - 22 - chip_w
+
+        gap = 24
+        pad = 22
+        panel_w = pad + title_w + gap + meta_w + 6 + fps_w + gap + chip_w + pad
+
+        cy = m + self.BAR_HEIGHT // 2
+        canvas.panel(m, m, panel_w, self.BAR_HEIGHT, radius=self.RADIUS)
+
+        x = m + pad
+        canvas.label(x, cy, title, 15, "semibold", _TEXT_RGB, "lm")
+        x += title_w + gap
+        canvas.label(x, cy, meta, 12, "regular", _DIM_RGB, "lm")
+        x += meta_w + 6
+        canvas.label(x, cy, f"{self.avg_fps:.1f}", 12, "semibold", _TEXT_RGB, "lm")
+        x += fps_w + gap
         canvas.panel(
-            chip_x, m + 6, chip_w, self.BAR_HEIGHT - 12,
+            x, m + 6, chip_w, self.BAR_HEIGHT - 12,
             radius=(self.BAR_HEIGHT - 12) // 2,
         )
-        canvas.label(
-            chip_x + chip_w // 2, cy, chip_text, 12, "semibold",
-            _TEXT_RGB, "mm",
-        )
+        canvas.label(x + chip_w // 2, cy, chip_text, 12, "semibold",
+                     _TEXT_RGB, "mm")
 
     def _draw_bottom_bar(self, canvas: Canvas, status: str) -> None:
         m = self.MARGIN
         h = canvas.height
-        canvas.panel(
-            m, h - m - self.BAR_HEIGHT, canvas.width - 2 * m, self.BAR_HEIGHT,
-            radius=self.RADIUS,
-        )
 
-        cy = h - m - self.BAR_HEIGHT // 2
+        pad = 22
+        gap = 28
         hints = [
             ("S", "Screenshot"),
             ("R", "Record"),
             ("Q", "Quit"),
         ]
-        x = m + 22
+        content_w = 0
+        for key, action in hints:
+            content_w += canvas.text_width(key, 13, "semibold")
+            content_w += 6 + canvas.text_width(action, 13) + gap
+        if status:
+            content_w += canvas.text_width(status, 13, "semibold") + 28
+        panel_w = pad + content_w + pad
+
+        cy = h - m - self.BAR_HEIGHT // 2
+        canvas.panel(m, h - m - self.BAR_HEIGHT, panel_w, self.BAR_HEIGHT,
+                     radius=self.RADIUS)
+
+        x = m + pad
         for key, action in hints:
             canvas.label(x, cy, key, 13, "semibold", _TEXT_RGB, "lm")
             x += canvas.text_width(key, 13, "semibold") + 6
             canvas.label(x, cy, action, 13, "regular", _DIM_RGB, "lm")
-            x += canvas.text_width(action, 13) + 28
+            x += canvas.text_width(action, 13) + gap
 
         if status:
-            w = canvas.text_width(status, 13, "semibold")
-            canvas.label(
-                canvas.width - m - 22 - w, cy, status, 13,
-                "semibold", _TEXT_RGB, "lm",
-            )
+            canvas.label(x, cy, status, 13, "semibold", _TEXT_RGB, "lm")
 
     # ------------------------------------------------------------------
     # Helpers
