@@ -1,7 +1,8 @@
 """Interactive test for the Camera module.
 
 Runs the camera in fullscreen with the best supported resolution and a
-minimal professional HUD overlay.
+minimal professional HUD overlay.  The menu bar and dashboard are
+floating widgets — drag them anywhere with the mouse.
 
 Controls:
     q  — quit
@@ -33,6 +34,28 @@ from src.camera import (
 )
 
 
+def _make_drag_handler(hud, canvas_w: int, canvas_h: int):
+    """Return an OpenCV mouse callback that drags HUD widgets."""
+    drag = {"widget": None, "offset": (0, 0)}
+
+    def on_mouse(event: int, x: int, y: int, flags: int, param) -> None:
+        if event == cv2.EVENT_LBUTTONDOWN:
+            widget = hud.hit_test(x, y, canvas_w, canvas_h)
+            if widget is not None:
+                rx, ry, _, _ = hud.widget_rect(widget, canvas_w, canvas_h)
+                drag["widget"] = widget
+                drag["offset"] = (x - rx, y - ry)
+        elif event == cv2.EVENT_MOUSEMOVE and drag["widget"] is not None:
+            ox, oy = drag["offset"]
+            hud.set_widget_pos(
+                drag["widget"], x - ox, y - oy, canvas_w, canvas_h,
+            )
+        elif event == cv2.EVENT_LBUTTONUP:
+            drag["widget"] = None
+
+    return on_mouse
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Test the Camera module")
     parser.add_argument("--camera", type=int, default=0, help="Camera device index")
@@ -58,10 +81,15 @@ def main() -> None:
         print(f"Camera {args.camera} started | resolution={cam.resolution}")
         print(f"Screen: {screen_w}x{screen_h} | font: Segoe UI")
         print("Controls:  [s] screenshot  [r] record  [q] quit")
+        print("Hint: drag the menu bar and dashboard anywhere with the mouse")
 
         window = "Assistive Vision"
         open_fullscreen_window(window)
         hud = HUD()
+        cv2.setMouseCallback(
+            window, _make_drag_handler(hud, screen_w, screen_h), hud,
+        )
+        hud.show_toast("Drag the bars with the mouse")
 
         recorder: VideoRecorder | None = None
 

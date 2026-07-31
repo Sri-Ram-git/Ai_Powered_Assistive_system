@@ -99,10 +99,36 @@ fonts (Segoe UI on Windows, fallback to Arial / DejaVu Sans):
 |---|---|---|---|
 | `tick(fps)` | float | — | Record rendered frame + FPS sample |
 | `render(frame, camera, mode, status)` | `np.ndarray`, Camera, str, str | `np.ndarray` | Draw full HUD on the frame |
-| `show_toast(message, duration)` | str, float | — | Transient bottom notification (auto-fade) |
-| `set_recording(active)` | bool | — | Show/hide red REC pill below the top bar |
-| `reset()` | — | — | Clear counters/history |
+| `show_toast(message, duration)` | str, float | — | Transient notification (auto-fade) |
+| `set_recording(active)` | bool | — | Show/hide red REC pill below the menu bar |
+| `widget_rect(widget, w, h)` | str, int, int | `(x, y, w, h)` | Current rectangle of a draggable widget |
+| `hit_test(x, y, w, h)` | int, int, int, int | str or None | Widget under a point ('top'/'bottom') |
+| `set_widget_pos(widget, x, y, w, h)` | str, int, int, int, int | — | Move a widget, clamped to the canvas |
+| `reset()` | — | — | Clear counters/history/positions |
 | `font_family` | — | str | Resolved font family name |
+
+### Draggable widgets
+
+The menu bar and dashboard are floating widgets. Wire OpenCV's mouse
+callback to the HUD for drag-and-drop repositioning:
+
+```python
+def on_mouse(event, x, y, flags, hud):
+    if event == cv2.EVENT_LBUTTONDOWN:
+        widget = hud.hit_test(x, y, canvas_w, canvas_h)
+        if widget:
+            rx, ry, _, _ = hud.widget_rect(widget, canvas_w, canvas_h)
+            drag["widget"], drag["offset"] = widget, (x - rx, y - ry)
+    elif event == cv2.EVENT_MOUSEMOVE and drag["widget"]:
+        ox, oy = drag["offset"]
+        hud.set_widget_pos(drag["widget"], x - ox, y - oy, canvas_w, canvas_h)
+    elif event == cv2.EVENT_LBUTTONUP:
+        drag["widget"] = None
+
+cv2.setMouseCallback(window, on_mouse, hud)
+```
+
+The REC pill follows the menu bar; toasts stack above the dashboard.
 
 ## Dependencies
 

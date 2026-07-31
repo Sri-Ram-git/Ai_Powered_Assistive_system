@@ -60,11 +60,7 @@ _FONT_CANDIDATES = [
 
 
 class FontManager:
-    """Locates a professional TTF font and caches loaded variants.
-
-    Searches well-known font paths across Windows, Linux, and macOS.
-    Falls back to the first family that provides a "regular" face.
-    """
+    """Locates a professional TTF font and caches loaded variants."""
 
     _WEIGHTS = ("regular", "semibold", "bold", "light")
 
@@ -73,6 +69,7 @@ class FontManager:
         self._family = "Sans"
         self._select_family()
         self._cache: Dict[Tuple[int, str], ImageFont.FreeTypeFont] = {}
+        self._meter = ImageDraw.Draw(Image.new("RGB", (1, 1)))
 
     def _select_family(self) -> None:
         for candidate in _FONT_CANDIDATES:
@@ -97,6 +94,14 @@ class FontManager:
             else:
                 self._cache[key] = ImageFont.load_default(size)
         return self._cache[key]
+
+    def measure(self, text: str, size: int, weight: str = "regular") -> int:
+        """Measure the pixel width of text without an image buffer."""
+        return int(
+            self._meter.textbbox(
+                (0, 0), text, font=self.font(size, weight)
+            )[2]
+        )
 
 
 # ----------------------------------------------------------------------
@@ -151,7 +156,7 @@ class Canvas:
         color: Tuple[int, int, int] = _TEXT_RGB,
         anchor: str = "lt",
     ) -> None:
-        """Draw text without shadow (clean look on white panels)."""
+        """Draw text without shadow (clean look on black panels)."""
         self.text(x, y, text, size, color, weight, anchor)
 
     # -- shapes -------------------------------------------------------
@@ -169,7 +174,7 @@ class Canvas:
         outline_alpha: int = 255,
         outline_width: int = 1,
     ) -> None:
-        """Draw a translucent white rounded rectangle."""
+        """Draw a translucent rounded rectangle."""
         if x < 0:
             w += x
             x = 0
@@ -236,23 +241,27 @@ class Canvas:
 
 
 # ----------------------------------------------------------------------
-# HUD — minimal monochrome overlay
+# HUD — minimal monochrome overlay with draggable widgets
 # ----------------------------------------------------------------------
 
+Rect = Tuple[int, int, int, int]  # (x, y, w, h)
+
+
 class HUD:
-    """Renders a short, pill-shaped, all-white HUD on camera frames.
+    """Renders a minimal monochrome HUD whose bars can be dragged around.
 
-    Layout (designed for fullscreen / high resolution):
+    Two widgets can be repositioned with the mouse:
 
-        ┌──────────────────────────────────────────────────────────────┐
-        │  ASSISTIVE VISION   Camera 0 | 1920x1080 | 30.0 FPS   [MODE] │
-        │                                                              │
-        │                       (live frame)                           │
-        │                                                              │
-        │  S Screenshot  R Record  Q Quit         <status message>     │
-        └──────────────────────────────────────────────────────────────┘
+        'top'     — the ASSISTIVE VISION menu bar
+        'bottom'  — the keyboard-hint dashboard
 
-    Every bar is a short white pill with dark text — no accent colours.
+    Drag workflow:
+        - ``hit_test(x, y, cw, ch)`` finds which widget a point is on
+        - ``set_widget_pos(widget, x, y, cw, ch)`` moves it (clamped to
+          the canvas), positions persist for the lifetime of the HUD
+        - the REC pill follows the top bar; toasts stack above the
+          bottom bar
+
     The HUD is a pure presentation layer: it never touches the camera
     or the processing pipeline.
     """
@@ -260,6 +269,7 @@ class HUD:
     BAR_HEIGHT = 34
     MARGIN = 10
     RADIUS = 17
+    WIDGETS = ("top", "bottom")
 
     def __init__(self, fps_history_len: int = 30) -> None:
         self._fonts = FontManager()
@@ -269,6 +279,10 @@ class HUD:
         self._last_fps: float = 0.0
         self._toast: Optional[Tuple[str, float, float]] = None
         self._recording: bool = False
+        self._positions: Dict[str, Optional[Tuple[int, int]]] = {
+            "top": None,
+            "bottom": None,
+        }
 
     # ------------------------------------------------------------------
     # State
@@ -287,27 +301,66 @@ class HUD:
         self._last_fps = 0.0
         self._toast = None
         self._recording = False
+        self._positions = {"top": None, "bottom": None}
 
     def show_toast(self, message: str, duration: float = 2.5) -> None:
-        """Display a transient toast notification near the bottom.
-
-        Args:
-            message: Text to show (e.g. "Screenshot saved: file.png").
-            duration: How long the toast stays visible, in seconds.
-        """
+        """Display a transient toast notification above the dashboard."""
         self._toast = (message, time.time(), duration)
 
     def set_recording(self, active: bool) -> None:
-        """Toggle the red 'REC' indicator overlay.
-
-        Args:
-            active: True while a recording is in progress.
-        """
+        """Toggle the red 'REC' pill overlay."""
         self._recording = bool(active)
 
     @property
     def font_family(self) -> str:
         return self._fonts.family
+
+    # ------------------------------------------------------------------
+    # Draggable widgets
+    # ------------------------------------------------------------------
+
+    def widget_rect(self, widget: str, canvas_w: int, canvas_h: int) -> Rect:
+        """Return the current (x, y, w, h) of a widget.
+
+        Args:
+            widget: 'top' or 'bottom'.
+            canvas_w, canvas_h: Display canvas dimensions.
+
+        Returns:
+            Rectangle tuple (x, y, w, h).
+        """
+        if widget == "top":
+            layout = self._top_layout()
+            x, y = self._widget_pos(widget, canvas_w, canvas_h)
+            return x, y, layout["w"], layout["h"]
+        if widget == "bottom":
+            layout = self._bottom_layout()
+            x, y = self._widget_pos(widget, canvas_w, canvas_h)
+            return x, y, layout["w"], layout["h"]
+        raise ValueError(f"Unknown widget: {widget}")
+
+    def hit_test(self, x: int, y: int, canvas_w: int, canvas_h: int) -> Optional[str]:
+        """Return the widget under point (x, y), or None."""
+        for widget in self.WIDGETS:
+            rx, ry, rw, rh = self.widget_rect(widget, canvas_w, canvas_h)
+            if rx <= x <= rx + rw and ry <= y <= ry + rh:
+                return widget
+        return None
+
+    def set_widget_pos(
+        self, widget: str, x: int, y: int, canvas_w: int, canvas_h: int
+    ) -> None:
+        """Move a widget to (x, y), clamped inside the canvas.
+
+        Args:
+            widget: 'top' or 'bottom'.
+            x, y: Desired top-left position.
+            canvas_w, canvas_h: Canvas bounds for clamping.
+        """
+        rx, ry, rw, rh = self.widget_rect(widget, canvas_w, canvas_h)
+        x = max(0, min(x, max(0, canvas_w - rw)))
+        y = max(0, min(y, max(0, canvas_h - rh)))
+        self._positions[widget] = (x, y)
 
     # ------------------------------------------------------------------
     # Rendering
@@ -328,7 +381,7 @@ class HUD:
             camera: Optional object exposing ``camera_id`` and
                 ``resolution`` (the src.camera.Camera instance).
             mode: Name of the active processing mode.
-            status: Optional transient status message (bottom right).
+            status: Optional transient status message.
 
         Returns:
             A copy of the frame with the HUD rendered on it.
@@ -341,15 +394,12 @@ class HUD:
         return canvas.to_bgr()
 
     # ------------------------------------------------------------------
-    # Internals
+    # Layout math (shared by drawing and hit-testing)
     # ------------------------------------------------------------------
 
-    def _draw_top_bar(
-        self, canvas: Canvas, camera, mode: str
-    ) -> None:
-        m = self.MARGIN
+    def _top_layout(self, mode: str = "LIVE", camera=None) -> Dict:
         title = "ASSISTIVE VISION"
-        title_w = canvas.text_width(title, 15, "semibold")
+        title_w = self._fonts.measure(title, 15, "semibold")
 
         cam_label = "N/A"
         res_label = "N/A"
@@ -359,37 +409,33 @@ class HUD:
                 res_label = f"{camera.resolution[0]}x{camera.resolution[1]}"
 
         meta = f"{cam_label}  |  {res_label}  |  FPS"
-        meta_w = canvas.text_width(meta, 12, "regular")
-        fps_w = canvas.text_width(f"{self.avg_fps:.1f}", 12, "semibold")
+        meta_w = self._fonts.measure(meta, 12, "regular")
+        fps_str = f"{self.avg_fps:.1f}"
+        fps_w = self._fonts.measure(fps_str, 12, "semibold")
 
-        chip_text = f"  {mode}  "
-        chip_w = canvas.text_width(chip_text, 12, "semibold") + 10
+        chip = f"  {mode}  "
+        chip_w = self._fonts.measure(chip, 12, "semibold") + 10
 
         gap = 24
         pad = 22
         panel_w = pad + title_w + gap + meta_w + 6 + fps_w + gap + chip_w + pad
 
-        cy = m + self.BAR_HEIGHT // 2
-        canvas.panel(m, m, panel_w, self.BAR_HEIGHT, radius=self.RADIUS)
+        return {
+            "title": title,
+            "title_w": title_w,
+            "meta": meta,
+            "meta_w": meta_w,
+            "fps": fps_str,
+            "fps_w": fps_w,
+            "chip": chip,
+            "chip_w": chip_w,
+            "gap": gap,
+            "pad": pad,
+            "w": panel_w,
+            "h": self.BAR_HEIGHT,
+        }
 
-        x = m + pad
-        canvas.label(x, cy, title, 15, "semibold", _TEXT_RGB, "lm")
-        x += title_w + gap
-        canvas.label(x, cy, meta, 12, "regular", _DIM_RGB, "lm")
-        x += meta_w + 6
-        canvas.label(x, cy, f"{self.avg_fps:.1f}", 12, "semibold", _TEXT_RGB, "lm")
-        x += fps_w + gap
-        canvas.panel(
-            x, m + 6, chip_w, self.BAR_HEIGHT - 12,
-            radius=(self.BAR_HEIGHT - 12) // 2,
-        )
-        canvas.label(x + chip_w // 2, cy, chip_text, 12, "semibold",
-                     _TEXT_RGB, "mm")
-
-    def _draw_bottom_bar(self, canvas: Canvas, status: str) -> None:
-        m = self.MARGIN
-        h = canvas.height
-
+    def _bottom_layout(self, status: str = "") -> Dict:
         pad = 22
         gap = 28
         hints = [
@@ -399,25 +445,74 @@ class HUD:
         ]
         content_w = 0
         for key, action in hints:
-            content_w += canvas.text_width(key, 13, "semibold")
-            content_w += 6 + canvas.text_width(action, 13) + gap
+            content_w += self._fonts.measure(key, 13, "semibold")
+            content_w += 6 + self._fonts.measure(action, 13) + gap
         if status:
-            content_w += canvas.text_width(status, 13, "semibold") + 28
-        panel_w = pad + content_w + pad
+            content_w += self._fonts.measure(status, 13, "semibold") + 28
+        return {
+            "hints": hints,
+            "pad": pad,
+            "gap": gap,
+            "w": pad + content_w + pad,
+            "h": self.BAR_HEIGHT,
+        }
 
-        cy = h - m - self.BAR_HEIGHT // 2
-        canvas.panel(m, h - m - self.BAR_HEIGHT, panel_w, self.BAR_HEIGHT,
-                     radius=self.RADIUS)
+    def _widget_pos(
+        self, widget: str, canvas_w: int, canvas_h: int
+    ) -> Tuple[int, int]:
+        stored = self._positions[widget]
+        if stored is not None:
+            return stored
+        if widget == "top":
+            return self.MARGIN, self.MARGIN
+        return self.MARGIN, canvas_h - self.MARGIN - self.BAR_HEIGHT
 
-        x = m + pad
-        for key, action in hints:
-            canvas.label(x, cy, key, 13, "semibold", _TEXT_RGB, "lm")
-            x += canvas.text_width(key, 13, "semibold") + 6
-            canvas.label(x, cy, action, 13, "regular", _DIM_RGB, "lm")
-            x += canvas.text_width(action, 13) + gap
+    # ------------------------------------------------------------------
+    # Drawing
+    # ------------------------------------------------------------------
+
+    def _draw_top_bar(
+        self, canvas: Canvas, camera, mode: str
+    ) -> None:
+        layout = self._top_layout(mode, camera)
+        x, y = self._widget_pos("top", canvas.width, canvas.height)
+        cy = y + layout["h"] // 2
+
+        canvas.panel(x, y, layout["w"], layout["h"], radius=self.RADIUS)
+
+        cursor = x + layout["pad"]
+        canvas.label(cursor, cy, layout["title"], 15, "semibold", _TEXT_RGB, "lm")
+        cursor += layout["title_w"] + layout["gap"]
+        canvas.label(cursor, cy, layout["meta"], 12, "regular", _DIM_RGB, "lm")
+        cursor += layout["meta_w"] + 6
+        canvas.label(cursor, cy, layout["fps"], 12, "semibold", _TEXT_RGB, "lm")
+        cursor += layout["fps_w"] + layout["gap"]
+
+        canvas.panel(
+            cursor, y + 6, layout["chip_w"], layout["h"] - 12,
+            radius=(layout["h"] - 12) // 2,
+        )
+        canvas.label(
+            cursor + layout["chip_w"] // 2, cy, layout["chip"], 12,
+            "semibold", _TEXT_RGB, "mm",
+        )
+
+    def _draw_bottom_bar(self, canvas: Canvas, status: str) -> None:
+        layout = self._bottom_layout(status)
+        x, y = self._widget_pos("bottom", canvas.width, canvas.height)
+        cy = y + layout["h"] // 2
+
+        canvas.panel(x, y, layout["w"], layout["h"], radius=self.RADIUS)
+
+        cursor = x + layout["pad"]
+        for key, action in layout["hints"]:
+            canvas.label(cursor, cy, key, 13, "semibold", _TEXT_RGB, "lm")
+            cursor += self._fonts.measure(key, 13, "semibold") + 6
+            canvas.label(cursor, cy, action, 13, "regular", _DIM_RGB, "lm")
+            cursor += self._fonts.measure(action, 13) + layout["gap"]
 
         if status:
-            canvas.label(x, cy, status, 13, "semibold", _TEXT_RGB, "lm")
+            canvas.label(cursor, cy, status, 13, "semibold", _TEXT_RGB, "lm")
 
     # ------------------------------------------------------------------
     # Notifications
@@ -428,18 +523,19 @@ class HUD:
         if not self._recording:
             return
 
+        rx, ry, rw, _ = self.widget_rect("top", canvas.width, canvas.height)
         text = "REC"
         w = 74
         h = 26
-        x = (canvas.width - w) // 2
-        y = self.MARGIN + self.BAR_HEIGHT + 12
+        x = rx + rw // 2 - w // 2
+        y = ry + self.BAR_HEIGHT + 12
 
         canvas.panel(x, y, w, h, radius=h // 2)
         canvas.circle(x + 20, y + h // 2, 5, fill=(255, 60, 60))
         canvas.label(x + 34, y + h // 2, text, 13, "semibold", _TEXT_RGB, "lm")
 
     def _draw_toast(self, canvas: Canvas) -> None:
-        """Draw a transient notification above the bottom bar."""
+        """Draw a transient notification above the dashboard."""
         if self._toast is None:
             return
 
@@ -452,16 +548,15 @@ class HUD:
         fade = max(0.0, 1.0 - (elapsed / duration))
         alpha = int(120 + 120 * fade)
 
-        w = canvas.text_width(message, 14, "semibold") + 36
+        bx, by, bw, _ = self.widget_rect("bottom", canvas.width, canvas.height)
+        w = self._fonts.measure(message, 14, "semibold") + 36
         h = 34
-        x = (canvas.width - w) // 2
-        y = canvas.height - self.MARGIN - self.BAR_HEIGHT - 12 - h
+        x = bx + bw // 2 - w // 2
+        y = by - 12 - h
 
         canvas.panel(x, y, w, h, radius=h // 2, alpha=alpha)
-        canvas.label(
-            x + w // 2, y + h // 2, message, 14, "semibold",
-            _TEXT_RGB, "mm",
-        )
+        canvas.label(x + w // 2, y + h // 2, message, 14, "semibold",
+                     _TEXT_RGB, "mm")
 
     # ------------------------------------------------------------------
     # Helpers
@@ -486,7 +581,7 @@ def annotate(
         canvas.line(x + 2, y, x + 8, y, _TEXT_RGB, 2)
         canvas.line(x, y - 8, x, y - 2, _TEXT_RGB, 2)
         canvas.line(x, y + 2, x, y + 8, _TEXT_RGB, 2)
-        canvas.panel(x + 6, y - 34, canvas.text_width(text, 13, "semibold") + 16, 26,
-                     radius=13, alpha=225)
+        label_w = fonts.measure(text, 13, "semibold") + 16
+        canvas.panel(x + 6, y - 34, label_w, 26, radius=13, alpha=225)
         canvas.label(x + 14, y - 21, text, 13, "semibold", _TEXT_RGB, "lm")
     return canvas.to_bgr()
