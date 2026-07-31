@@ -23,6 +23,7 @@ webcam initialisation, frame acquisition, and camera management.
 | `camera.py` | Core `Camera` class — init, start, read, stop, context manager |
 | `camera_manager.py` | `CameraManager` + `CameraInfo` dataclass — discovery, selection |
 | `camera_utils.py` | `take_screenshot`, `record_video`, `draw_fps`, `draw_timestamp`, `show_feed` |
+| `hud.py` | `HUD` class — professional overlay (panels, FPS graph, status bar) |
 | `camera_test.py` | Interactive CLI test script |
 
 ## Classes / Functions
@@ -66,6 +67,19 @@ webcam initialisation, frame acquisition, and camera management.
 | `draw_fps(frame, fps)` | `np.ndarray`, float | `np.ndarray` | Overlay FPS |
 | `draw_timestamp(frame)` | `np.ndarray` | `np.ndarray` | Overlay timestamp |
 | `show_feed(camera, window_name, process_frame, on_key)` | Camera, str, callable, callable | — | Live display loop |
+
+### HUD overlay (hud.py)
+
+| Method | Input | Output | Description |
+|---|---|---|---|
+| `tick(fps)` | float | — | Record rendered frame + FPS sample |
+| `render(frame, camera, mode, status)` | `np.ndarray`, Camera, str, str | `np.ndarray` | Draw full HUD on the frame |
+| `reset()` | — | — | Clear counters/history |
+
+The HUD renders: an info panel (source, resolution, FPS, frames, uptime),
+a live FPS sparkline with average, and a bottom status bar with keyboard
+hints.  FPS text is colour-coded (green ≥ 24, orange ≥ 12, red below).
+It is a pure presentation layer and never touches the camera object.
 
 ## Dependencies
 

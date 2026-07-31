@@ -7,11 +7,14 @@ from src.camera.camera_utils import (
     draw_timestamp,
     show_feed,
 )
+from src.camera.hud import HUD, annotate
 
 __all__ = [
     "Camera",
     "CameraManager",
     "CameraInfo",
+    "HUD",
+    "annotate",
     "take_screenshot",
     "record_video",
     "draw_fps",

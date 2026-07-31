@@ -1,11 +1,12 @@
 """Interactive test for the Camera module.
 
-Run directly to verify camera initialisation, frame capture, overlays,
-screenshot capture, and graceful shutdown.
+Run directly to verify camera initialisation, frame capture, the
+professional HUD overlay, screenshot capture, and graceful shutdown.
 
 Controls:
     q  — quit
     s  — take screenshot
+    r  — record a 5-second video clip
 """
 import argparse
 import sys
@@ -18,7 +19,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.camera import Camera, CameraManager, draw_fps, draw_timestamp, take_screenshot
+from src.camera import Camera, CameraManager, HUD, record_video, take_screenshot
 
 
 def main() -> None:
@@ -26,6 +27,7 @@ def main() -> None:
     parser.add_argument("--camera", type=int, default=0, help="Camera device index")
     parser.add_argument("--width", type=int, default=640, help="Frame width")
     parser.add_argument("--height", type=int, default=480, help="Frame height")
+    parser.add_argument("--fps", type=int, default=30, help="Target FPS")
     args = parser.parse_args()
 
     # 1. Discover cameras
@@ -36,27 +38,23 @@ def main() -> None:
         print("ERROR: No cameras found. Exiting.")
         sys.exit(1)
 
-    # 2. Open and stream
-    with Camera(camera_id=args.camera, resolution=(args.width, args.height)) as cam:
+    hud = HUD()
+
+    # 2. Open and stream with HUD overlay
+    with Camera(
+        camera_id=args.camera,
+        resolution=(args.width, args.height),
+        fps=args.fps,
+    ) as cam:
         print(f"Camera {args.camera} started | resolution={cam.resolution}")
-        print("Controls:  [s] screenshot  [q] quit")
+        print("Controls:  [s] screenshot  [r] record  [q] quit")
 
         while True:
             frame = cam.read()
+            hud.tick(cam.actual_fps)
+            display = hud.render(frame, camera=cam, mode="LIVE", status="")
 
-            display = draw_fps(frame.copy(), cam.actual_fps)
-            display = draw_timestamp(display)
-            cv2.putText(
-                display,
-                f"Res: {cam.resolution[0]}x{cam.resolution[1]}",
-                (10, 90),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.6,
-                (255, 255, 0),
-                2,
-            )
-
-            cv2.imshow("Camera Test", display)
+            cv2.imshow("Assistive Vision - Camera", display)
 
             key = cv2.waitKey(1) & 0xFF
             if key == ord("q"):
@@ -65,6 +63,10 @@ def main() -> None:
             elif key == ord("s"):
                 path = take_screenshot(frame)
                 print(f"Screenshot saved: {path}")
+            elif key == ord("r"):
+                print("Recording 5 seconds...")
+                path = record_video(cam, duration=5)
+                print(f"Recording saved: {path}")
 
     cv2.destroyAllWindows()
     print("Camera test complete.")
