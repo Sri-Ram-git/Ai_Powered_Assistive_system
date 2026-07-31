@@ -199,6 +199,27 @@ class Canvas:
     ) -> None:
         self._draw.line((x1, y1, x2, y2), fill=color, width=width)
 
+    def circle(
+        self,
+        cx: int,
+        cy: int,
+        radius: int,
+        fill: Tuple[int, int, int],
+        alpha: int = 255,
+        outline: Optional[Tuple[int, int, int]] = None,
+        outline_alpha: int = 255,
+        outline_width: int = 1,
+    ) -> None:
+        """Draw a filled (optionally outlined) circle."""
+        bbox = (cx - radius, cy - radius, cx + radius, cy + radius)
+        fill_rgba = (*fill, alpha)
+        outline_rgba = (
+            (*outline, outline_alpha) if outline is not None else None
+        )
+        self._draw.ellipse(
+            bbox, fill=fill_rgba, outline=outline_rgba, width=outline_width,
+        )
+
     # -- text measurement ---------------------------------------------
 
     def text_width(self, text: str, size: int, weight: str = "regular") -> int:
@@ -246,6 +267,8 @@ class HUD:
         self._start_time = time.time()
         self._fps_samples: Deque[float] = deque(maxlen=fps_history_len)
         self._last_fps: float = 0.0
+        self._toast: Optional[Tuple[str, float, float]] = None
+        self._recording: bool = False
 
     # ------------------------------------------------------------------
     # State
@@ -262,6 +285,25 @@ class HUD:
         self._start_time = time.time()
         self._fps_samples.clear()
         self._last_fps = 0.0
+        self._toast = None
+        self._recording = False
+
+    def show_toast(self, message: str, duration: float = 2.5) -> None:
+        """Display a transient toast notification near the bottom.
+
+        Args:
+            message: Text to show (e.g. "Screenshot saved: file.png").
+            duration: How long the toast stays visible, in seconds.
+        """
+        self._toast = (message, time.time(), duration)
+
+    def set_recording(self, active: bool) -> None:
+        """Toggle the red 'REC' indicator overlay.
+
+        Args:
+            active: True while a recording is in progress.
+        """
+        self._recording = bool(active)
 
     @property
     def font_family(self) -> str:
@@ -294,6 +336,8 @@ class HUD:
         canvas = Canvas(frame.copy(), self._fonts)
         self._draw_top_bar(canvas, camera=camera, mode=mode)
         self._draw_bottom_bar(canvas, status=status)
+        self._draw_recording(canvas)
+        self._draw_toast(canvas)
         return canvas.to_bgr()
 
     # ------------------------------------------------------------------
@@ -374,6 +418,50 @@ class HUD:
 
         if status:
             canvas.label(x, cy, status, 13, "semibold", _TEXT_RGB, "lm")
+
+    # ------------------------------------------------------------------
+    # Notifications
+    # ------------------------------------------------------------------
+
+    def _draw_recording(self, canvas: Canvas) -> None:
+        """Draw a red 'REC' pill below the top bar while recording."""
+        if not self._recording:
+            return
+
+        text = "REC"
+        w = 74
+        h = 26
+        x = (canvas.width - w) // 2
+        y = self.MARGIN + self.BAR_HEIGHT + 12
+
+        canvas.panel(x, y, w, h, radius=h // 2)
+        canvas.circle(x + 20, y + h // 2, 5, fill=(255, 60, 60))
+        canvas.label(x + 34, y + h // 2, text, 13, "semibold", _TEXT_RGB, "lm")
+
+    def _draw_toast(self, canvas: Canvas) -> None:
+        """Draw a transient notification above the bottom bar."""
+        if self._toast is None:
+            return
+
+        message, t0, duration = self._toast
+        elapsed = time.time() - t0
+        if elapsed > duration:
+            self._toast = None
+            return
+
+        fade = max(0.0, 1.0 - (elapsed / duration))
+        alpha = int(120 + 120 * fade)
+
+        w = canvas.text_width(message, 14, "semibold") + 36
+        h = 34
+        x = (canvas.width - w) // 2
+        y = canvas.height - self.MARGIN - self.BAR_HEIGHT - 12 - h
+
+        canvas.panel(x, y, w, h, radius=h // 2, alpha=alpha)
+        canvas.label(
+            x + w // 2, y + h // 2, message, 14, "semibold",
+            _TEXT_RGB, "mm",
+        )
 
     # ------------------------------------------------------------------
     # Helpers

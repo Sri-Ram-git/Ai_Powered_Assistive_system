@@ -5,8 +5,9 @@ minimal professional HUD overlay.
 
 Controls:
     q  — quit
-    s  — take screenshot
-    r  — record a 5-second video clip
+    s  — take screenshot (toast confirms where it was saved)
+    r  — record a 5-second video clip (UI keeps running with a REC
+         indicator; a toast confirms when the file is saved)
 """
 import argparse
 import sys
@@ -23,10 +24,10 @@ from src.camera import (
     Camera,
     CameraManager,
     HUD,
+    VideoRecorder,
     auto_select_resolution,
     get_screen_size,
     open_fullscreen_window,
-    record_video,
     scale_to_fit,
     take_screenshot,
 )
@@ -62,27 +63,53 @@ def main() -> None:
         open_fullscreen_window(window)
         hud = HUD()
 
+        recorder: VideoRecorder | None = None
+
         while True:
-            frame = cam.read()
+            # During recording the recorder thread owns frame reads, so
+            # display its latest frame instead of reading twice.
+            if recorder is not None and recorder.is_recording:
+                frame = recorder.latest_frame
+                if frame is None:
+                    continue
+            else:
+                frame = cam.read()
+
             hud.tick(cam.actual_fps)
             display = scale_to_fit(frame, screen_w, screen_h)
-            display = hud.render(
-                display, camera=cam, mode="LIVE", status="",
-            )
+            display = hud.render(display, camera=cam, mode="LIVE", status="")
 
             cv2.imshow(window, display)
 
             key = cv2.waitKey(1) & 0xFF
             if key == ord("q"):
+                if recorder is not None:
+                    recorder.stop()
                 print("Quitting...")
                 break
             elif key == ord("s"):
                 path = take_screenshot(frame)
+                hud.show_toast(f"Screenshot saved: {Path(path).name}")
                 print(f"Screenshot saved: {path}")
-            elif key == ord("r"):
-                print("Recording 5 seconds...")
-                path = record_video(cam, duration=5)
-                print(f"Recording saved: {path}")
+            elif key == ord("r") and (
+                recorder is None or not recorder.is_recording
+            ):
+                recorder = VideoRecorder(cam, duration=5)
+                recorder.start()
+                hud.set_recording(True)
+                hud.show_toast("Recording...")
+                print("Recording started...")
+
+            # Recording finished in the background: confirm with a toast
+            if (
+                recorder is not None
+                and not recorder.is_recording
+                and recorder.saved_path is not None
+            ):
+                hud.set_recording(False)
+                hud.show_toast(f"Saved: {Path(recorder.saved_path).name}")
+                print(f"Recording saved: {recorder.saved_path}")
+                recorder = None
 
     cv2.destroyAllWindows()
     print("Camera test complete.")

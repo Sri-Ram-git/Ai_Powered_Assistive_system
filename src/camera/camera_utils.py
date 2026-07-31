@@ -1,3 +1,4 @@
+import threading
 import time
 from pathlib import Path
 from typing import Callable, List, Optional, Tuple
@@ -235,7 +236,9 @@ def scale_to_fit(
     new_h = max(1, int(src_h * scale))
 
     interpolation = (
-        cv2.INTER_AREA if scale < 1.0 else cv2.INTER_LINEAR
+        cv2.INTER_AREA
+        if scale < 1.0
+        else cv2.INTER_CUBIC
     )
     resized = cv2.resize(frame, (new_w, new_h), interpolation=interpolation)
 
@@ -274,3 +277,115 @@ def auto_select_resolution(
         *camera.resolution,
     )
     return camera.resolution
+
+
+class VideoRecorder:
+    """Records camera frames to a video file in a background thread.
+
+    While recording, the latest captured frame is exposed via
+    ``latest_frame`` so the UI can keep displaying the feed without
+    blocking the main loop.
+
+    Usage:
+        recorder = VideoRecorder(camera, duration=5)
+        recorder.start()
+        ...
+        while recorder.is_recording:
+            frame = recorder.latest_frame   # display this
+            cv2.imshow("Feed", frame)
+        path = recorder.saved_path
+    """
+
+    def __init__(
+        self,
+        camera,
+        output_dir: str = "assets/sample_videos",
+        duration: int = 5,
+        fps: float = 20.0,
+    ) -> None:
+        """Configure the recorder.
+
+        Args:
+            camera: A running Camera instance (source of frames).
+            output_dir: Directory for the output video file.
+            duration: Recording length in seconds.
+            fps: Frames per second for the output video.
+        """
+        self._camera = camera
+        self._output_dir = output_dir
+        self._duration = duration
+        self._fps = fps
+        self._thread: Optional[threading.Thread] = None
+        self._latest: Optional[np.ndarray] = None
+        self._saved_path: Optional[str] = None
+        self._is_recording = False
+
+    @property
+    def is_recording(self) -> bool:
+        return self._is_recording
+
+    @property
+    def latest_frame(self) -> Optional[np.ndarray]:
+        return self._latest
+
+    @property
+    def saved_path(self) -> Optional[str]:
+        return self._saved_path
+
+    def start(self) -> str:
+        """Begin recording in a background thread.
+
+        Returns:
+            Path where the video file will be written.
+
+        Raises:
+            RecordingError: If a recording is already in progress.
+        """
+        if self._is_recording:
+            raise RecordingError("A recording is already in progress.")
+
+        out_path = Path(self._output_dir)
+        out_path.mkdir(parents=True, exist_ok=True)
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        filename = f"recording_{timestamp}.avi"
+        full_path = str(out_path / filename)
+
+        self._saved_path = full_path
+        self._is_recording = True
+        self._latest = None
+        self._thread = threading.Thread(
+            target=self._run, name="video-recorder", daemon=True,
+        )
+        self._thread.start()
+        _logger.info("Recording started -> %s", full_path)
+        return full_path
+
+    def stop(self) -> None:
+        """Stop recording early and wait for the writer to flush."""
+        self._is_recording = False
+        if self._thread is not None:
+            self._thread.join(timeout=2.0)
+            self._thread = None
+
+    def _run(self) -> None:
+        width, height = self._camera.resolution
+        fourcc = cv2.VideoWriter_fourcc(*"XVID")
+        writer = cv2.VideoWriter(
+            self._saved_path, fourcc, self._fps, (width, height)
+        )
+
+        start = time.time()
+        try:
+            while self._is_recording and time.time() - start < self._duration:
+                try:
+                    frame = self._camera.read()
+                    writer.write(frame)
+                    self._latest = frame
+                except Exception:
+                    _logger.warning(
+                        "Frame dropped during recording", exc_info=True,
+                    )
+        finally:
+            writer.release()
+            self._is_recording = False
+            _logger.info("Recording saved: %s", self._saved_path)

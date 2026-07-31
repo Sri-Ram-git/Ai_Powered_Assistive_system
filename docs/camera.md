@@ -64,14 +64,25 @@ webcam initialisation, frame acquisition, and camera management.
 | Function | Input | Output | Description |
 |---|---|---|---|
 | `take_screenshot(frame, save_dir)` | `np.ndarray`, str | str (path) | Save frame as PNG |
-| `record_video(camera, output_dir, duration, fps)` | Camera, str, int, float | str (path) | Record N-second video |
+| `record_video(camera, output_dir, duration, fps)` | Camera, str, int, float | str (path) | Record N-second video (blocking) |
+| `VideoRecorder(camera, output_dir, duration, fps)` | Camera, str, int, float | class | Record in a background thread; `latest_frame` keeps UI live |
 | `draw_fps(frame, fps)` | `np.ndarray`, float | `np.ndarray` | Overlay FPS |
 | `draw_timestamp(frame)` | `np.ndarray` | `np.ndarray` | Overlay timestamp |
 | `show_feed(camera, window_name, process_frame, on_key)` | Camera, str, callable, callable | — | Live display loop |
 | `get_screen_size()` | — | `(int, int)` | Primary display resolution |
 | `open_fullscreen_window(name)` | str | — | Borderless fullscreen OpenCV window |
-| `scale_to_fit(frame, w, h)` | `np.ndarray`, int, int | `np.ndarray` | Aspect-preserving letterbox scale |
+| `scale_to_fit(frame, w, h)` | `np.ndarray`, int, int | `np.ndarray` | Aspect-preserving letterbox scale (INTER_CUBIC upscale) |
 | `auto_select_resolution(camera)` | Camera | `(int, int)` | Pick best supported resolution |
+
+### `VideoRecorder`
+
+| Member | Type | Description |
+|---|---|---|
+| `start()` | method → str | Begin background recording, return target path |
+| `stop()` | method | Stop early and flush the video file |
+| `is_recording` | property (bool) | True while the background thread writes frames |
+| `latest_frame` | property (`np.ndarray` or None) | Most recent captured frame for live UI display |
+| `saved_path` | property (str or None) | Output file path once recording finishes |
 
 ### HUD overlay (hud.py)
 
@@ -88,6 +99,8 @@ fonts (Segoe UI on Windows, fallback to Arial / DejaVu Sans):
 |---|---|---|---|
 | `tick(fps)` | float | — | Record rendered frame + FPS sample |
 | `render(frame, camera, mode, status)` | `np.ndarray`, Camera, str, str | `np.ndarray` | Draw full HUD on the frame |
+| `show_toast(message, duration)` | str, float | — | Transient bottom notification (auto-fade) |
+| `set_recording(active)` | bool | — | Show/hide red REC pill below the top bar |
 | `reset()` | — | — | Clear counters/history |
 | `font_family` | — | str | Resolved font family name |
 

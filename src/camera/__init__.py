@@ -10,6 +10,7 @@ from src.camera.camera_utils import (
     open_fullscreen_window,
     scale_to_fit,
     auto_select_resolution,
+    VideoRecorder,
 )
 from src.camera.hud import HUD, annotate
 
@@ -19,6 +20,7 @@ __all__ = [
     "CameraInfo",
     "HUD",
     "annotate",
+    "VideoRecorder",
     "take_screenshot",
     "record_video",
     "draw_fps",
