@@ -1,83 +1,249 @@
 import time
 from collections import deque
-from typing import Deque, Iterable, Optional, Tuple
+from pathlib import Path
+from typing import Deque, Dict, Iterable, Optional, Tuple
 
 import cv2
 import numpy as np
 
-BGRColor = Tuple[int, int, int]
+try:
+    from PIL import Image, ImageDraw, ImageFont
+
+    _PIL_AVAILABLE = True
+except ImportError:  # pragma: no cover - fallback path
+    _PIL_AVAILABLE = False
 
 # ----------------------------------------------------------------------
-# Styling constants
+# Colours (BGR for cv2, converted to RGB for PIL)
 # ----------------------------------------------------------------------
 
-FONT = cv2.FONT_HERSHEY_SIMPLEX
+COLOR_BG = (24, 24, 28)
+COLOR_ACCENT = (0, 190, 255)
+COLOR_TEXT = (236, 236, 236)
+COLOR_TEXT_DIM = (160, 160, 166)
+COLOR_FPS_OK = (90, 220, 130)
+COLOR_FPS_LOW = (70, 150, 255)
+COLOR_FPS_BAD = (70, 70, 255)
 
-COLOR_BG = (28, 28, 32)           # dark panel background
-COLOR_ACCENT = (0, 215, 255)      # amber accent
-COLOR_FPS_OK = (80, 220, 120)     # green
-COLOR_FPS_LOW = (60, 140, 255)    # orange
-COLOR_FPS_BAD = (60, 60, 255)     # red
-COLOR_TEXT = (235, 235, 235)      # near-white
-COLOR_TEXT_DIM = (170, 170, 170)  # grey
-COLOR_OUTLINE = (0, 0, 0)         # text outline / shadow
-
-
-def _outlined_text(
-    frame: np.ndarray,
-    text: str,
-    origin: Tuple[int, int],
-    scale: float = 0.6,
-    color: BGRColor = COLOR_TEXT,
-    thickness: int = 2,
-    outline: int = 3,
-) -> None:
-    """Draw text with a black outline for readability on any background."""
-    x, y = origin
-    cv2.putText(
-        frame, text, (x, y), FONT, scale, COLOR_OUTLINE, thickness + outline,
-        cv2.LINE_AA,
-    )
-    cv2.putText(
-        frame, text, (x, y), FONT, scale, color, thickness, cv2.LINE_AA,
-    )
+_ACCENT_RGB = (255, 190, 0)
+_TEXT_RGB = (236, 236, 236)
+_DIM_RGB = (160, 160, 166)
 
 
-def _blend_panel(
-    frame: np.ndarray,
-    x: int,
-    y: int,
-    w: int,
-    h: int,
-    alpha: float = 0.55,
-) -> None:
-    """Overlay a semi-transparent dark rounded rectangle on the frame."""
-    overlay = frame.copy()
-    cv2.rectangle(overlay, (x, y), (x + w, y + h), COLOR_BG, -1, cv2.LINE_AA)
-    cv2.rectangle(overlay, (x, y), (x + w, y + h), COLOR_ACCENT, 1, cv2.LINE_AA)
-    cv2.addWeighted(overlay, alpha, frame, 1.0 - alpha, 0, frame)
+# ----------------------------------------------------------------------
+# Font management
+# ----------------------------------------------------------------------
+
+_FONT_CANDIDATES = [
+    {
+        "family": "Segoe UI",
+        "regular": "C:/Windows/Fonts/segoeui.ttf",
+        "semibold": "C:/Windows/Fonts/seguisb.ttf",
+        "bold": "C:/Windows/Fonts/segoeuib.ttf",
+        "light": "C:/Windows/Fonts/segoeuil.ttf",
+    },
+    {
+        "family": "Arial",
+        "regular": "C:/Windows/Fonts/arial.ttf",
+        "semibold": "C:/Windows/Fonts/arialbd.ttf",
+        "bold": "C:/Windows/Fonts/arialbd.ttf",
+        "light": "C:/Windows/Fonts/arial.ttf",
+    },
+    {
+        "family": "DejaVu Sans",
+        "regular": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "semibold": "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+        "bold": "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+        "light": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+    },
+]
 
 
-class HUD:
-    """Renders a professional overlay (HUD) on camera frames.
+class FontManager:
+    """Locates a professional TTF font and caches loaded variants.
 
-    The HUD is a pure presentation layer: it never touches the camera
-    or the processing pipeline.  It tracks its own frame counter and
-    FPS history so it can draw live graphs.
-
-    Usage:
-        hud = HUD()
-        while camera.is_running:
-            frame = camera.read()
-            hud.tick(camera.actual_fps)
-            display = hud.render(frame, camera=camera, mode="RAW")
-            cv2.imshow("Feed", display)
+    Searches well-known font paths across Windows, Linux, and macOS.
+    Falls back to the first family that provides a "regular" face.
     """
 
-    def __init__(self, fps_history_len: int = 90) -> None:
+    _WEIGHTS = ("regular", "semibold", "bold", "light")
+
+    def __init__(self) -> None:
+        self._path: Dict[str, str] = {}
+        self._family = "Sans"
+        self._select_family()
+        self._cache: Dict[Tuple[int, str], ImageFont.FreeTypeFont] = {}
+
+    def _select_family(self) -> None:
+        for candidate in _FONT_CANDIDATES:
+            regular = candidate.get("regular", "")
+            if Path(regular).is_file():
+                self._family = candidate["family"]
+                self._path = {w: candidate.get(w, regular) for w in self._WEIGHTS}
+                return
+        self._family = "Default"
+
+    @property
+    def family(self) -> str:
+        return self._family
+
+    def font(self, size: int, weight: str = "regular") -> ImageFont.FreeTypeFont:
+        """Return a cached PIL font of the given size and weight."""
+        key = (size, weight)
+        if key not in self._cache:
+            path = self._path.get(weight) or self._path.get("regular", "")
+            if path:
+                self._cache[key] = ImageFont.truetype(path, size)
+            else:
+                self._cache[key] = ImageFont.load_default(size)
+        return self._cache[key]
+
+
+# ----------------------------------------------------------------------
+# Canvas — draws text, rounded panels, and lines onto a BGR frame
+# ----------------------------------------------------------------------
+
+class Canvas:
+    """High-level 2D drawing surface backed by PIL (antialiased text).
+
+    Accepts BGR frames (OpenCV convention) and returns a BGR frame,
+    so it slots cleanly into the existing pipeline.
+    """
+
+    def __init__(self, frame_bgr: np.ndarray, fonts: FontManager) -> None:
+        self.width = frame_bgr.shape[1]
+        self.height = frame_bgr.shape[0]
+        self._fonts = fonts
+        self._image = Image.fromarray(
+            cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2RGB)
+        )
+        self._draw = ImageDraw.Draw(self._image, "RGBA")
+
+    # -- text ---------------------------------------------------------
+
+    def text(
+        self,
+        x: int,
+        y: int,
+        text: str,
+        size: int = 14,
+        color: Tuple[int, int, int] = _TEXT_RGB,
+        weight: str = "regular",
+        anchor: str = "lt",
+        alpha: int = 255,
+    ) -> None:
+        """Draw antialiased text. Anchor is a PIL anchor (e.g. 'lt', 'lm')."""
+        self._draw.text(
+            (x, y),
+            text,
+            font=self._fonts.font(size, weight),
+            fill=(*color, alpha),
+            anchor=anchor,
+        )
+
+    def label(
+        self,
+        x: int,
+        y: int,
+        text: str,
+        size: int = 14,
+        weight: str = "regular",
+        color: Tuple[int, int, int] = _TEXT_RGB,
+        anchor: str = "lt",
+    ) -> None:
+        """Draw text with a subtle dark shadow for readability."""
+        self.text(x + 1, y + 1, text, size, (0, 0, 0), weight, anchor, alpha=180)
+        self.text(x, y, text, size, color, weight, anchor)
+
+    # -- shapes -------------------------------------------------------
+
+    def panel(
+        self,
+        x: int,
+        y: int,
+        w: int,
+        h: int,
+        radius: int = 10,
+        fill: Tuple[int, int, int] = COLOR_BG,
+        alpha: int = 150,
+        outline: Optional[Tuple[int, int, int]] = None,
+        outline_alpha: int = 255,
+        outline_width: int = 1,
+    ) -> None:
+        """Draw a semi-transparent rounded rectangle."""
+        if x < 0:
+            w += x
+            x = 0
+        if y < 0:
+            h += y
+            y = 0
+        fill_rgba = (*fill, alpha)
+        outline_rgba = (
+            (*outline, outline_alpha) if outline is not None else None
+        )
+        self._draw.rounded_rectangle(
+            (x, y, x + w, y + h),
+            radius=radius,
+            fill=fill_rgba,
+            outline=outline_rgba,
+            width=outline_width,
+        )
+
+    def line(
+        self,
+        x1: int,
+        y1: int,
+        x2: int,
+        y2: int,
+        color: Tuple[int, int, int],
+        width: int = 2,
+    ) -> None:
+        self._draw.line((x1, y1, x2, y2), fill=color, width=width)
+
+    # -- text measurement ---------------------------------------------
+
+    def text_width(self, text: str, size: int, weight: str = "regular") -> int:
+        return int(
+            self._draw.textbbox(
+                (0, 0), text, font=self._fonts.font(size, weight)
+            )[2]
+        )
+
+    # -- output -------------------------------------------------------
+
+    def to_bgr(self) -> np.ndarray:
+        return cv2.cvtColor(np.array(self._image), cv2.COLOR_RGB2BGR)
+
+
+# ----------------------------------------------------------------------
+# HUD — minimal professional overlay
+# ----------------------------------------------------------------------
+
+class HUD:
+    """Renders a clean, minimal HUD on camera frames.
+
+    Layout (designed for fullscreen / high resolution):
+
+        ┌──────────────────────────────────────────────────────────────┐
+        │  ASSISTIVE VISION    Camera 0 • 1920x1080 • 30.0 FPS  [MODE] │
+        │                                                              │
+        │                       (live frame)                           │
+        │                                                              │
+        │  S Screenshot  R Record  Q Quit          <status message>    │
+        └──────────────────────────────────────────────────────────────┘
+
+    The HUD is a pure presentation layer: it never touches the camera
+    or the processing pipeline.
+    """
+
+    BAR_HEIGHT = 46
+    MARGIN = 14
+
+    def __init__(self, fps_history_len: int = 30) -> None:
+        self._fonts = FontManager()
         self._frame_count = 0
         self._start_time = time.time()
-        self._fps_history: Deque[float] = deque(maxlen=fps_history_len)
+        self._fps_samples: Deque[float] = deque(maxlen=fps_history_len)
         self._last_fps: float = 0.0
 
     # ------------------------------------------------------------------
@@ -88,14 +254,17 @@ class HUD:
         """Record one rendered frame and its FPS value."""
         self._frame_count += 1
         self._last_fps = fps
-        self._fps_history.append(fps)
+        self._fps_samples.append(fps)
 
     def reset(self) -> None:
-        """Reset internal counters (e.g. when reopening a feed)."""
         self._frame_count = 0
         self._start_time = time.time()
-        self._fps_history.clear()
+        self._fps_samples.clear()
         self._last_fps = 0.0
+
+    @property
+    def font_family(self) -> str:
+        return self._fonts.family
 
     # ------------------------------------------------------------------
     # Rendering
@@ -106,168 +275,136 @@ class HUD:
         frame: np.ndarray,
         *,
         camera=None,
-        mode: str = "RAW",
+        mode: str = "LIVE",
         status: str = "",
     ) -> np.ndarray:
-        """Draw the full HUD onto a copy of the frame.
+        """Draw the HUD onto a copy of the frame.
 
         Args:
             frame: Input BGR frame.
             camera: Optional object exposing ``camera_id`` and
                 ``resolution`` (the src.camera.Camera instance).
             mode: Name of the active processing mode.
-            status: Optional transient status message.
+            status: Optional transient status message (bottom right).
 
         Returns:
             A copy of the frame with the HUD rendered on it.
         """
-        display = frame.copy()
-
-        self._draw_info_panel(display, camera=camera, mode=mode)
-        self._draw_fps_graph(display)
-        self._draw_status_bar(display, status=status)
-
-        return display
+        canvas = Canvas(frame.copy(), self._fonts)
+        self._draw_top_bar(canvas, camera=camera, mode=mode)
+        self._draw_bottom_bar(canvas, status=status)
+        return canvas.to_bgr()
 
     # ------------------------------------------------------------------
     # Internals
     # ------------------------------------------------------------------
 
-    def _draw_info_panel(self, frame: np.ndarray, camera, mode: str) -> None:
-        h, w = frame.shape[:2]
-        x, y, pad = 12, 12, 12
-        line_h = 26
-        n_lines = 5
-        panel_w = 260
-        panel_h = n_lines * line_h + pad * 2
+    def _draw_top_bar(
+        self, canvas: Canvas, camera, mode: str
+    ) -> None:
+        m = self.MARGIN
+        canvas.panel(
+            m, m, canvas.width - 2 * m, self.BAR_HEIGHT,
+            radius=12, alpha=170, outline=_ACCENT_RGB, outline_width=1,
+        )
 
-        _blend_panel(frame, x, y, panel_w, panel_h)
+        cx = m + 24
+        cy = m + self.BAR_HEIGHT // 2
 
-        camera_label = "N/A"
+        canvas.label(
+            cx, cy, "ASSISTIVE VISION", 19, "semibold", _ACCENT_RGB, "lm",
+        )
+
+        cam_label = "N/A"
         res_label = "N/A"
         if camera is not None:
-            camera_label = f"Camera {camera.camera_id}"
+            cam_label = f"Camera {camera.camera_id}"
             if hasattr(camera, "resolution"):
                 res_label = f"{camera.resolution[0]}x{camera.resolution[1]}"
 
-        uptime = time.time() - self._start_time
-        fps_color = self._fps_color(self._last_fps)
-
-        cx = x + pad
-        cy = y + pad + line_h
-
-        _outlined_text(
-            frame, "ASSISTIVE VISION", (cx, cy - 10), 0.62, COLOR_ACCENT, 2, 3,
+        meta = f"{cam_label}   |   {res_label}   |   FPS {self.avg_fps:.1f}"
+        fps_color = _FPS_RGB(self.avg_fps)
+        meta_x = cx + canvas.text_width("ASSISTIVE VISION", 19, "semibold") + 28
+        # dim part, then FPS part in its own colour
+        dim_part = f"{cam_label}   |   {res_label}   |   FPS "
+        canvas.label(meta_x, cy, dim_part, 14, "regular", _DIM_RGB, "lm")
+        canvas.label(
+            meta_x + canvas.text_width(dim_part, 14), cy,
+            f"{self.avg_fps:.1f}", 14, "semibold", fps_color, "lm",
         )
 
-        rows = [
-            ("Source", camera_label),
-            ("Resolution", res_label),
-            ("FPS", f"{self._last_fps:5.1f}"),
-            ("Frames", f"{self._frame_count}"),
-            ("Uptime", f"{int(uptime)}s"),
+        # mode chip, right-aligned
+        chip_text = f"  {mode}  "
+        chip_w = canvas.text_width(chip_text, 14, "semibold") + 8
+        chip_x = canvas.width - m - 24 - chip_w
+        canvas.panel(
+            chip_x, m + 10, chip_w, self.BAR_HEIGHT - 20,
+            radius=9, fill=(20, 20, 24), alpha=180,
+            outline=_ACCENT_RGB, outline_width=1,
+        )
+        canvas.label(
+            chip_x + chip_w // 2, cy, chip_text, 14, "semibold",
+            _ACCENT_RGB, "mm",
+        )
+
+    def _draw_bottom_bar(self, canvas: Canvas, status: str) -> None:
+        m = self.MARGIN
+        h = canvas.height
+        canvas.panel(
+            m, h - m - self.BAR_HEIGHT, canvas.width - 2 * m, self.BAR_HEIGHT,
+            radius=12, alpha=170, outline=_ACCENT_RGB, outline_width=1,
+        )
+
+        cy = h - m - self.BAR_HEIGHT // 2
+        hints = [
+            ("S", "Screenshot"),
+            ("R", "Record"),
+            ("Q", "Quit"),
         ]
-        for i, (label, value) in enumerate(rows):
-            row_y = cy + 14 + i * line_h
-            _outlined_text(frame, label, (cx, row_y), 0.5, COLOR_TEXT_DIM, 1, 2)
-            value_color = fps_color if label == "FPS" else COLOR_TEXT
-            _outlined_text(
-                frame, value, (cx + 110, row_y), 0.55, value_color, 1, 2,
-            )
-
-        mode_x = x + panel_w + 10
-        _outlined_text(frame, f"MODE  {mode}", (mode_x, y + 24), 0.55, COLOR_ACCENT, 1, 2)
-
-    def _draw_fps_graph(self, frame: np.ndarray) -> None:
-        h, w = frame.shape[:2]
-        graph_w = min(220, w - 24)
-        graph_h = 44
-        graph_x = w - graph_w - 12
-        graph_y = 12
-
-        _blend_panel(frame, graph_x, graph_y, graph_w, graph_h)
-
-        data = list(self._fps_history)
-        if len(data) < 2:
-            _outlined_text(
-                frame, "fps", (graph_x + 8, graph_y + graph_h - 8),
-                0.5, COLOR_TEXT_DIM, 1, 2,
-            )
-            return
-
-        max_val = max(max(data), 1.0)
-        n = len(data)
-        step_x = (graph_w - 16) / (n - 1)
-        points = [
-            (int(graph_x + 8 + i * step_x),
-             int(graph_y + graph_h - 8 - (data[i] / max_val) * (graph_h - 16)))
-            for i in range(n)
-        ]
-
-        pts = np.array(points, np.int32).reshape((-1, 1, 2))
-        cv2.polylines(frame, [pts], False, COLOR_FPS_OK, 2, cv2.LINE_AA)
-
-        avg = sum(data) / n
-        avg_y = int(graph_y + graph_h - 8 - (avg / max_val) * (graph_h - 16))
-        cv2.line(
-            frame,
-            (graph_x + 8, avg_y),
-            (graph_x + graph_w - 8, avg_y),
-            COLOR_FPS_OK,
-            1,
-            cv2.LINE_AA,
-        )
-        _outlined_text(
-            frame, f"avg {avg:4.1f}", (graph_x + 8, graph_y + graph_h - 8),
-            0.5, COLOR_FPS_OK, 1, 2,
-        )
-
-    def _draw_status_bar(self, frame: np.ndarray, status: str) -> None:
-        h, w = frame.shape[:2]
-        bar_h = 34
-        bar_y = h - bar_h
-        pad = 12
-
-        _blend_panel(frame, 0, bar_y, w, bar_h)
-
-        hints = "[S] Screenshot   [R] Record   [Q] Quit"
-        _outlined_text(
-            frame, hints, (pad, bar_y + 22), 0.5, COLOR_TEXT_DIM, 1, 2,
-        )
+        x = m + 24
+        for key, action in hints:
+            canvas.label(x, cy, key, 14, "bold", _ACCENT_RGB, "lm")
+            x += canvas.text_width(key, 14, "bold") + 6
+            canvas.label(x, cy, action, 14, "regular", _TEXT_RGB, "lm")
+            x += canvas.text_width(action, 14) + 30
 
         if status:
-            text_w = int(cv2.getTextSize(
-                status, FONT, 0.55, 2,
-            )[0][0])
-            _outlined_text(
-                frame, status, (w - text_w - pad, bar_y + 22),
-                0.55, COLOR_ACCENT, 2, 3,
+            w = canvas.text_width(status, 14, "semibold")
+            canvas.label(
+                canvas.width - m - 24 - w, cy, status, 14,
+                "semibold", _ACCENT_RGB, "lm",
             )
 
-    @staticmethod
-    def _fps_color(fps: float) -> BGRColor:
-        if fps >= 24.0:
-            return COLOR_FPS_OK
-        if fps >= 12.0:
-            return COLOR_FPS_LOW
-        return COLOR_FPS_BAD
+    # ------------------------------------------------------------------
+    # Helpers
+    # ------------------------------------------------------------------
+
+    @property
+    def avg_fps(self) -> float:
+        if not self._fps_samples:
+            return 0.0
+        return sum(self._fps_samples) / len(self._fps_samples)
+
+
+def _FPS_RGB(fps: float) -> Tuple[int, int, int]:
+    if fps >= 24.0:
+        return (90, 220, 130)
+    if fps >= 12.0:
+        return (70, 150, 255)
+    return (70, 70, 255)
 
 
 def annotate(
     frame: np.ndarray,
     labels: Iterable[Tuple[int, int, str]] = (),
 ) -> np.ndarray:
-    """Draw small labeled markers on a frame (e.g. detected objects).
-
-    Args:
-        frame: Input BGR frame.
-        labels: Iterable of ``(x, y, text)`` tuples.
-
-    Returns:
-        A copy of the frame with markers drawn.
-    """
-    display = frame.copy()
+    """Draw small labelled markers on a frame (e.g. detected objects)."""
+    fonts = FontManager()
+    canvas = Canvas(frame.copy(), fonts)
     for x, y, text in labels:
-        cv2.circle(display, (x, y), 6, COLOR_ACCENT, -1, cv2.LINE_AA)
-        _outlined_text(display, text, (x + 10, y + 6), 0.5, COLOR_TEXT, 1, 2)
-    return display
+        canvas.line(x - 8, y, x - 2, y, _ACCENT_RGB, 2)
+        canvas.line(x + 2, y, x + 8, y, _ACCENT_RGB, 2)
+        canvas.line(x, y - 8, x, y - 2, _ACCENT_RGB, 2)
+        canvas.line(x, y + 2, x, y + 8, _ACCENT_RGB, 2)
+        canvas.label(x + 10, y - 20, text, 14, "semibold", _TEXT_RGB)
+    return canvas.to_bgr()

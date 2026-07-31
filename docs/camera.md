@@ -22,9 +22,9 @@ webcam initialisation, frame acquisition, and camera management.
 |---|---|
 | `camera.py` | Core `Camera` class — init, start, read, stop, context manager |
 | `camera_manager.py` | `CameraManager` + `CameraInfo` dataclass — discovery, selection |
-| `camera_utils.py` | `take_screenshot`, `record_video`, `draw_fps`, `draw_timestamp`, `show_feed` |
-| `hud.py` | `HUD` class — professional overlay (panels, FPS graph, status bar) |
-| `camera_test.py` | Interactive CLI test script |
+| `camera_utils.py` | `take_screenshot`, `record_video`, `draw_fps`, `draw_timestamp`, `show_feed` + display helpers |
+| `hud.py` | `HUD` class — minimal professional overlay (PIL + TTF fonts) |
+| `camera_test.py` | Interactive CLI test script (fullscreen, auto high-res) |
 
 ## Classes / Functions
 
@@ -67,25 +67,35 @@ webcam initialisation, frame acquisition, and camera management.
 | `draw_fps(frame, fps)` | `np.ndarray`, float | `np.ndarray` | Overlay FPS |
 | `draw_timestamp(frame)` | `np.ndarray` | `np.ndarray` | Overlay timestamp |
 | `show_feed(camera, window_name, process_frame, on_key)` | Camera, str, callable, callable | — | Live display loop |
+| `get_screen_size()` | — | `(int, int)` | Primary display resolution |
+| `open_fullscreen_window(name)` | str | — | Borderless fullscreen OpenCV window |
+| `scale_to_fit(frame, w, h)` | `np.ndarray`, int, int | `np.ndarray` | Aspect-preserving letterbox scale |
+| `auto_select_resolution(camera)` | Camera | `(int, int)` | Pick best supported resolution |
 
 ### HUD overlay (hud.py)
+
+The HUD renders a minimal professional UI using Pillow with TrueType
+fonts (Segoe UI on Windows, fallback to Arial / DejaVu Sans):
+
+- **Top bar** — `ASSISTIVE VISION` title, camera/resolution/FPS meta
+  (FPS colour-coded green ≥ 24, orange ≥ 12, red below), mode chip
+- **Bottom bar** — keyboard hints + transient status message
+- Rounded semi-transparent panels with accent borders
+- Antialiased text with subtle shadows; pure presentation layer
 
 | Method | Input | Output | Description |
 |---|---|---|---|
 | `tick(fps)` | float | — | Record rendered frame + FPS sample |
 | `render(frame, camera, mode, status)` | `np.ndarray`, Camera, str, str | `np.ndarray` | Draw full HUD on the frame |
 | `reset()` | — | — | Clear counters/history |
-
-The HUD renders: an info panel (source, resolution, FPS, frames, uptime),
-a live FPS sparkline with average, and a bottom status bar with keyboard
-hints.  FPS text is colour-coded (green ≥ 24, orange ≥ 12, red below).
-It is a pure presentation layer and never touches the camera object.
+| `font_family` | — | str | Resolved font family name |
 
 ## Dependencies
 
 - Python 3.11+
 - OpenCV (`cv2`)
 - NumPy
+- Pillow (professional HUD text rendering)
 
 ## Limitations
 

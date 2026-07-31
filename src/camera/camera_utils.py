@@ -1,6 +1,6 @@
 import time
 from pathlib import Path
-from typing import Callable, Optional
+from typing import Callable, List, Optional, Tuple
 
 import cv2
 import numpy as np
@@ -173,3 +173,104 @@ def show_feed(
         _logger.info("Feed interrupted.")
     finally:
         cv2.destroyWindow(window_name)
+
+
+# ----------------------------------------------------------------------
+# Display helpers (fullscreen, scaling, resolution selection)
+# ----------------------------------------------------------------------
+
+DEFAULT_RESOLUTIONS: List[Tuple[int, int]] = [
+    (1920, 1080),
+    (1280, 720),
+    (640, 480),
+    (320, 240),
+]
+
+
+def get_screen_size() -> Tuple[int, int]:
+    """Return the primary display resolution in pixels.
+
+    Uses Win32 API on Windows and falls back to 1920x1080 elsewhere.
+    """
+    try:
+        import ctypes
+
+        user32 = ctypes.windll.user32
+        return user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
+    except Exception:
+        return 1920, 1080
+
+
+def open_fullscreen_window(window_name: str) -> None:
+    """Open a borderless fullscreen display window.
+
+    Args:
+        window_name: Title used to identify the window.
+    """
+    cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
+    cv2.setWindowProperty(
+        window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN
+    )
+
+
+def scale_to_fit(
+    frame: np.ndarray,
+    width: int,
+    height: int,
+) -> np.ndarray:
+    """Scale a frame to fit within (width, height) while keeping aspect
+    ratio, centred on a black canvas.
+
+    Args:
+        frame: Input BGR image.
+        width: Target canvas width in pixels.
+        height: Target canvas height in pixels.
+
+    Returns:
+        Canvas of (height, width) with the frame letterboxed inside.
+    """
+    src_h, src_w = frame.shape[:2]
+    scale = min(width / src_w, height / src_h)
+    new_w = max(1, int(src_w * scale))
+    new_h = max(1, int(src_h * scale))
+
+    interpolation = (
+        cv2.INTER_AREA if scale < 1.0 else cv2.INTER_LINEAR
+    )
+    resized = cv2.resize(frame, (new_w, new_h), interpolation=interpolation)
+
+    canvas = np.zeros((height, width, 3), dtype=np.uint8)
+    x0 = (width - new_w) // 2
+    y0 = (height - new_h) // 2
+    canvas[y0:y0 + new_h, x0:x0 + new_w] = resized
+    return canvas
+
+
+def auto_select_resolution(
+    camera,
+    preferred: Optional[List[Tuple[int, int]]] = None,
+) -> Tuple[int, int]:
+    """Select the best supported resolution for a running camera.
+
+    Tries each preferred resolution in order and keeps the first that
+    the camera accepts at >= 90% of the requested size.
+
+    Args:
+        camera: A started Camera instance.
+        preferred: Ordered list of (width, height) to try.
+
+    Returns:
+        The (width, height) actually selected.
+    """
+    candidates = preferred or DEFAULT_RESOLUTIONS
+    for width, height in candidates:
+        camera.set_resolution(width, height)
+        actual_w, actual_h = camera.resolution
+        if actual_w >= width * 0.9 and actual_h >= height * 0.9:
+            _logger.info("Selected resolution %dx%d", actual_w, actual_h)
+            return actual_w, actual_h
+    _logger.warning(
+        "No preferred resolution matched; keeping %dx%d",
+        *camera.resolution,
+    )
+    return camera.resolution

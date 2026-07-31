@@ -6,6 +6,10 @@ from src.camera.camera_utils import (
     draw_fps,
     draw_timestamp,
     show_feed,
+    get_screen_size,
+    open_fullscreen_window,
+    scale_to_fit,
+    auto_select_resolution,
 )
 from src.camera.hud import HUD, annotate
 
@@ -20,4 +24,8 @@ __all__ = [
     "draw_fps",
     "draw_timestamp",
     "show_feed",
+    "get_screen_size",
+    "open_fullscreen_window",
+    "scale_to_fit",
+    "auto_select_resolution",
 ]

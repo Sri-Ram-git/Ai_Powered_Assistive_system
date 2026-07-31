@@ -2,6 +2,9 @@
 opencv-python>=4.9.0
 numpy>=1.24.0
 
+# Professional HUD text rendering (TTF fonts, antialiasing)
+Pillow>=10.0.0
+
 # Plotting / visualisation (used in later modules)
 matplotlib>=3.7.0
 
