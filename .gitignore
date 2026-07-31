@@ -17,9 +17,17 @@ env/
 # Logs
 logs/*.log
 
-# Screenshots & recordings
+# Assets — NEVER push personal media, photos, faces, screenshots,
+# or recordings to the repository.  Keep only placeholder .gitkeep files.
+assets/*
+!assets/**/
+!assets/**/.gitkeep
+
+# Screenshots & recordings (defensive, in case paths change)
 assets/screenshots/*
 assets/sample_videos/*
+assets/sample_images/*
+src/image_fundamentals/sample_images/*
 
 # OS
 .DS_Store
