@@ -34,6 +34,7 @@ class Camera:
         resolution: Tuple[int, int] = (640, 480),
         fps: int = 30,
         backend: int = cv2.CAP_DSHOW,
+        mirror: bool = True,
     ) -> None:
         """Configure camera parameters without starting the capture.
 
@@ -42,11 +43,14 @@ class Camera:
             resolution: Desired (width, height) in pixels.
             fps: Target frames per second.
             backend: OpenCV backend (default CAP_DSHOW for Windows).
+            mirror: Horizontally flip every frame so the feed behaves
+                like a mirror (True by default for live preview).
         """
         self._camera_id = camera_id
         self._resolution = resolution
         self._target_fps = fps
         self._backend = backend
+        self._mirror = mirror
         self._cap: Optional[cv2.VideoCapture] = None
         self._is_running = False
         self._actual_fps: float = 0.0
@@ -77,6 +81,20 @@ class Camera:
     @property
     def frame_count(self) -> int:
         return self._frame_count
+
+    @property
+    def mirror(self) -> bool:
+        """Whether the feed is horizontally flipped (mirror mode)."""
+        return self._mirror
+
+    def set_mirror(self, enabled: bool) -> None:
+        """Toggle mirror mode at runtime.
+
+        Args:
+            enabled: True to horizontally flip frames.
+        """
+        self._mirror = bool(enabled)
+        self._logger.info("Mirror mode %s", "enabled" if self._mirror else "disabled")
 
     # ------------------------------------------------------------------
     # Lifecycle
@@ -133,6 +151,9 @@ class Camera:
             )
 
         self._frame_count += 1
+
+        if self._mirror:
+            frame = cv2.flip(frame, 1)
 
         if self._frame_count % 30 == 0:
             elapsed = time.time() - self._fps_start_time

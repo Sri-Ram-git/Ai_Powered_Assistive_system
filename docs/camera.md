@@ -32,13 +32,14 @@ webcam initialisation, frame acquisition, and camera management.
 
 | Method | Input | Output | Description |
 |---|---|---|---|
-| `__init__` | camera_id, resolution, fps, backend | — | Configure camera parameters |
+| `__init__` | camera_id, resolution, fps, backend, mirror | — | Configure camera parameters |
 | `start()` | — | — | Open the camera device |
 | `read()` | — | `np.ndarray` (BGR) | Grab next frame |
 | `stop()` | — | — | Release camera |
 | `set_resolution(w, h)` | int, int | — | Change resolution at runtime |
+| `set_mirror(enabled)` | bool | — | Toggle horizontal flip at runtime |
 
-**Properties:** `is_running`, `resolution`, `camera_id`, `actual_fps`, `frame_count`
+**Properties:** `is_running`, `resolution`, `camera_id`, `actual_fps`, `frame_count`, `mirror`
 
 **Context manager:** `with Camera(...) as cam:` — auto start/stop.
 
