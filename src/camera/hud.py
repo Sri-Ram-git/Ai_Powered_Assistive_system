@@ -15,19 +15,19 @@ except ImportError:  # pragma: no cover - fallback path
 
 # ----------------------------------------------------------------------
 # Colours (BGR for cv2, converted to RGB for PIL)
+# Monochrome design: white panels, dark text, light borders.
 # ----------------------------------------------------------------------
 
-COLOR_BG = (24, 24, 28)
-COLOR_ACCENT = (0, 190, 255)
-COLOR_TEXT = (236, 236, 236)
-COLOR_TEXT_DIM = (160, 160, 166)
-COLOR_FPS_OK = (90, 220, 130)
-COLOR_FPS_LOW = (70, 150, 255)
-COLOR_FPS_BAD = (70, 70, 255)
+COLOR_PANEL = (255, 255, 255)
+COLOR_BORDER = (230, 230, 236)
+COLOR_TEXT = (30, 30, 34)
+COLOR_TEXT_DIM = (128, 128, 138)
+COLOR_OUTLINE = (0, 0, 0)
 
-_ACCENT_RGB = (255, 190, 0)
-_TEXT_RGB = (236, 236, 236)
-_DIM_RGB = (160, 160, 166)
+_PANEL_RGB = (255, 255, 255)
+_BORDER_RGB = (230, 230, 236)
+_TEXT_RGB = (30, 30, 34)
+_DIM_RGB = (128, 128, 138)
 
 
 # ----------------------------------------------------------------------
@@ -151,8 +151,7 @@ class Canvas:
         color: Tuple[int, int, int] = _TEXT_RGB,
         anchor: str = "lt",
     ) -> None:
-        """Draw text with a subtle dark shadow for readability."""
-        self.text(x + 1, y + 1, text, size, (0, 0, 0), weight, anchor, alpha=180)
+        """Draw text without shadow (clean look on white panels)."""
         self.text(x, y, text, size, color, weight, anchor)
 
     # -- shapes -------------------------------------------------------
@@ -163,14 +162,14 @@ class Canvas:
         y: int,
         w: int,
         h: int,
-        radius: int = 10,
-        fill: Tuple[int, int, int] = COLOR_BG,
-        alpha: int = 150,
-        outline: Optional[Tuple[int, int, int]] = None,
+        radius: int = 18,
+        fill: Tuple[int, int, int] = _PANEL_RGB,
+        alpha: int = 230,
+        outline: Optional[Tuple[int, int, int]] = _BORDER_RGB,
         outline_alpha: int = 255,
         outline_width: int = 1,
     ) -> None:
-        """Draw a semi-transparent rounded rectangle."""
+        """Draw a translucent white rounded rectangle."""
         if x < 0:
             w += x
             x = 0
@@ -216,28 +215,30 @@ class Canvas:
 
 
 # ----------------------------------------------------------------------
-# HUD — minimal professional overlay
+# HUD — minimal monochrome overlay
 # ----------------------------------------------------------------------
 
 class HUD:
-    """Renders a clean, minimal HUD on camera frames.
+    """Renders a short, pill-shaped, all-white HUD on camera frames.
 
     Layout (designed for fullscreen / high resolution):
 
         ┌──────────────────────────────────────────────────────────────┐
-        │  ASSISTIVE VISION    Camera 0 • 1920x1080 • 30.0 FPS  [MODE] │
+        │  ASSISTIVE VISION   Camera 0 | 1920x1080 | 30.0 FPS   [MODE] │
         │                                                              │
         │                       (live frame)                           │
         │                                                              │
-        │  S Screenshot  R Record  Q Quit          <status message>    │
+        │  S Screenshot  R Record  Q Quit         <status message>     │
         └──────────────────────────────────────────────────────────────┘
 
+    Every bar is a short white pill with dark text — no accent colours.
     The HUD is a pure presentation layer: it never touches the camera
     or the processing pipeline.
     """
 
-    BAR_HEIGHT = 46
-    MARGIN = 14
+    BAR_HEIGHT = 34
+    MARGIN = 10
+    RADIUS = 17
 
     def __init__(self, fps_history_len: int = 30) -> None:
         self._fonts = FontManager()
@@ -305,14 +306,14 @@ class HUD:
         m = self.MARGIN
         canvas.panel(
             m, m, canvas.width - 2 * m, self.BAR_HEIGHT,
-            radius=12, alpha=170, outline=_ACCENT_RGB, outline_width=1,
+            radius=self.RADIUS,
         )
 
-        cx = m + 24
+        cx = m + 22
         cy = m + self.BAR_HEIGHT // 2
 
         canvas.label(
-            cx, cy, "ASSISTIVE VISION", 19, "semibold", _ACCENT_RGB, "lm",
+            cx, cy, "ASSISTIVE VISION", 15, "semibold", _TEXT_RGB, "lm",
         )
 
         cam_label = "N/A"
@@ -322,29 +323,24 @@ class HUD:
             if hasattr(camera, "resolution"):
                 res_label = f"{camera.resolution[0]}x{camera.resolution[1]}"
 
-        meta = f"{cam_label}   |   {res_label}   |   FPS {self.avg_fps:.1f}"
-        fps_color = _FPS_RGB(self.avg_fps)
-        meta_x = cx + canvas.text_width("ASSISTIVE VISION", 19, "semibold") + 28
-        # dim part, then FPS part in its own colour
-        dim_part = f"{cam_label}   |   {res_label}   |   FPS "
-        canvas.label(meta_x, cy, dim_part, 14, "regular", _DIM_RGB, "lm")
+        dim_part = f"{cam_label}  |  {res_label}  |  FPS"
+        meta_x = cx + canvas.text_width("ASSISTIVE VISION", 15, "semibold") + 24
+        canvas.label(meta_x, cy, dim_part, 12, "regular", _DIM_RGB, "lm")
         canvas.label(
-            meta_x + canvas.text_width(dim_part, 14), cy,
-            f"{self.avg_fps:.1f}", 14, "semibold", fps_color, "lm",
+            meta_x + canvas.text_width(dim_part, 12) + 6, cy,
+            f"{self.avg_fps:.1f}", 12, "semibold", _TEXT_RGB, "lm",
         )
 
-        # mode chip, right-aligned
         chip_text = f"  {mode}  "
-        chip_w = canvas.text_width(chip_text, 14, "semibold") + 8
-        chip_x = canvas.width - m - 24 - chip_w
+        chip_w = canvas.text_width(chip_text, 12, "semibold") + 10
+        chip_x = canvas.width - m - 22 - chip_w
         canvas.panel(
-            chip_x, m + 10, chip_w, self.BAR_HEIGHT - 20,
-            radius=9, fill=(20, 20, 24), alpha=180,
-            outline=_ACCENT_RGB, outline_width=1,
+            chip_x, m + 6, chip_w, self.BAR_HEIGHT - 12,
+            radius=(self.BAR_HEIGHT - 12) // 2,
         )
         canvas.label(
-            chip_x + chip_w // 2, cy, chip_text, 14, "semibold",
-            _ACCENT_RGB, "mm",
+            chip_x + chip_w // 2, cy, chip_text, 12, "semibold",
+            _TEXT_RGB, "mm",
         )
 
     def _draw_bottom_bar(self, canvas: Canvas, status: str) -> None:
@@ -352,7 +348,7 @@ class HUD:
         h = canvas.height
         canvas.panel(
             m, h - m - self.BAR_HEIGHT, canvas.width - 2 * m, self.BAR_HEIGHT,
-            radius=12, alpha=170, outline=_ACCENT_RGB, outline_width=1,
+            radius=self.RADIUS,
         )
 
         cy = h - m - self.BAR_HEIGHT // 2
@@ -361,18 +357,18 @@ class HUD:
             ("R", "Record"),
             ("Q", "Quit"),
         ]
-        x = m + 24
+        x = m + 22
         for key, action in hints:
-            canvas.label(x, cy, key, 14, "bold", _ACCENT_RGB, "lm")
-            x += canvas.text_width(key, 14, "bold") + 6
-            canvas.label(x, cy, action, 14, "regular", _TEXT_RGB, "lm")
-            x += canvas.text_width(action, 14) + 30
+            canvas.label(x, cy, key, 13, "semibold", _TEXT_RGB, "lm")
+            x += canvas.text_width(key, 13, "semibold") + 6
+            canvas.label(x, cy, action, 13, "regular", _DIM_RGB, "lm")
+            x += canvas.text_width(action, 13) + 28
 
         if status:
-            w = canvas.text_width(status, 14, "semibold")
+            w = canvas.text_width(status, 13, "semibold")
             canvas.label(
-                canvas.width - m - 24 - w, cy, status, 14,
-                "semibold", _ACCENT_RGB, "lm",
+                canvas.width - m - 22 - w, cy, status, 13,
+                "semibold", _TEXT_RGB, "lm",
             )
 
     # ------------------------------------------------------------------
@@ -386,14 +382,6 @@ class HUD:
         return sum(self._fps_samples) / len(self._fps_samples)
 
 
-def _FPS_RGB(fps: float) -> Tuple[int, int, int]:
-    if fps >= 24.0:
-        return (90, 220, 130)
-    if fps >= 12.0:
-        return (70, 150, 255)
-    return (70, 70, 255)
-
-
 def annotate(
     frame: np.ndarray,
     labels: Iterable[Tuple[int, int, str]] = (),
@@ -402,9 +390,11 @@ def annotate(
     fonts = FontManager()
     canvas = Canvas(frame.copy(), fonts)
     for x, y, text in labels:
-        canvas.line(x - 8, y, x - 2, y, _ACCENT_RGB, 2)
-        canvas.line(x + 2, y, x + 8, y, _ACCENT_RGB, 2)
-        canvas.line(x, y - 8, x, y - 2, _ACCENT_RGB, 2)
-        canvas.line(x, y + 2, x, y + 8, _ACCENT_RGB, 2)
-        canvas.label(x + 10, y - 20, text, 14, "semibold", _TEXT_RGB)
+        canvas.line(x - 8, y, x - 2, y, _TEXT_RGB, 2)
+        canvas.line(x + 2, y, x + 8, y, _TEXT_RGB, 2)
+        canvas.line(x, y - 8, x, y - 2, _TEXT_RGB, 2)
+        canvas.line(x, y + 2, x, y + 8, _TEXT_RGB, 2)
+        canvas.panel(x + 6, y - 34, canvas.text_width(text, 13, "semibold") + 16, 26,
+                     radius=13, alpha=225)
+        canvas.label(x + 14, y - 21, text, 13, "semibold", _TEXT_RGB, "lm")
     return canvas.to_bgr()
