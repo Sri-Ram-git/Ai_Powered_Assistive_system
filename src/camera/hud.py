@@ -15,19 +15,19 @@ except ImportError:  # pragma: no cover - fallback path
 
 # ----------------------------------------------------------------------
 # Colours (BGR for cv2, converted to RGB for PIL)
-# Monochrome design: white panels, black text, light borders.
+# Monochrome design: black panels, white text, light borders.
 # ----------------------------------------------------------------------
 
-COLOR_PANEL = (255, 255, 255)
-COLOR_BORDER = (230, 230, 236)
-COLOR_TEXT = (0, 0, 0)
-COLOR_TEXT_DIM = (60, 60, 60)
+COLOR_PANEL = (0, 0, 0)
+COLOR_BORDER = (90, 90, 96)
+COLOR_TEXT = (255, 255, 255)
+COLOR_TEXT_DIM = (200, 200, 206)
 COLOR_OUTLINE = (0, 0, 0)
 
-_PANEL_RGB = (255, 255, 255)
-_BORDER_RGB = (230, 230, 236)
-_TEXT_RGB = (0, 0, 0)
-_DIM_RGB = (60, 60, 60)
+_PANEL_RGB = (0, 0, 0)
+_BORDER_RGB = (90, 90, 96)
+_TEXT_RGB = (255, 255, 255)
+_DIM_RGB = (200, 200, 206)
 
 
 # ----------------------------------------------------------------------
