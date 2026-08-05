@@ -28,6 +28,8 @@ assets/screenshots/*
 assets/sample_videos/*
 assets/sample_images/*
 src/image_fundamentals/sample_images/*
+# Allow the repo's own synthetic sample scene (no personal media)
+!src/image_fundamentals/sample_images/test_scene.png
 
 # OS
 .DS_Store
