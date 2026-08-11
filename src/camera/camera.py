@@ -165,7 +165,10 @@ class Camera:
     def stop(self) -> None:
         """Release the camera and clean up resources."""
         if self._cap is not None:
-            self._cap.release()
+            try:
+                self._cap.release()
+            except Exception:
+                pass
             self._cap = None
         self._is_running = False
         elapsed = (
@@ -189,13 +192,13 @@ class Camera:
             CameraAccessError: If camera is not initialized.
             InvalidResolutionError: If width or height are non-positive.
         """
-        if self._cap is None:
-            raise CameraAccessError("Camera is not initialized.")
         if width <= 0 or height <= 0:
             raise InvalidResolutionError(
                 f"Invalid resolution: {width}x{height}. "
                 "Width and height must be positive."
             )
+        if self._cap is None:
+            raise CameraAccessError("Camera is not initialized.")
 
         self._cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
         self._cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
