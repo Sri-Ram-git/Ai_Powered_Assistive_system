@@ -1,0 +1,48 @@
+detection:
+  model_path: "models/yolov8n.onnx"
+  input_size: 640
+  conf_threshold: 0.45
+  iou_threshold: 0.45
+  every_n_frames: 2
+
+tracking:
+  iou_threshold: 0.3
+  max_missed: 8
+  distance_change_metres: 1.0
+  min_announce_interval: 3.0
+
+navigation:
+  # Vertical field of view of the camera (degrees).  Big lever on
+  # distance accuracy — measure your webcam's real FOV if you can.
+  # Typical laptop webcams: ~50-60 deg vertical.
+  vertical_fov: 55
+  # Optional per-class real-world heights override:
+  # reference_heights:
+  #   person: 1.7
+
+ocr:
+  min_confidence: 0.3
+  max_boxes: 50
+  every_n_frames: 10
+  # true  = announce text found, press R to hear it
+  # false = read text aloud automatically as soon as it's detected
+  ask_before_reading: false
+
+speech:
+  rate: 165
+  volume: 1.0
+
+decision:
+  cooldown_seconds: 4.0
+  min_priority: 5
+  speak_ocr_text: true
+  max_ocr_chars: 80
+
+camera:
+  id: 0
+  resolution: [1280, 720]
+
+app:
+  display_scale: 1.0
+  jpeg_width: 960
+  jpeg_quality: 70

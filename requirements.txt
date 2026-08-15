@@ -14,3 +14,17 @@ pytest-cov>=4.1.0
 
 # Utilities
 PyYAML>=6.0
+
+# Week 2-3 AI modules
+# ONNX runtime (CPU) for YOLO + RapidOCR inference
+onnxruntime>=1.18.0
+
+# Text recognition (CPU-only, no Paddle/PyTorch)
+rapidocr-onnxruntime>=1.2.0
+
+# Text-to-speech (uses the OS speech engine: SAPI5 on Windows)
+pyttsx3>=2.90
+
+# Web dashboard (live camera + state via browser)
+Flask>=3.0.0
+flask-cors>=4.0.0

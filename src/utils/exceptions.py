@@ -36,3 +36,23 @@ class ImageError(Exception):
 class ProcessingError(Exception):
     """Base exception for image processing pipeline errors."""
     pass
+
+
+class DetectionError(Exception):
+    """Base exception for object-detection errors."""
+    pass
+
+
+class OcrError(Exception):
+    """Base exception for OCR / text-recognition errors."""
+    pass
+
+
+class SpeechError(Exception):
+    """Base exception for text-to-speech errors."""
+    pass
+
+
+class DecisionError(Exception):
+    """Base exception for decision-engine errors."""
+    pass

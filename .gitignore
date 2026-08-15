@@ -38,6 +38,9 @@ Thumbs.db
 # Config overrides
 *.local.yaml
 
+# Models — large downloaded weights, re-downloaded via config
+models/*.onnx
+
 # Distribution / build
 dist/
 build/
