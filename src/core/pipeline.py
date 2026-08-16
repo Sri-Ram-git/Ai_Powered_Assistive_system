@@ -85,6 +85,9 @@ class AsyncVisionPipeline:
         self._decision = None
         self._model_path = None
         self._depth = None
+        self._latest_scene = None
+        self._safety = None
+        self._latest_risk = None
 
     # ------------------------------------------------------------------
     # Lifecycle
@@ -152,6 +155,16 @@ class AsyncVisionPipeline:
     @property
     def latest_results(self) -> LatestResults:
         return self._results
+
+    @property
+    def latest_scene(self):
+        """The most recently built SceneContext (or None)."""
+        return self._latest_scene
+
+    @property
+    def latest_risk(self):
+        """The most recent SafetyEngine RiskAssessment (or None)."""
+        return self._latest_risk
 
     def state_snapshot(self) -> Dict:
         with self._state_lock:
@@ -272,6 +285,28 @@ class AsyncVisionPipeline:
                 self._ocr_worker.latest_result()
                 if self._ocr_worker is not None else []
             )
+
+            # Deterministic scene context (world model for downstream).
+            from src.vision.scene_context import build_scene_context
+
+            scene = build_scene_context(
+                tracks=list(tracks),
+                ocr_text=[r.text for r in ocr_items],
+                frame_w=frame.shape[1],
+                frame_h=frame.shape[0],
+                distance_of=lambda t, fh: _track_distance_m(
+                    t, fh, self._cfg.vfov_deg),
+                depth_available=(depth_result is not None),
+            )
+            self._latest_scene = scene
+
+            # Deterministic safety assessment (never an LLM).
+            from src.safety import SafetyEngine
+
+            if self._safety is None:
+                self._safety = SafetyEngine()
+            risk = self._safety.assess(scene)
+            self._latest_risk = risk
 
             phrases = monitor.events(tracks, frame.shape[1], frame.shape[0])
             summary = FrameSummary(
