@@ -409,7 +409,18 @@ class AsyncVisionPipeline:
 
     def _detect_loop(self) -> None:
         cfg = self._cfg
-        detector = self._load_detector(cfg)
+        # A missing/unloadable model must not kill the pipeline: the grab,
+        # depth and OCR stages stay alive and the loop keeps publishing
+        # state (with empty detections) so the app reports the fault via
+        # state rather than silently stopping detection.
+        try:
+            detector = self._load_detector(cfg)
+        except Exception as exc:
+            _logger.error(
+                "Detection unavailable (no model?) — running without "
+                "detections: %s", exc)
+            self._set_state(detection_error=str(exc))
+            detector = None
         tracker = IoUTracker(
             iou_threshold=cfg.iou_threshold,
             max_missed=cfg.max_missed,
@@ -443,7 +454,7 @@ class AsyncVisionPipeline:
             frame_index += 1
             started = time.time()
             detections: List = []
-            if frame_index % cfg.detect_every == 0:
+            if detector is not None and frame_index % cfg.detect_every == 0:
                 try:
                     detections = detector.detect(frame)
                     tracks = tracker.update(detections)
