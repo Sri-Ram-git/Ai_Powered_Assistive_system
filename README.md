@@ -1,5 +1,7 @@
 # AI-Powered Assistive Vision System
 
+**Version 1.0** — see [VERSION](VERSION)
+
 A modular computer-vision system for an assistive device that helps
 visually impaired people navigate their surroundings:
 
@@ -11,6 +13,10 @@ Camera → Object Detection → Tracking → OCR → Decision Engine → Speech 
 assistance.  The full pipeline runs in `src/assist/assist_app.py`, and a
 live **web dashboard** (`src/server`) streams the annotated feed and AI
 guidance to any browser.
+
+> Version 1.0 marks the audited, tested release state: 159/159 tests passing,
+> TTS one-shot bug fixed, and de-duplicated continuous speech. See
+> [REPORT.md](REPORT.md) for the full technical audit.
 
 ## Modules
 
