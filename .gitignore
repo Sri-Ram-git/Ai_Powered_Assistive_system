@@ -45,6 +45,16 @@ Thumbs.db
 # Config overrides
 *.local.yaml
 
+# Secrets & credentials — never commit keys/tokens/certificates.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+secrets/*
+
 # Models — large downloaded weights, re-downloaded via config
 models/*.onnx
 
