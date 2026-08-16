@@ -140,9 +140,11 @@ def lvis_bbox_to_xyxy(bbox: Sequence[float]) -> List[float]:
 
 
 def _write_yolo_label(dest: str, class_id: int, boxes: List[Tuple[str, list]],
-                      width: int, height: int) -> None:
+                      width: int, height: int,
+                      classes: Optional[List[int]] = None) -> None:
     lines = []
-    for _, box in boxes:
+    for i, (_, box) in enumerate(boxes):
+        cid = classes[i] if classes else class_id
         if width <= 0 or height <= 0:
             continue
         x0, y0, x1, y1 = box
@@ -156,7 +158,7 @@ def _write_yolo_label(dest: str, class_id: int, boxes: List[Tuple[str, list]],
         h = (y1 - y0) / height
         if w <= 0 or h <= 0:
             continue
-        lines.append(f"{class_id} {cx:.6f} {cy:.6f} {w:.6f} {h:.6f}")
+        lines.append(f"{cid} {cx:.6f} {cy:.6f} {w:.6f} {h:.6f}")
     with open(dest, "w", encoding="utf-8") as fh:
         fh.write("\n".join(lines) + ("\n" if lines else ""))
 
@@ -212,9 +214,33 @@ def run(source: str, annotations_path: str, classes: Sequence[str],
                 "lvis_id": lvis_id, "openimages_id": entry.openimages_id,
                 "coco_id": entry.coco_id})
         img_by_id = {img["id"]: img for img in images}
-        download_map: Dict[str, Tuple[str, str]] = {}   # img_id -> (url, dest)
+        # LVIS category names may differ from vocabulary words (e.g. vocab
+        # "cell phone" is LVIS "cellphone", "laptop" is "laptop_computer").
+        # Resolve via the LVIS id first, then by the LVIS name's first token
+        # (a safe rule: "laptop_computer" starts with "laptop").
+        lvis_by_first_token: Dict[str, str] = {}
+        for cname in cat_names.values():
+            first = cname.split("_", 1)[0].strip().lower()
+            if first:
+                lvis_by_first_token.setdefault(first, cname)
+        word_to_lvis_name: Dict[str, str] = {}
         for word in words:
-            group = groups.get(word, [])[:max_images_per_class]
+            entry = vocab.resolve(word)
+            cat_name = None
+            if entry and entry.lvis_id is not None:
+                for cid, cname in cat_names.items():
+                    if cid == entry.lvis_id:
+                        cat_name = cname
+                        break
+            if cat_name is None and entry:
+                cat_name = lvis_by_first_token.get(
+                    entry.word.strip().lower().split()[0])
+            word_to_lvis_name[word] = cat_name or entry.word
+        download_map: Dict[str, Tuple[str, str]] = {}   # img_id -> (url, dest)
+        word_img_ids: Dict[str, List[str]] = {}
+        for word in words:
+            group = groups.get(word_to_lvis_name[word], [])[
+                :max_images_per_class]
             for ann in group:
                 img_id = ann["image_id"]
                 img = img_by_id.get(img_id)
@@ -222,14 +248,21 @@ def run(source: str, annotations_path: str, classes: Sequence[str],
                     continue
                 split = "val2017" if "val" in str(img.get("coco_url", "")) \
                     else "train2017"
+                file_name = img.get("file_name") or str(
+                    img.get("coco_url", "")).rsplit("/", 1)[-1]
+                if not file_name:
+                    continue
                 url = COCO_IMAGE_URL.format(
-                    split=split, file_name=img["file_name"])
+                    split=split, file_name=file_name)
                 dest = os.path.join(img_dir, f"{img_id}.jpg")
                 download_map.setdefault(str(img_id), (url, dest))
-        # write labels grouped by image
+                word_img_ids.setdefault(word, []).append(str(img_id))
+        # write labels grouped by image (accumulate all boxes, write once)
+        per_image_boxes: Dict[str, List[Tuple[int, list]]] = {}
         for word in words:
             cid = name_to_id[word]
-            group = groups.get(word, [])[:max_images_per_class]
+            group = groups.get(word_to_lvis_name[word], [])[
+                :max_images_per_class]
             for ann in group:
                 img_id = str(ann["image_id"])
                 img = img_by_id.get(ann["image_id"])
@@ -237,12 +270,17 @@ def run(source: str, annotations_path: str, classes: Sequence[str],
                     continue
                 # LVIS/COCO bbox is [x, y, width, height].
                 box = lvis_bbox_to_xyxy(ann.get("bbox", [0, 0, 0, 0]))
-                yolo_path = os.path.join(lab_dir, f"{img_id}.txt")
-                _write_yolo_label(
-                    yolo_path, cid,
-                    [(img_id, box)], int(img.get("width", 1)),
-                    int(img.get("height", 1)))
+                per_image_boxes.setdefault(img_id, []).append((cid, box))
                 stats["annotations"] += 1
+        for img_id, boxes in per_image_boxes.items():
+            img = img_by_id.get(int(img_id))
+            if not img:
+                continue
+            _write_yolo_label(
+                os.path.join(lab_dir, f"{img_id}.txt"), 0,
+                [(img_id, box) for _, box in boxes],
+                int(img.get("width", 1)), int(img.get("height", 1)),
+                classes=[cid for cid, _ in boxes])
         stats["images"] += len(download_map)
     elif source == "openimages":
         class_ids = {}
@@ -265,6 +303,7 @@ def run(source: str, annotations_path: str, classes: Sequence[str],
         word_to_id = {w: i for i, w in enumerate(words)}
         download_map: Dict[str, Tuple[str, str]] = {}
         used: Dict[str, int] = {}
+        boxes_per_image: Dict[str, List[Tuple[int, list]]] = {}
         for img_id, anns in per_image.items():
             if used.get(img_id, 0) >= max_images_per_class:
                 continue
@@ -275,10 +314,15 @@ def run(source: str, annotations_path: str, classes: Sequence[str],
             for word, box in anns:
                 if word not in word_to_id:
                     continue
-                _write_yolo_label(
-                    os.path.join(lab_dir, f"{img_id}.txt"),
-                    word_to_id[word], [(img_id, box)], 1, 1)
+                # OpenImages boxes are already normalised to [0, 1].
+                boxes_per_image.setdefault(img_id, []).append(
+                    (word_to_id[word], box))
                 stats["annotations"] += 1
+        for img_id, boxes in boxes_per_image.items():
+            _write_yolo_label(
+                os.path.join(lab_dir, f"{img_id}.txt"), 0,
+                [(img_id, box) for _, box in boxes], 1, 1,
+                classes=[cid for cid, _ in boxes])
         stats["images"] += len(download_map)
     else:
         raise ValueError(f"unknown source: {source!r}")
@@ -295,6 +339,17 @@ def run(source: str, annotations_path: str, classes: Sequence[str],
                 stats["failed"] += 1
 
     # Report + write outputs.
+    succeeded: Dict[str, int] = {}
+    if source == "lvis":
+        for word, ids in word_img_ids.items():
+            succeeded[word] = sum(
+                1 for i in ids if os.path.exists(
+                    os.path.join(img_dir, f"{i}.jpg")))
+    else:
+        for word in words:
+            succeeded[word] = sum(
+                1 for f in os.listdir(img_dir)
+                if os.path.exists(os.path.join(img_dir, f)))
     report = {
         "source": source,
         "requested_words": len(words),
@@ -303,6 +358,7 @@ def run(source: str, annotations_path: str, classes: Sequence[str],
         "failed_images": stats["failed"],
         "annotations_written": stats["annotations"],
         "categories": len(categories),
+        "per_word_images": succeeded,
         "generated": time.strftime("%Y-%m-%d %H:%M:%S"),
         "note": ("counts are real download outcomes; failed images are "
                  "reported, never silently dropped"),

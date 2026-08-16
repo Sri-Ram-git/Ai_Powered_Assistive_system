@@ -44,6 +44,20 @@ def test_write_yolo_label_skips_zero_box(tmp_path):
     assert open(dest, encoding="utf-8").read() == ""
 
 
+def test_write_yolo_label_multiple_classes_one_file(tmp_path):
+    """All boxes for an image (possibly different classes) share one file."""
+    dest = str(tmp_path / "multi.txt")
+    _write_yolo_label(
+        dest, 0,
+        [("img", [0, 0, 320, 480]), ("img", [320, 0, 640, 480])],
+        640, 480,
+        classes=[0, 3])
+    lines = [l.split() for l in open(dest, encoding="utf-8").read().strip()
+             .splitlines()]
+    assert [int(l[0]) for l in lines] == [0, 3]
+    assert len(lines) == 2
+
+
 def test_classify_tiers():
     assert classify("person") == ("critical", "person")
     assert classify("stop sign")[0] == "critical"
