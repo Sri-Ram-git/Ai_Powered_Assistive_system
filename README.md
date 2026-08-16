@@ -106,6 +106,26 @@ Tooling: `scripts/benchmark/perception_benchmark.py`,
 `scripts/debug/detection_visualizer.py`,
 `scripts/benchmark/object_detection_metrics.py`, `configs/object_priority.yaml`.
 
+### Object vocabulary (1000+ words)
+
+The speaking engine only repeats words the model can detect.  The
+vocabulary ([`docs/vocabulary/`](docs/vocabulary/)) gives the system a
+**1551-word list** where every word is a real category in a labelled
+image dataset (LVIS 1203 + OpenImages 601 + COCO 80):
+
+| Item | Path |
+|---|---|
+| Runtime manifest | `data/vocabulary/object_vocabulary.yaml` |
+| Plain word list | `data/vocabulary/words.txt` |
+| Builder | `scripts/vocabulary/build_vocabulary.py` |
+| Label-image downloader | `scripts/vocabulary/download_labeled_dataset.py` |
+| Teach your own objects | `scripts/training/teach_objects.py` |
+| Guide | `docs/vocabulary/vocabulary.md`, `docs/vocabulary/training.md` |
+
+Words carry a safety tier (56 critical / 112 high / 1333 normal /
+50 low) that raises speech priority, and the app varies repeated
+phrasing so announcements are not one fixed sentence.
+
 ## Architecture
 
 ```
@@ -150,10 +170,15 @@ box):
 │   ├── metrics/         # Prometheus registry
 │   ├── camera/ image_fundamentals/ image_processing/ morphology/
 │   ├── assist/ server/ playground/
+│   ├── audio/            # SpeechOutput, SpeechQueue, speech variety
+│   ├── vocabulary/       # 1000+ word object vocabulary runtime
 │   └── utils/
 ├── tests/               # hardware-free suite (coverage-gated ≥80%)
 ├── performance/         # benchmark suite + results
 ├── scripts/             # calibration, benchmarks, audits, optimization
+│   ├── vocabulary/      # build manifest + download labelled images
+│   └── training/        # teach-your-own-objects capture tool
+├── data/vocabulary/     # manifest, word list, dataset class sources
 ├── docs/                # per-module + productization docs
 ├── configs/             # YAML configuration
 ├── models/              # manifest.yaml + weights (git-ignored)

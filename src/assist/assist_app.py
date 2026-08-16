@@ -10,8 +10,12 @@ stage can freeze the view:
 
 This app is a thin display layer: it shows the *latest* camera frame
 with the *latest* tracking overlay at camera FPS, and never blocks on
-detection, tracking, OCR, or speech.  OCR is disabled by default
-(Phase 21); the worker only loads when ``ocr.enabled: true``.
+detection, tracking, OCR, or speech.  OCR runs on its own worker thread
+(non-blocking); it is enabled by default so text is read aloud.
+
+Speech uses the object vocabulary (1551 words) to pick an announcement
+tier and to vary repeated phrasing so the same object is not announced
+with one fixed sentence.
 
 Usage:
     python src/assist/assist_app.py [--camera 0] [--config configs/assist_config.yaml]
@@ -27,6 +31,7 @@ Keys:
 import argparse
 import sys
 from pathlib import Path
+from typing import Optional
 
 import cv2
 import yaml
@@ -37,6 +42,8 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from src.audio import SpeechOutput  # noqa: E402
 from src.audio.speech_queue import SpeechQueue, SpeechTier  # noqa: E402
+from src.audio.variety import SpeechVariety  # noqa: E402
+from src.vocabulary import ObjectVocabulary  # noqa: E402
 from src.camera import (  # noqa: E402
     HUD,
     get_screen_size,
@@ -145,9 +152,22 @@ def _debug_overlay(display, state, results, extra: str = ""):
     return display
 
 
-def _speech_tier_for(text: str) -> SpeechTier:
-    """Map engine output to a speech tier (safety phrases are critical)."""
+def _speech_tier_for(text: str, vocab: Optional[ObjectVocabulary] = None) -> SpeechTier:
+    """Map engine output to a speech tier.
+
+    Vocabulary tier wins (a detected "car"/"person" is critical), then
+    safety keyword cues, then normal.
+    """
     lowered = (text or "").lower()
+    if vocab is not None:
+        for word in lowered.split():
+            tier = vocab.tier_for(word.strip(".,;:!?"))
+            if tier == "critical":
+                return SpeechTier.CRITICAL
+            if tier == "high":
+                return SpeechTier.HIGH
+            if tier == "low":
+                return SpeechTier.LOW
     if "stop" in lowered or "emergency" in lowered:
         return SpeechTier.CRITICAL
     if "turn" in lowered or "now" in lowered:
@@ -192,10 +212,16 @@ def main() -> None:
     )
     queue.start()
     mute = _Mute()
+    variety = SpeechVariety()
+    try:
+        vocab = ObjectVocabulary.load()
+    except Exception:
+        vocab = None
 
     def speak(text: str) -> None:
         if not mute:
-            queue.enqueue(text, tier=_speech_tier_for(text))
+            varied = variety.render(text)
+            queue.enqueue(varied, tier=_speech_tier_for(varied, vocab))
 
     pipe = AsyncVisionPipeline(config=cfg, speech_callback=speak)
     pipe.start(timeout=8.0)

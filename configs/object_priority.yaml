@@ -1,6 +1,10 @@
 # Object priority for guidance + speech (Phase 2).
 #
-# Every class below is one the model actually understands (COCO-80).
+# NOTE (16 Aug 2026): the live speech/priority source is now the object
+# vocabulary manifest — data/vocabulary/object_vocabulary.yaml (1551
+# words with tiers, built from real labelled-image datasets).  This file
+# is kept as the original COCO-80 reference for the model's own classes.
+#
 # Tiers determine how urgently an object is announced:
 #
 #   critical   immediate safety — must be spoken first, without delay
