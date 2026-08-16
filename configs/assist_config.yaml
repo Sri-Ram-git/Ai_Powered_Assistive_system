@@ -27,6 +27,15 @@ ocr:
   # true  = announce text found, press R to hear it
   # false = read text aloud automatically as soon as it's detected
   ask_before_reading: false
+  # OCR input preprocessing strategy (none|gray|threshold|contrast|downscale|downscale2)
+  preprocess: "none"
+
+depth:
+  # Optional monocular depth stage (default off — keeps CPU budget).
+  # "synthetic" needs no model; "depth_anything_v2" needs model_path.
+  enabled: false
+  backend: "synthetic"
+  model_path: ""
 
 speech:
   rate: 165

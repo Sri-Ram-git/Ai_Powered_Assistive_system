@@ -84,6 +84,7 @@ class AsyncVisionPipeline:
         self._monitor = None
         self._decision = None
         self._model_path = None
+        self._depth = None
 
     # ------------------------------------------------------------------
     # Lifecycle
@@ -178,6 +179,21 @@ class AsyncVisionPipeline:
         self._ocr_worker = self._build_ocr_worker()
         self._ocr_worker.start()
 
+        if self._cfg.depth_enabled:
+            try:
+                from src.depth import create_depth_estimator
+
+                self._depth = create_depth_estimator(
+                    backend=self._cfg.depth_backend,
+                    model_path=self._cfg.depth_model_path or None,
+                )
+                _logger.info("Depth stage enabled (%s)",
+                             self._cfg.depth_backend)
+            except Exception as exc:
+                _logger.warning(
+                    "Depth stage unavailable (continuing without): %s", exc)
+                self._depth = None
+
         while not self._stop.wait(0.25):
             pass
 
@@ -243,6 +259,15 @@ class AsyncVisionPipeline:
             else:
                 tracks = tracker.active_tracks
 
+            # Optional depth stage (independent, non-blocking on detect).
+            depth_result = None
+            if self._depth is not None and frame_index % 5 == 0:
+                try:
+                    depth_result = self._depth.estimate(
+                        frame, boxes=[t.box for t in tracks])
+                except Exception as exc:
+                    _logger.warning("Depth failed: %s", exc)
+
             ocr_items = (
                 self._ocr_worker.latest_result()
                 if self._ocr_worker is not None else []
@@ -271,6 +296,7 @@ class AsyncVisionPipeline:
                 detections=detections,
                 tracks=tracks,
                 ocr_items=ocr_items,
+                depth_map=depth_result.map if depth_result else None,
                 guidance=phrases,
                 latencies={
                     "yolo_ms": round(
@@ -278,6 +304,8 @@ class AsyncVisionPipeline:
                     "ocr_ms": round(
                         self._ocr_worker.last_latency_ms, 1)
                     if self._ocr_worker is not None else 0.0,
+                    "depth_ms": round(depth_result.latency_ms, 1)
+                    if depth_result else 0.0,
                 },
             )
             self._update_state(tracks, ocr_items, phrases, frame)

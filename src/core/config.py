@@ -37,6 +37,9 @@ class PipelineConfig:
     mode: str = "object"
     inference_timeout_ms: int = 2000
     metrics: bool = True
+    depth_enabled: bool = False
+    depth_backend: str = "synthetic"
+    depth_model_path: str = ""
 
     @classmethod
     def from_yaml(cls, path: str) -> "PipelineConfig":
@@ -78,6 +81,11 @@ class PipelineConfig:
         cfg.jpeg_width = int(app.get("jpeg_width", cfg.jpeg_width))
         cfg.vfov_deg = float(nav.get("vertical_fov", cfg.vfov_deg))
         cfg.mode = str(app.get("mode", cfg.mode))
+        depth = data.get("depth", {})
+        cfg.depth_enabled = bool(depth.get("enabled", cfg.depth_enabled))
+        cfg.depth_backend = str(depth.get("backend", cfg.depth_backend))
+        cfg.depth_model_path = str(depth.get("model_path",
+                                             cfg.depth_model_path))
         heights = dict(nav.get("reference_heights", {}) or {})
         if heights:
             from src.navigation import guidance as _g
