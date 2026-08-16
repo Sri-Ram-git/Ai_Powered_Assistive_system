@@ -1,0 +1,28 @@
+# Calibration dataset for the monocular pinhole distance estimator.
+#
+# Columns:
+#   label              — detected object class (used to pick reference height)
+#   box_height_px      — measured bounding-box height in pixels
+#   frame_height_px    — frame height in pixels
+#   real_distance_m    — ground-truth distance measured with a tape/ruler
+#   reference_height_m — real-world height of the object (optional; if empty
+#                        the guidance default for the label is used)
+#
+# NOTE: These initial rows are SYNTHETIC — box heights generated from the
+# pinhole model at a 55 deg vertical FOV with known distances, so the
+# calibration machinery can be exercised end-to-end and should recover
+# ~55 deg and near-zero error.  Replace with real camera measurements via
+# `python tools/calibrate_camera.py --live` before trusting the numbers.
+label,box_height_px,frame_height_px,real_distance_m,reference_height_m
+person,1175.6,720.0,1.0,1.7
+person,587.8,720.0,2.0,1.7
+person,391.9,720.0,3.0,1.7
+person,293.9,720.0,4.0,1.7
+chair,622.4,720.0,1.0,0.9
+chair,311.2,720.0,2.0,0.9
+chair,207.5,720.0,3.0,0.9
+chair,155.6,720.0,4.0,0.9
+stop sign,1383.1,720.0,1.0,2.0
+stop sign,691.6,720.0,2.0,2.0
+stop sign,461.0,720.0,3.0,2.0
+stop sign,345.8,720.0,4.0,2.0
