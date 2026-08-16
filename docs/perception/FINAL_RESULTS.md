@@ -65,7 +65,9 @@ path.
 12. Run `python scripts/benchmark/perception_benchmark.py --mode all`
     → report written to `performance/results/`.
 13. Remove the webcam → app errors clearly, does not hang.
-14. Disable `ocr.enabled` in YAML → startup does not load OCR at all.
+14. Disable `ocr.enabled` in YAML → startup does not load OCR at all;
+    with it enabled the OCR worker runs on its own thread and text is
+    read aloud (never blocking the vision thread).
 15. Swap `model_path` to `yolov8n.onnx` → app still runs (compare).
 16. Leave it running 30 min → no crash, no unbounded queue growth.
 17. Occlusion: partially hide the person → track survives `max_missed`.
@@ -77,7 +79,8 @@ path.
 - [x] Detection ≥ 10 FPS target on this machine (~12 Hz measured)
 - [x] Tracking: class-consistent, smoothing, label voting, conf smoothing
 - [x] Speech non-blocking, deduplicated, rate-limited, priority tiers
-- [x] OCR disabled by default, not loaded when off
+- [x] OCR on a dedicated worker (non-blocking), enabled by default so
+      text is read aloud; not loaded at all when disabled
 - [x] Visual debug mode (`d`)
 - [x] Benchmark + visualiser + evaluation tooling
 - [x] New tests: realtime pipeline, tracking stability, label stability,

@@ -18,9 +18,11 @@ display loop    latest frame + latest tracks overlay → imshow at camera FPS
 - **Detect every N, track at its own rate**: detection runs every 2
   frames (configurable); the tracking/decision/safety stages run in the
   same worker but are cheap.
-- **OCR is off the vision thread** and, by default, not even loaded
-  (`ocr.enabled: false`, Phase 21).  No RapidOCR model load at startup,
-  no worker thread, no blocking.
+- **OCR is off the vision thread**: it runs on its own worker
+  (`ocr.enabled: true` by default so text is read aloud).  It is only
+  loaded when enabled; when disabled there is no RapidOCR model load at
+  startup, no worker thread, no blocking.  Either way the vision loop
+  never waits on OCR.
 - **JPEG encoding is opt-in** (`encode_jpeg`), so the desktop path never
   wastes CPU producing web frames.
 
@@ -32,7 +34,7 @@ display loop    latest frame + latest tracks overlay → imshow at camera FPS
 | Detection throughput | ≥ 10 FPS | ~84 ms/frame ⇒ **~12 Hz** detections | met |
 | Tracking = camera FPS | display smoothness | tracker runs per detect tick; display = camera FPS | met |
 | Speech non-blocking | never blocks vision | SpeechQueue + worker; vision loop never calls TTS | met |
-| OCR in real-time path | none | disabled by default; not loaded | met |
+| OCR in real-time path | none | runs on dedicated worker; vision thread never blocks on it | met |
 
 ### Before / after (OCR off)
 

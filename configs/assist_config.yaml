@@ -39,10 +39,11 @@ navigation:
   #   person: 1.7
 
 ocr:
-  # OCR is disabled in the real-time pipeline (Phase 21): it is a slow,
-  # blocking stage that must never run on the vision thread.  The worker
-  # remains available for on-demand reading (press R in the app).
-  enabled: false
+  # OCR runs on its own dedicated worker thread (never on the vision
+  # thread), so text can be read aloud without ever blocking the camera.
+  # Enabled by default so the system keeps speaking; the async engine
+  # keeps it non-blocking either way.
+  enabled: true
   min_confidence: 0.3
   max_boxes: 50
   every_n_frames: 10
