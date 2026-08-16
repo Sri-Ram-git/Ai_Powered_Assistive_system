@@ -8,7 +8,6 @@ the state dict is populated (running flag, detections key present).
 import time
 
 import numpy as np
-import pytest
 
 from src.server.pipeline import PipelineConfig, PipelineServer
 

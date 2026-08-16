@@ -1,7 +1,6 @@
 """Unit tests for the object-detection module (hardware-free)."""
 from pathlib import Path
 
-import cv2
 import numpy as np
 import pytest
 

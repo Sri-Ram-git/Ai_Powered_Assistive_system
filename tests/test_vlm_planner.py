@@ -6,7 +6,6 @@ from src.response import (
     ResponsePlanner,
     ResponsePriority,
 )
-from src.safety import RiskLevel
 from src.vision.scene_context import SceneContext, SceneObject
 from src.vision.vlm import DeterministicVLM, create_vlm
 

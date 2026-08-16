@@ -56,16 +56,16 @@ def main() -> None:
     median = latencies[len(latencies) // 2]
     print(f"  median parse latency : {median:.3f} ms "
           f"({len(latencies)} parses)")
-    print(f"  offline capability   : True (no model, no network)")
+    print("  offline capability   : True (no model, no network)")
 
     if args.backend == "whisper":
         # Report model metadata; real audio transcription latency needs
         # an audio clip and is hardware-dependent.
         import faster_whisper
         print(f"  faster-whisper       : {faster_whisper.__version__}")
-        print(f"  model                : tiny (int8, CPU)")
-        print(f"  note                 : audio transcription latency "
-              f"varies with clip length; parse stage above is shared")
+        print("  model                : tiny (int8, CPU)")
+        print("  note                 : audio transcription latency "
+              "varies with clip length; parse stage above is shared")
 
 
 if __name__ == "__main__":

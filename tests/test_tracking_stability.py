@@ -6,9 +6,7 @@ Proves, without hardware, that the hardened IoUTracker:
     - smooths box jitter (EMA) instead of copying raw detections
     - exposes the Phase 9 per-track fields
 """
-import time
 
-import numpy as np
 
 from src.detection.detector import DetectionResult
 from src.tracking.tracker import IoUTracker

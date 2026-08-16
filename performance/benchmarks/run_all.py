@@ -26,8 +26,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-import cv2
-import numpy as np
+import cv2  # noqa: E402
+import numpy as np  # noqa: E402
 
 RESULTS_DIR = PROJECT_ROOT / "performance" / "results"
 
@@ -117,7 +117,7 @@ def _system_stats():
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--detect-warmup", type=int, default=1)
-    args = parser.parse_args()
+    parser.parse_args()
 
     print(f"OpenCV {cv2.__version__} | numpy {np.__version__}")
     frame = _synthetic_frame()

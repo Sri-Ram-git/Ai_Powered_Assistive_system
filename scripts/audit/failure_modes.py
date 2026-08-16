@@ -8,7 +8,6 @@ Run:  python scripts/audit/failure_modes.py
 import sys
 from pathlib import Path
 
-import cv2
 import numpy as np
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -50,7 +49,6 @@ def main():
         OcrError,
         ProcessingError,
         RecordingError,
-        SpeechError,
     )
 
     # ---------------- image fundamentals ----------------
@@ -145,8 +143,8 @@ def main():
     d = YoloDetector(str(model))
     check("detect on empty frame returns []",
           lambda: (None if d.detect(np.zeros((0, 0, 3), np.uint8)) else None), expect_ok=True)
-    ok = len(d.detect(np.zeros((640, 640, 3), np.uint8))) >= 0
-    print(f"PASS  detect on black frame (returns list)")
+    _ = len(d.detect(np.zeros((640, 640, 3), np.uint8))) >= 0
+    print("PASS  detect on black frame (returns list)")
 
     # ---------------- OCR ----------------
     from src.ocr import OcrEngine

@@ -15,7 +15,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.image_fundamentals.image_utils import read_image
+from src.image_fundamentals.image_utils import read_image  # noqa: E402
 from src.image_processing import processing as P  # noqa: E402
 
 SCENE = PROJECT_ROOT / "src" / "image_fundamentals" / "sample_images" \

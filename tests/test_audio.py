@@ -1,5 +1,4 @@
 """Unit tests for the speech module (no audio output in tests)."""
-import time
 
 import pytest
 

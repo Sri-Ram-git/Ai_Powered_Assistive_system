@@ -229,7 +229,6 @@ def sweep_confidences(model_path: str, seconds: float,
         start = time.monotonic()
         while time.monotonic() - start < seconds:
             frame = cam.read()
-            raw = detector._parse_outputs
             # Re-run parsing at each threshold without re-inferring.
             blob, ratio, pad_x, pad_y = detector._letterbox(frame)
             detector._net.setInput(blob)

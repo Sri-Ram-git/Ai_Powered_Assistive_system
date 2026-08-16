@@ -5,7 +5,6 @@ without Flask.  ``src.server.pipeline.PipelineConfig`` re-exports this
 type so existing imports keep working.
 """
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import Dict, Tuple
 
 import yaml

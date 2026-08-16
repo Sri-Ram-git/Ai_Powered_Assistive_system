@@ -29,7 +29,7 @@ from src.core.results import LatestResults
 from src.decision import DecisionEngine, FrameSummary
 from src.detection import YoloDetector
 from src.metrics import MetricsRegistry
-from src.ocr import OcrEngine, OcrResult
+from src.ocr import OcrEngine
 from src.ocr.worker import OcrWorker
 from src.tracking import IoUTracker, TrackingMonitor
 from src.utils.logger import setup_logger

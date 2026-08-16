@@ -14,7 +14,7 @@ right *kind* of guidance was produced, not exact wording.  The dataset
 size limits statistical power — reports must state this.
 """
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Sequence
+from typing import Dict, Sequence
 
 
 @dataclass

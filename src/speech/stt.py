@@ -15,8 +15,7 @@ Two implementations:
 ``create_stt`` selects a backend from configuration so the rest of the
 system never cares which backend is active.
 """
-import threading
-from typing import List, Optional
+from typing import Optional
 
 from src.speech.commands import CommandRegistry
 from src.speech.command_parser import CommandParser, ParsedCommand

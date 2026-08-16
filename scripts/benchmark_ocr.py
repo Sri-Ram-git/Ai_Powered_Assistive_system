@@ -49,7 +49,7 @@ def _run_sync_ocr(engine, frame, strategy: str, n: int) -> dict:
     latencies = []
     for _ in range(n):
         started = time.monotonic()
-        items = engine.read_text(preprocess(frame, strategy))
+        engine.read_text(preprocess(frame, strategy))
         latencies.append((time.monotonic() - started) * 1000.0)
     latencies.sort()
     return {

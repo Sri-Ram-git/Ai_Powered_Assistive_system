@@ -6,7 +6,6 @@ returns a new image.  Inputs are never mutated.
 """
 import cv2
 import numpy as np
-from typing import Optional, Tuple
 
 from src.image_fundamentals.image_utils import to_grayscale
 from src.utils.exceptions import ProcessingError

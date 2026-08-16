@@ -1,8 +1,5 @@
 """Tests for the IoU tracker and tracking monitor (hardware-free)."""
-import time
 
-import numpy as np
-import pytest
 
 from src.detection.detector import DetectionResult
 from src.tracking.monitor import TrackingMonitor

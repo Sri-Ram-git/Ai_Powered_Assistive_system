@@ -22,7 +22,7 @@ cannot chatter while the vision loop runs freely.
 import threading
 import time
 from enum import IntEnum
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional
 
 from src.decision.engine import cue_identity
 from src.utils.logger import setup_logger

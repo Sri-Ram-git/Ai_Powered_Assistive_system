@@ -79,8 +79,10 @@ def _save_sample(out: str, frame: np.ndarray, box: tuple,
     cv2.imwrite(img_path, frame)
     h, w = frame.shape[:2]
     x0, y0, x1, y1 = box
-    x0 = max(0, min(x0, w - 1)); x1 = max(0, min(x1, w - 1))
-    y0 = max(0, min(y0, h - 1)); y1 = max(0, min(y1, h - 1))
+    x0 = max(0, min(x0, w - 1))
+    x1 = max(0, min(x1, w - 1))
+    y0 = max(0, min(y0, h - 1))
+    y1 = max(0, min(y1, h - 1))
     if x1 <= x0 or y1 <= y0:
         raise ValueError("box has zero size")
     cx = (x0 + x1) / 2 / w
@@ -150,7 +152,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     class_id = 0
     captured: Optional[np.ndarray] = None
-    box: Optional[tuple] = None
     state = {"drawing": False, "origin": None, "box": None}
     saved_this_session = 0
     start = time.time()
@@ -186,7 +187,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                     ok, frame = cap.read()
                     if ok:
                         captured = frame.copy()
-                        box = None
                         state = {"drawing": False, "origin": None, "box": None}
                         cv2.setMouseCallback(WINDOW, _on_mouse, state)
             else:

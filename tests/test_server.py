@@ -3,12 +3,9 @@
 These avoid the real camera/model by using stub components, so they run
 on any machine.
 """
-import threading
-import time
 
 import cv2
 import numpy as np
-import pytest
 
 
 class _StubPipeline:

@@ -10,7 +10,6 @@ Usage:
     text = engine.text_of(frame)             # " ".join of all text
 """
 from dataclasses import dataclass
-from pathlib import Path
 from typing import List, Sequence, Tuple
 
 import cv2

@@ -1,6 +1,4 @@
 """Unit tests for navigation guidance (hardware-free)."""
-import numpy as np
-import pytest
 
 from src.detection.detector import DetectionResult
 from src.navigation.guidance import (

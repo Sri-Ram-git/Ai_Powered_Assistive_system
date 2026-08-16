@@ -2,7 +2,6 @@
 import time
 
 import numpy as np
-import pytest
 
 from src.core.frame_manager import FrameManager
 from src.core.results import LatestResults

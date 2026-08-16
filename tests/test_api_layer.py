@@ -1,10 +1,8 @@
 """Tests for the API layer and the UI/API/server split (P13)."""
-import threading
 
 import numpy as np
 import pytest
 
-from src.api import create_api
 from src.core.config import PipelineConfig
 from src.server.app import create_app
 

@@ -106,7 +106,7 @@ def load_openimages_annotations(path: str, class_ids: Dict[str, str]) -> Tuple[
         for line in reader:
             if len(line) < 7:
                 continue
-            image_id, _, label, conf, xmin, xmax, ymin, ymax = \
+            image_id, _, label, _conf, xmin, xmax, ymin, ymax = \
                 line[0], line[1], line[2], line[3], line[4], line[5], line[6], line[7]
             if label not in want:
                 continue

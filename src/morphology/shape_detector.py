@@ -5,12 +5,12 @@ analysing contour geometry: vertex count from polygon approximation plus
 circularity from area/perimeter ratio.
 """
 from dataclasses import dataclass
-from typing import List, Optional, Tuple
+from typing import List, Tuple
 
 import cv2
 import numpy as np
 
-from src.image_processing.processing import canny, threshold
+from src.image_processing.processing import threshold
 from src.morphology.contour_utils import (
     contour_area,
     contour_perimeter,

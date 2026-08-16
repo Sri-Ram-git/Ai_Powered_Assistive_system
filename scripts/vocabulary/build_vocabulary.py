@@ -20,7 +20,7 @@ import json
 import os
 import sys
 from collections import OrderedDict
-from typing import Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Dict, List, Optional, Sequence, Tuple
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__),
                                                 "..", "..")))
@@ -306,7 +306,7 @@ def emit_yaml(entries: List[VocabularyEntry], path: str) -> None:
         "# Regenerate:  python scripts/vocabulary/build_vocabulary.py",
         "# Runtime API:  src/vocabulary (ObjectVocabulary.load()).",
         "#",
-        f"version: 1",
+        "version: 1",
         f"word_count: {len(entries)}",
         "tiers:",
         f"  critical: {counts.get('critical', 0)}",

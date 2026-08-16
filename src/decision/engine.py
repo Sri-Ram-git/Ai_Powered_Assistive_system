@@ -10,7 +10,7 @@ temporal state (cooldowns, last spoken text) on top.
 """
 import re
 from dataclasses import dataclass
-from typing import Iterable, List, Optional, Sequence
+from typing import Iterable, List, Optional
 
 from src.detection.detector import DetectionResult
 from src.navigation.guidance import nearest_obstacle, scene_cues
@@ -103,7 +103,7 @@ def evaluate(summary: FrameSummary) -> List[Decision]:
 
     if obstacle is not None and obstacle.category == "obstacle":
         decisions.append(Decision(
-            text=f"Obstacle ahead",
+            text="Obstacle ahead",
             priority=_PRIORITIES["obstacle"],
             source="detection",
         ))

@@ -131,7 +131,6 @@ def test_ocr_worker_tolerates_engine_failure(monkeypatch):
 
 def test_detector_failure_keeps_loop_alive(monkeypatch):
     from src.detection.detector import YoloDetector
-    from src.server.pipeline import _camera_factory
 
     cfg = PipelineConfig()
     cfg.detect_every = 1

@@ -7,7 +7,7 @@ Standard Levenshtein-distance based metrics:
 * detection success = fraction of reference strings that produced at
   least one recognised line with >= 50% of its words correct.
 """
-from typing import List, Sequence
+from typing import Sequence
 
 
 def _levenshtein(a: str, b: str) -> int:
