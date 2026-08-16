@@ -40,6 +40,8 @@ class PipelineConfig:
     depth_enabled: bool = False
     depth_backend: str = "synthetic"
     depth_model_path: str = ""
+    planner_cooldown: float = 2.5
+    planner_dedupe: bool = True
 
     @classmethod
     def from_yaml(cls, path: str) -> "PipelineConfig":
@@ -57,6 +59,7 @@ class PipelineConfig:
         cam = data.get("camera", {})
         app = data.get("app", {})
         nav = data.get("navigation", {})
+        plan = data.get("planner", {})
 
         cfg.camera_id = cam.get("id", cfg.camera_id)
         cfg.camera_resolution = tuple(cam.get("resolution",
@@ -86,6 +89,9 @@ class PipelineConfig:
         cfg.depth_backend = str(depth.get("backend", cfg.depth_backend))
         cfg.depth_model_path = str(depth.get("model_path",
                                              cfg.depth_model_path))
+        cfg.planner_cooldown = float(
+            plan.get("cooldown_seconds", cfg.planner_cooldown))
+        cfg.planner_dedupe = bool(plan.get("dedupe", cfg.planner_dedupe))
         heights = dict(nav.get("reference_heights", {}) or {})
         if heights:
             from src.navigation import guidance as _g

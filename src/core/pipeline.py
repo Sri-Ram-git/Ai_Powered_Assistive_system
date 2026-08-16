@@ -329,7 +329,12 @@ class AsyncVisionPipeline:
             )
 
             if self._planner is None:
-                self._planner = ResponsePlanner()
+                from src.response import PlannerConfig
+
+                self._planner = ResponsePlanner(PlannerConfig(
+                    cooldown_seconds=self._cfg.planner_cooldown,
+                    dedupe=self._cfg.planner_dedupe,
+                ))
             proposals = [
                 Response(p, ResponsePriority.NAVIGATION, source="detect")
                 for p in phrases

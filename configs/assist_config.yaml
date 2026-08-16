@@ -47,6 +47,14 @@ decision:
   speak_ocr_text: true
   max_ocr_chars: 80
 
+planner:
+  # Response planner (priority/dedup/cooldown) over spoken responses.
+  cooldown_seconds: 2.5
+  # Skip responses with priority equal to or worse than this
+  # (5 = QUIET; urgent safety = 0 always wins and bypasses cooldown).
+  min_priority: 5
+  dedupe: true
+
 camera:
   id: 0
   resolution: [1280, 720]
