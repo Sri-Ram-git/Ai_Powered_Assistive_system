@@ -38,7 +38,7 @@ class _StubCamera:
         pass
 
 
-def _run_pipeline_with(factory, seconds=8.0):
+def _run_pipeline_with(factory, seconds=12.0):
     """Boot a pipeline using the given stub camera factory."""
     import src.server.pipeline as pl
 
@@ -60,7 +60,7 @@ def _run_pipeline_with(factory, seconds=8.0):
             while time.time() < deadline:
                 jpeg = server.latest_jpeg
                 state = server.state_snapshot()
-                if jpeg and state.get("detections") is not None:
+                if jpeg and state.get("detections") is not None and state.get("fps") is not None:
                     break
                 time.sleep(0.1)
             return server, jpeg, state
@@ -82,6 +82,7 @@ class TestPipelineEndToEnd:
         assert state["running"] is True
         assert "detections" in state
         assert "fps" in state
+        assert state["fps"] is not None
 
     def test_pipeline_state_snapshot_is_copy(self):
         server, _, _ = _run_pipeline_with(

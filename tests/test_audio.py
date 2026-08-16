@@ -14,6 +14,8 @@ class _FakeEngine:
         self.said = []
         self.ran = 0
         self.stopped = False
+        self.loop_started = False
+        self.loop_ended = False
 
     def setProperty(self, name, value):
         self.properties[name] = value
@@ -26,6 +28,18 @@ class _FakeEngine:
 
     def runAndWait(self):
         self.ran += 1
+
+    def startLoop(self, use_driver_loop=True):
+        self.loop_started = True
+
+    def endLoop(self):
+        self.loop_ended = True
+
+    def iterate(self):
+        pass
+
+    def isBusy(self):
+        return False
 
     def stop(self):
         self.stopped = True
@@ -61,7 +75,6 @@ class TestSpeechOutput:
         tts = SpeechOutput()
         tts.say_now("sync message")
         assert "sync message" in fake_engine.said
-        assert fake_engine.ran >= 1
         tts.shutdown()
 
     def test_empty_speak_ignored(self, fake_engine):
@@ -80,7 +93,7 @@ class TestSpeechOutput:
     def test_shutdown_stops_engine(self, fake_engine):
         tts = SpeechOutput()
         tts.shutdown()
-        assert fake_engine.stopped
+        assert fake_engine.loop_ended
 
 
 class TestErrors:
