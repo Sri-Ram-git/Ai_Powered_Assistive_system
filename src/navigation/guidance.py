@@ -210,6 +210,18 @@ def scene_cues(
             f"{distance_phrase(d.box, frame_h, d.label)}"
         )
 
+    # Other objects (phone, bottle, laptop, chair, ...) are announced
+    # too: without this a phone was detected on screen yet never spoken.
+    for d in detections:
+        if d.label in ("person", "traffic light", "stop sign"):
+            continue
+        if d.category == "vehicle":
+            continue
+        cues.append(
+            f"{d.label.capitalize()} {direction_of(d.box, frame_w)}, "
+            f"{distance_phrase(d.box, frame_h, d.label)}"
+        )
+
     return cues
 
 

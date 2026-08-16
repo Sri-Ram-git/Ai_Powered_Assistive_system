@@ -255,7 +255,7 @@ def main() -> None:
                 frame_w=frame.shape[1],
                 frame_h=frame.shape[0],
             )
-            phrase = engine.decide(summary)
+            phrase = engine.decide(summary, already_spoken=phrases)
             if phrase and not muted:
                 tts.speak(phrase)
 

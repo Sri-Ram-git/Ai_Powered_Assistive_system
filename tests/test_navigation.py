@@ -89,5 +89,13 @@ class TestSceneCues:
         cues = scene_cues([], ocr, 640, 480)
         assert any("Crosswalk sign ahead" in c for c in cues)
 
+    def test_phone_cue_with_distance(self):
+        # A cell phone (an "object" category) must produce a spoken cue
+        # with a distance — previously it was detected but never voiced.
+        phone = _det("cell phone", (200, 100, 60, 120))
+        cues = scene_cues([phone], [], 640, 480)
+        assert any("Cell phone ahead" in c for c in cues)
+        assert any("metres" in c for c in cues)
+
     def test_no_cues_for_empty(self):
         assert scene_cues([], [], 640, 480) == []

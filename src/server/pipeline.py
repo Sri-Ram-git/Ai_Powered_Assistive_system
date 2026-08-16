@@ -344,7 +344,7 @@ class PipelineServer:
                 frame_w=frame.shape[1],
                 frame_h=frame.shape[0],
             )
-            phrase = engine.decide(summary)
+            phrase = engine.decide(summary, already_spoken=phrases)
             if phrase:
                 phrases.append(phrase)
 

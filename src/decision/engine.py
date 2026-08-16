@@ -8,8 +8,9 @@ Design: the engine is *stateless* in its core logic (`evaluate` is a
 pure function of a frame summary); the `DecisionEngine` wrapper adds the
 temporal state (cooldowns, last spoken text) on top.
 """
+import re
 from dataclasses import dataclass
-from typing import List, Optional, Sequence
+from typing import Iterable, List, Optional, Sequence
 
 from src.detection.detector import DetectionResult
 from src.navigation.guidance import nearest_obstacle, scene_cues
@@ -32,6 +33,24 @@ _PRIORITIES = {
 # Vehicle labels map to the vehicle priority tier.
 _VEHICLE_LABELS = {"car", "bus", "truck", "motorcycle", "bicycle",
                    "train", "airplane", "boat"}
+
+# Trailing distance words stripped when building a cue identity.
+_DISTANCE_SUFFIX = re.compile(
+    r",?\s*(?:about \d+\.?\d* metres?|far away|very close|close|near)\s*$",
+    re.IGNORECASE,
+)
+
+
+def cue_identity(text: str) -> str:
+    """Stable identity for a cue, ignoring the numeric distance.
+
+    "Person ahead, about 5 metres" and "Person ahead, about 6 metres"
+    are the *same* message; jitter between frames must not cause the
+    engine to re-speak it.  Bounding-box noise changes the distance by
+    ±1m continuously, which was why the voice repeated itself.
+    """
+    lowered = _DISTANCE_SUFFIX.sub("", text or "").strip().lower()
+    return lowered
 
 
 @dataclass
@@ -127,22 +146,28 @@ class DecisionEngine:
         self._read_ocr_text = bool(read_ocr_text)
         self._max_ocr_chars = int(max_ocr_chars)
         self._last_spoken: Optional[str] = None
+        self._last_identity: Optional[str] = None
         self._last_time: float = 0.0
 
     def decide(
         self,
         summary: FrameSummary,
         now: Optional[float] = None,
+        already_spoken: Optional[Iterable[str]] = None,
     ) -> Optional[str]:
         """Return the next phrase to speak, or None.
 
         Args:
             summary: Frame summary to evaluate.
             now: Current time in seconds (defaults to wall clock).
+            already_spoken: Identities already announced this frame by
+                another source (e.g. the tracking monitor).  The engine
+                skips a decision whose identity was just announced, so
+                one object is never narrated twice per frame.
 
         Returns:
-            The highest-priority phrase if it is due (cooldown elapsed and
-            different from last spoken), otherwise None.
+            The highest-priority phrase if it is due (cooldown elapsed,
+            identity changed, and not just spoken), otherwise None.
         """
         import time
 
@@ -152,16 +177,24 @@ class DecisionEngine:
         decisions = evaluate(_with_read_ocr(summary, self))
         if not decisions:
             self._last_spoken = None
+            self._last_identity = None
             return None
 
         top = decisions[0]
         if top.priority > self._min_priority:
             return None
 
+        identity = cue_identity(top.text)
+        if already_spoken:
+            for spoken in already_spoken:
+                if cue_identity(spoken) == identity:
+                    return None
+
         elapsed = now - self._last_time
         # First utterance is always allowed.
-        if self._last_spoken is None:
+        if self._last_identity is None:
             self._last_spoken = top.text
+            self._last_identity = identity
             self._last_time = now
             _logger.info("Decision: %s", top.text)
             return top.text
@@ -170,11 +203,14 @@ class DecisionEngine:
         if elapsed < self._cooldown:
             return None
 
-        # The identical phrase is not repeated (reset() re-enables it).
-        if top.text == self._last_spoken:
+        # The same *message* is not repeated (reset() re-enables it).
+        # Identity comparison ignores distance jitter: "about 5 metres"
+        # vs "about 6 metres" is still "Person ahead".
+        if identity == self._last_identity:
             return None
 
         self._last_spoken = top.text
+        self._last_identity = identity
         self._last_time = now
         _logger.info("Decision: %s", top.text)
         return top.text
@@ -182,6 +218,7 @@ class DecisionEngine:
     def reset(self) -> None:
         """Clear cooldown state (e.g. when switching scenes)."""
         self._last_spoken = None
+        self._last_identity = None
         self._last_time = 0.0
 
     def set_read_ocr_text(self, enabled: bool) -> None:

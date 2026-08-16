@@ -83,6 +83,49 @@ class TestDecisionEngine:
         engine.reset()
         assert engine.decide(summary, now=1.0) is not None
 
+    def test_distance_jitter_does_not_respeak(self):
+        # Box size jitters frame-to-frame, so the distance phrase changes
+        # ("about 5 metres" -> "about 6 metres").  That is the SAME
+        # message and must not be re-spoken.
+        engine = DecisionEngine(cooldown_seconds=1.0)
+        s1 = FrameSummary(detections=[_det("person", (100, 0, 60, 200))],
+                          ocr_items=[], frame_w=640, frame_h=480)
+        s2 = FrameSummary(detections=[_det("person", (100, 0, 64, 204))],
+                          ocr_items=[], frame_w=640, frame_h=480)
+        assert engine.decide(s1, now=0.0) is not None
+        assert engine.decide(s2, now=5.0) is None  # cooldown passed but same identity
+
+    def test_identity_change_after_cooldown_respeaks(self):
+        engine = DecisionEngine(cooldown_seconds=1.0)
+        s_right = FrameSummary(detections=[_det("person", (600, 0, 60, 200))],
+                               ocr_items=[], frame_w=640, frame_h=480)
+        s_left = FrameSummary(detections=[_det("person", (0, 0, 60, 200))],
+                              ocr_items=[], frame_w=640, frame_h=480)
+        assert engine.decide(s_right, now=0.0) is not None
+        assert engine.decide(s_right, now=5.0) is None      # same message
+        assert engine.decide(s_left, now=10.0) is not None  # new direction
+
+    def test_already_spoken_identity_is_skipped(self):
+        # The tracking monitor announces "Person ahead, about 5 metres";
+        # the decision engine must not narrate the same person again.
+        engine = DecisionEngine(cooldown_seconds=0.0)
+        summary = FrameSummary(detections=[_det("person", (290, 0, 60, 200))],
+                               ocr_items=[], frame_w=640, frame_h=480)
+        phrase = engine.decide(summary, now=0.0,
+                               already_spoken=["Person ahead, about 5 metres"])
+        assert phrase is None
+
+    def test_phone_detection_gets_a_decision(self):
+        # cell phone is category "object" (not person/vehicle/signal),
+        # but it must still be narrated — with its distance.
+        engine = DecisionEngine(cooldown_seconds=1.0)
+        summary = FrameSummary(detections=[_det("cell phone", (200, 0, 60, 120))],
+                               ocr_items=[], frame_w=640, frame_h=480)
+        phrase = engine.decide(summary, now=0.0)
+        assert phrase is not None
+        assert "Cell phone" in phrase
+        assert "metres" in phrase
+
     def test_no_detections_returns_none(self):
         engine = DecisionEngine()
         assert engine.decide(FrameSummary(), now=0.0) is None
