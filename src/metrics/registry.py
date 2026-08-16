@@ -83,6 +83,33 @@ class MetricsRegistry:
     def started_at(self) -> float:
         return self._started
 
+    def counter(self, name: str) -> int:
+        """Total count for a counter across all label sets."""
+        with self._lock:
+            return int(sum(self._counters[name].values()))
+
+    def gauge(self, name: str) -> Optional[float]:
+        """Latest value of an unlabelled gauge (None if unset)."""
+        with self._lock:
+            d = self._gauges.get(name)
+            if not d:
+                return None
+            return float(d.get("", 0.0))
+
+    def summary(self, name: str) -> Optional[Dict]:
+        """Snapshot of a histogram (None if never observed)."""
+        with self._lock:
+            d = self._histograms.get(name)
+            if not d or not d.get("count"):
+                return None
+            return {
+                "count": int(d["count"]),
+                "sum": float(d["sum"]),
+                "min": float(d.get("min", 0.0)),
+                "max": float(d.get("max", 0.0)),
+                "mean": float(d["sum"]) / float(d["count"]),
+            }
+
 
 def _key(labels: Optional[Dict[str, str]]) -> str:
     """Serialise a label dict into the Prometheus label suffix."""

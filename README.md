@@ -87,6 +87,25 @@ Phases 0–25 are tracked in [`docs/productization/`](docs/productization/):
 | 22–24 | Offline-first / mobile / cloud strategy | `offline_first.md`, `mobile_path.md`, `cloud_devops.md` |
 | 25 | Documentation + README overhaul | this file |
 
+## Perception hardening (26-phase plan)
+
+The basic vision pipeline (camera → detection → label → tracking →
+smooth display → intelligent speech) is being hardened phase by phase,
+recorded in [`docs/perception/`](docs/perception/):
+
+| Doc | Covers |
+|---|---|
+| `baseline.md` | Phase 1 BEFORE numbers (3.2 fps blocking loop → async) |
+| `detection.md` | Phases 3-5 preprocessing audit, threshold sweep, model choice |
+| `tracking.md` | Phases 8-13 class-consistent + smoothed + voted tracking |
+| `performance.md` | Phases 6-7, 21-23 async pipeline, targets, debug mode |
+| `evaluation.md` | Phases 14-17 quality metrics + training decision |
+| `FINAL_RESULTS.md` | Phases 24-26 checklist + honest BEFORE/AFTER |
+
+Tooling: `scripts/benchmark/perception_benchmark.py`,
+`scripts/debug/detection_visualizer.py`,
+`scripts/benchmark/object_detection_metrics.py`, `configs/object_priority.yaml`.
+
 ## Architecture
 
 ```

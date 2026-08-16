@@ -102,6 +102,8 @@ class AsyncVisionPipeline:
 
         self._mode_manager = None
         self._decision_engine = None
+        self._tracker = None
+        self._monitor = None
 
     # ------------------------------------------------------------------
     # Lifecycle
@@ -167,6 +169,18 @@ class AsyncVisionPipeline:
             return self._latest_jpeg
 
     @property
+    def latest_frame(self) -> Optional[np.ndarray]:
+        """The most recent raw camera frame (no annotation, no JPEG).
+
+        Consumers (e.g. the desktop display loop) read the newest frame
+        and overlay the latest ``latest_results`` themselves, so the
+        display never blocks on detection or encoding.  Do not mutate
+        the returned array.
+        """
+        _, frame = self._frames.latest()
+        return frame
+
+    @property
     def latest_results(self) -> LatestResults:
         return self._results
 
@@ -229,6 +243,22 @@ class AsyncVisionPipeline:
             self._decision_engine.set_read_ocr_text(behavior.announce_text)
         self._set_state(mode=behavior.name)
         _logger.info("Mode -> %s (%s)", behavior.name, behavior.label)
+
+    def reset(self) -> None:
+        """Forget all temporal state (tracks, cooldowns, speech memory).
+
+        Used when the user signals a scene change (space bar in the
+        desktop app).  The detector/model itself is untouched.
+        """
+        if self._tracker is not None:
+            self._tracker.reset()
+        if self._monitor is not None:
+            self._monitor.reset()
+        if self._decision_engine is not None:
+            self._decision_engine.reset()
+        if self._planner is not None:
+            self._planner.reset()
+        _logger.info("Pipeline temporal state reset")
 
     def handle_command(self, parsed) -> bool:
         """Execute a parsed voice command (or the raw text).
@@ -320,8 +350,14 @@ class AsyncVisionPipeline:
         )
         self._detect_thread.start()
 
-        self._ocr_worker = self._build_ocr_worker()
-        self._ocr_worker.start()
+        # Phase 21: OCR is a slow stage; when disabled at startup it is
+        # never loaded (no RapidOCR model load, no worker thread).
+        if self._cfg.ocr_enabled:
+            self._ocr_worker = self._build_ocr_worker()
+            self._ocr_worker.start()
+        else:
+            self._ocr_worker = None
+            _logger.info("OCR disabled — worker not started")
 
         if self._cfg.depth_enabled:
             try:
@@ -354,11 +390,13 @@ class AsyncVisionPipeline:
 
             self._frames.publish(frame)
 
-            results = self._results.snapshot()
-            annotated = self._annotate(frame, results)
-            jpeg = self._to_jpeg(annotated, cfg.jpeg_width, cfg.jpeg_quality)
-            with self._jpeg_lock:
-                self._latest_jpeg = jpeg
+            if cfg.encode_jpeg:
+                results = self._results.snapshot()
+                annotated = self._annotate(frame, results)
+                jpeg = self._to_jpeg(annotated, cfg.jpeg_width,
+                                     cfg.jpeg_quality)
+                with self._jpeg_lock:
+                    self._latest_jpeg = jpeg
 
             now = time.time()
             if now - last_fps_time >= 1.0:
@@ -372,8 +410,14 @@ class AsyncVisionPipeline:
     def _detect_loop(self) -> None:
         cfg = self._cfg
         detector = self._load_detector(cfg)
-        tracker = IoUTracker(iou_threshold=cfg.iou_threshold,
-                             max_missed=cfg.max_missed)
+        tracker = IoUTracker(
+            iou_threshold=cfg.iou_threshold,
+            max_missed=cfg.max_missed,
+            smoothing=cfg.tracking_smoothing,
+            conf_smoothing=cfg.tracking_conf_smoothing,
+            class_consistent=cfg.tracking_class_consistent,
+            label_vote_window=cfg.tracking_label_vote_window,
+        )
         monitor = TrackingMonitor(
             distance_change_metres=cfg.distance_delta,
             min_announce_interval=cfg.min_announce,
@@ -386,6 +430,8 @@ class AsyncVisionPipeline:
             max_ocr_chars=cfg.max_ocr_chars,
         )
         self._decision_engine = engine
+        self._tracker = tracker
+        self._monitor = monitor
 
         frame_index = 0
         while not self._stop.is_set():
@@ -565,8 +611,14 @@ class AsyncVisionPipeline:
         model_path = cfg.model_path
         if not Path(model_path).is_absolute():
             model_path = str(Path(__file__).resolve().parents[2] / model_path)
-        return YoloDetector(model_path, input_size=640,
-                            conf_threshold=0.35, iou_threshold=0.45)
+        return YoloDetector(
+            model_path,
+            input_size=640,
+            conf_threshold=cfg.conf_threshold,
+            iou_threshold=cfg.nms_iou_threshold,
+            conf_overrides=cfg.conf_overrides,
+            filter_tall_laptops=cfg.filter_tall_laptops,
+        )
 
     def _update_state(self, tracks, ocr_items, phrases, frame) -> None:
         items = []

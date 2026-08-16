@@ -18,6 +18,10 @@ class PipelineConfig:
     camera_id: int = 0
     camera_resolution: Tuple[int, int] = (1280, 720)
     model_path: str = "models/yolov8n.onnx"
+    conf_threshold: float = 0.4
+    nms_iou_threshold: float = 0.45
+    conf_overrides: Dict[str, float] = field(default_factory=dict)
+    filter_tall_laptops: bool = False
     detect_every: int = 2
     ocr_every: int = 10
     ocr_min_conf: float = 0.3
@@ -33,6 +37,7 @@ class PipelineConfig:
     max_ocr_chars: int = 80
     jpeg_quality: int = 70
     jpeg_width: int = 960
+    encode_jpeg: bool = True
     vfov_deg: float = 55.0
     mode: str = "object"
     inference_timeout_ms: int = 2000
@@ -42,8 +47,12 @@ class PipelineConfig:
     depth_model_path: str = ""
     planner_cooldown: float = 2.5
     planner_dedupe: bool = True
-    ocr_enabled: bool = True
+    ocr_enabled: bool = False
     navigation_enabled: bool = True
+    tracking_smoothing: float = 0.4
+    tracking_conf_smoothing: float = 0.5
+    tracking_label_vote_window: int = 5
+    tracking_class_consistent: bool = True
 
     @classmethod
     def from_yaml(cls, path: str) -> "PipelineConfig":
@@ -67,13 +76,29 @@ class PipelineConfig:
         cfg.camera_resolution = tuple(cam.get("resolution",
                                               cfg.camera_resolution))
         cfg.model_path = det.get("model_path", cfg.model_path)
+        cfg.conf_threshold = float(
+            det.get("conf_threshold", cfg.conf_threshold))
+        cfg.nms_iou_threshold = float(
+            det.get("iou_threshold", cfg.nms_iou_threshold))
+        cfg.conf_overrides = dict(det.get("conf_overrides", {}) or {})
+        cfg.filter_tall_laptops = bool(
+            det.get("filter_tall_laptops", cfg.filter_tall_laptops))
         cfg.detect_every = max(1, int(det.get("every_n_frames", cfg.detect_every)))
         cfg.ocr_every = max(1, int(ocr.get("every_n_frames", cfg.ocr_every)))
+        cfg.ocr_enabled = bool(ocr.get("enabled", cfg.ocr_enabled))
         cfg.ocr_min_conf = float(ocr.get("min_confidence", cfg.ocr_min_conf))
         cfg.ocr_preprocess = str(ocr.get("preprocess", cfg.ocr_preprocess))
         cfg.ocr_max_boxes = int(ocr.get("max_boxes", cfg.ocr_max_boxes))
         cfg.iou_threshold = float(trk.get("iou_threshold", cfg.iou_threshold))
         cfg.max_missed = int(trk.get("max_missed", cfg.max_missed))
+        cfg.tracking_smoothing = float(
+            trk.get("smoothing", cfg.tracking_smoothing))
+        cfg.tracking_conf_smoothing = float(
+            trk.get("conf_smoothing", cfg.tracking_conf_smoothing))
+        cfg.tracking_label_vote_window = int(
+            trk.get("label_vote_window", cfg.tracking_label_vote_window))
+        cfg.tracking_class_consistent = bool(
+            trk.get("class_consistent", cfg.tracking_class_consistent))
         cfg.distance_delta = float(
             trk.get("distance_change_metres", cfg.distance_delta))
         cfg.min_announce = float(

@@ -56,18 +56,13 @@ NAVIGATION_CLASSES: Dict[str, str] = {
     "fire hydrant": "obstacle",
 }
 
-# Classes that need a higher confidence bar before they're believed.
+# Optional per-class confidence floors (config-driven, default off).
 # YOLO is prone to labeling plain rectangles (doors, walls, screens)
-# as "laptop", "tv", "book", etc. at low confidence.
-_HIGH_CONF_CLASSES = {
-    "laptop": 0.55,
-    "tv": 0.5,
-    "book": 0.55,
-    "remote": 0.55,
-    "mouse": 0.5,
-    "cell phone": 0.5,
-    "toilet": 0.5,
-}
+# as "laptop", "tv", "book", etc. at low confidence.  These raise the
+# bar for those labels *only when* the pipeline config opts in — they are
+# deliberately not applied by default so real objects are never silently
+# dropped (Phase 3: never hide detection failures).
+_HIGH_CONF_CLASSES = {}
 
 _INPUT_SIZE = 640
 
@@ -107,6 +102,8 @@ class YoloDetector:
         input_size: int = _INPUT_SIZE,
         conf_threshold: float = 0.4,
         iou_threshold: float = 0.45,
+        conf_overrides: Optional[Dict[str, float]] = None,
+        filter_tall_laptops: bool = False,
     ) -> None:
         """Configure the detector.
 
@@ -115,6 +112,12 @@ class YoloDetector:
             input_size: Square size the model expects (default 640).
             conf_threshold: Minimum class confidence to keep a box.
             iou_threshold: NMS intersection-over-union cutoff.
+            conf_overrides: Optional per-class confidence floors
+                (evidence-based, e.g. from a threshold sweep).  Empty by
+                default so detection failures are never hidden.
+            filter_tall_laptops: Apply the tall-laptop heuristic that
+                drops boxes much taller than wide.  Off by default
+                because it can discard real (open) laptops.
 
         Raises:
             DetectionError: If the model cannot be loaded.
@@ -131,6 +134,8 @@ class YoloDetector:
         self._conf = float(conf_threshold)
         self._iou = float(iou_threshold)
         self._names = list(COCO_NAMES)
+        self._conf_overrides = dict(conf_overrides or {})
+        self._filter_tall_laptops = bool(filter_tall_laptops)
         self._loaded = True
         _logger.info(
             "Loaded YOLO model %s (input=%d, conf=%.2f, iou=%.2f)",
@@ -222,9 +227,10 @@ class YoloDetector:
         class_scores = scores[np.arange(scores.shape[0]), class_ids]
 
         # Per-class confidence: some classes need a higher bar to avoid
-        # false positives (e.g. "laptop" firing on doors/rectangles).
+        # false positives (e.g. "laptop" firing on doors/rectangles),
+        # *only when* the pipeline opts in via conf_overrides.
         class_conf = np.array([
-            _HIGH_CONF_CLASSES.get(self._names[int(i)], self._conf)
+            self._conf_overrides.get(self._names[int(i)], self._conf)
             for i in class_ids
         ])
         keep_conf = class_scores >= class_conf
@@ -275,7 +281,8 @@ class YoloDetector:
             box = (int(round(x1o)), int(round(y1o)),
                    int(round(x2o - x1o)), int(round(y2o - y1o)))
 
-            if _looks_like_false_laptop(label, box):
+            if self._filter_tall_laptops and _looks_like_false_laptop(
+                    label, box):
                 continue
 
             results.append(DetectionResult(
@@ -294,8 +301,9 @@ def _looks_like_false_laptop(label: str,
 
     A real laptop is a wide, low slab (aspect ratio ~1.3-2.5 wide).  A
     door, poster, or wall panel is the opposite — tall and narrow.  When
-    the model insists on calling those "laptop", the confidence bar in
-    _HIGH_CONF_CLASSES already kills most; this catches the rest.
+    the model insists on calling those "laptop", per-class confidence
+    overrides (conf_overrides) already kill most; this catches the rest.
+    Off by default because it can discard real (open) laptops.
     """
     if label != "laptop":
         return False
