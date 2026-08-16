@@ -20,7 +20,7 @@ class TestDetectionMetrics:
         m = evaluate_detections(pred, gt)
         assert m["precision"] == 1.0
         assert m["recall"] == 1.0
-        assert m["mAP@50"] == 1.0
+        assert m["mAP@50"] == pytest.approx(1.0)
         assert m["false_positives"] == 0
         assert m["false_negatives"] == 0
 
