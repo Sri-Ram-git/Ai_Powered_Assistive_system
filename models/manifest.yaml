@@ -7,6 +7,21 @@
 # This manifest is the record of what SHOULD be present at runtime and
 # where it comes from.
 models:
+  - id: yolov8s
+    name: YOLOv8 small (default)
+    task: object_detection
+    file: models/yolov8s.onnx
+    runtime: opencv_dnn          # cv2.dnn.readNetFromONNX
+    source: https://github.com/CVHub520/X-AnyLabeling/releases/download/v0.1.0/yolov8s.onnx
+    license: AGPL-3.0            # Ultralytics default; verify for distribution
+    input_size: 640              # fixed-shape export; 416/320 fail
+    classes: 80                  # COCO
+    sha256: e67a2801da67ce55d2c3ae4d80e310120f2e5cfc58ac9474933ff5a62ff475a0
+    downloaded: true
+    notes: Larger + more accurate than yolov8n; ~2x CPU latency
+          (137 ms vs ~60 ms/frame). Recommended for identifying more
+          everyday objects reliably.
+
   - id: yolov8n
     name: YOLOv8 nano
     task: object_detection
@@ -16,8 +31,8 @@ models:
     license: AGPL-3.0            # Ultralytics default; verify for distribution
     input_size: 640              # fixed-shape export; 416/320 fail
     classes: 80                  # COCO
-    sha256: null                 # populate after download: certutil -hashfile models/yolov8n.onnx SHA256
-    downloaded: false
+    sha256: e0bd17e5cb5aeccbb0cf89c9bf8b8425c5bf36f835ccd323dc8beeb235c9ce23
+    downloaded: true
 
   - id: rapidocr
     name: RapidOCR (PP-OCR)

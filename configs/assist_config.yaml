@@ -1,5 +1,8 @@
 detection:
-  model_path: "models/yolov8n.onnx"
+  # Larger, more accurate model (identifies more everyday objects
+  # reliably).  ~2x the CPU latency of yolov8n (137ms vs ~60ms/frame).
+  # Swap back to yolov8n.onnx for faster but less confident detection.
+  model_path: "models/yolov8s.onnx"
   input_size: 640
   conf_threshold: 0.45
   iou_threshold: 0.45

@@ -23,22 +23,20 @@ roadmap (`docs/productization/`).
 ```bash
 pip install -r requirements.txt
 
-# Download the detection model (12 MB, git-ignored)
-curl -L -o models/yolov8n.onnx ^
-  https://github.com/CVHub520/X-AnyLabeling/releases/download/v0.1.0/yolov8n.onnx
+# Download the detection model (yolov8s, ~22 MB, git-ignored).
+# It identifies more everyday objects reliably than the smaller yolov8n.
+curl -L -o models/yolov8s.onnx ^
+  https://github.com/CVHub520/X-AnyLabeling/releases/download/v0.1.0/yolov8s.onnx
 
-# Run the live web dashboard (browser UI with camera + AI guidance)
-python src/server/app.py --config configs/assist_config.yaml --port 5000
-#   -> dashboard:      http://127.0.0.1:5000/
-#   -> JSON API:       http://127.0.0.1:5000/api/health
-#   -> metrics:        http://127.0.0.1:5000/api/metrics
-
-# Run the desktop assist app (detection + OCR + speech)
-python src/assist/assist_app.py
+# Run the assistive desktop app (camera + detection + OCR + speech)
+python src/assist/assist_app.py --config configs/assist_config.yaml
 
 # Run the test suite (hardware-free, coverage-gated)
 python -m pytest -q
 ```
+
+The desktop app is the primary interface — no web browser or server
+required.
 
 ## Modules
 
@@ -92,25 +90,25 @@ Phases 0–25 are tracked in [`docs/productization/`](docs/productization/):
 ## Architecture
 
 ```
-┌──────────────  src/core (engine, no Flask)  ──────────────┐
-│ grab thread → FrameManager → JPEG (UI)                     │
-│ detect thread → YOLO → tracker → scene → safety → planner  │
-│ OCR worker   → latest OCR result (non-blocking)            │
-└──────────────────────────┬─────────────────────────────────┘
-                           │ state / results / jpeg
-        ┌──────────────────┴───────────────────┐
-   src/api (JSON)                     src/ui (dashboard)
-   /api/health /api/state /api/mode  /  + /video_feed
-   /api/command /api/config /api/metrics
+Camera → YOLO detection (yolov8s) → IoU tracking → distance/guidance
+       → OCR (RapidOCR, throttled) → decision engine → speech (TTS)
 ```
 
-The engine has no Flask dependency; the server is a thin composition
-root.  Safety decisions are deterministic and never pass through an LLM.
-The device is offline-first by design.
+The desktop app (`src/assist/assist_app.py`) is the **primary
+interface** — it runs the whole pipeline in one window with a draggable
+HUD, stable track IDs, per-object distances, and spoken guidance.
+Safety decisions are deterministic and never pass through an LLM.  The
+device is offline-first by design.
+
+(The async engine in `src/core`, JSON API in `src/api`, and dashboard in
+`src/ui` exist for headless/remote operation and evaluation tooling —
+they are optional and not needed to use the device.)
 
 ## Product modes
 
-Switch modes via the dashboard, `POST /api/mode`, or `app.mode` config:
+Set the starting mode via `app.mode` in `configs/assist_config.yaml`
+(optional; the desktop app runs object+reading+voice control out of the
+box):
 
 - `object` — detect objects, guide by proximity
 - `reading` — OCR-focused: read text aloud
