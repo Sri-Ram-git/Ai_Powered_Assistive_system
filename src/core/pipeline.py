@@ -88,6 +88,7 @@ class AsyncVisionPipeline:
         self._latest_scene = None
         self._safety = None
         self._latest_risk = None
+        self._planner = None
 
     # ------------------------------------------------------------------
     # Lifecycle
@@ -319,11 +320,36 @@ class AsyncVisionPipeline:
             if phrase:
                 phrases.append(phrase)
 
-            for p in phrases:
-                _logger.info("Speak: %s", p)
+            # Response planner arbitrates everything (priority/dedup/
+            # cooldown); urgent safety bypasses the cooldown.
+            from src.response import (
+                Response,
+                ResponsePlanner,
+                ResponsePriority,
+            )
+
+            if self._planner is None:
+                self._planner = ResponsePlanner()
+            proposals = [
+                Response(p, ResponsePriority.NAVIGATION, source="detect")
+                for p in phrases
+            ]
+            if risk and risk.urgent:
+                top = risk.hazards[0]
+                proposals.insert(
+                    0,
+                    Response(
+                        f"{top.label} {top.direction} — stop",
+                        ResponsePriority.URGENT_SAFETY,
+                        source="safety", urgent=True,
+                    ),
+                )
+            chosen = self._planner.plan(proposals, risk=risk)
+            if chosen is not None:
+                _logger.info("Speak: %s", chosen.text)
                 if self._speech_callback is not None:
                     try:
-                        self._speech_callback(p)
+                        self._speech_callback(chosen.text)
                     except Exception:  # pragma: no cover
                         pass
 
