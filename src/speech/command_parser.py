@@ -40,3 +40,8 @@ class CommandParser:
         command = self._registry.lookup_phrase(text)
         confidence = 1.0 if command is not None else 0.0
         return ParsedCommand(command=command, text=text, confidence=confidence)
+
+
+def parse_command(text: str) -> ParsedCommand:
+    """Convenience: parse one transcript with a default parser."""
+    return CommandParser().parse(text)

@@ -68,7 +68,13 @@ class AsyncVisionPipeline:
 
         self._latest_jpeg: Optional[bytes] = None
         self._jpeg_lock = threading.Lock()
-        self._state: Dict = {"running": False}
+        self._state: Dict = {
+            "running": False,
+            "detections": [],
+            "ocr_text": "",
+            "guidance": None,
+            "fps": 0.0,
+        }
         self._state_lock = threading.Lock()
 
         self._stop = threading.Event()
@@ -137,7 +143,7 @@ class AsyncVisionPipeline:
         if self._ocr_worker is not None:
             self._ocr_worker.stop()
         for t in (self._grab_thread, self._detect_thread, self._thread):
-            if t is not None:
+            if t is not None and t.is_alive():
                 t.join(timeout=3.0)
         if self._camera is not None:
             self._camera.stop()
@@ -158,6 +164,11 @@ class AsyncVisionPipeline:
         return self._results
 
     @property
+    def config(self) -> PipelineConfig:
+        """Effective pipeline configuration (read-only consumer view)."""
+        return self._cfg
+
+    @property
     def latest_scene(self):
         """The most recently built SceneContext (or None)."""
         return self._latest_scene
@@ -173,6 +184,96 @@ class AsyncVisionPipeline:
         if "detections" in state:
             state["detections"] = [dict(d) for d in state["detections"]]
         return state
+
+    # ------------------------------------------------------------------
+    # API-facing controls
+    # ------------------------------------------------------------------
+
+    VALID_MODES = ("object", "reading", "navigation", "scene", "voice")
+
+    def set_mode(self, mode: str) -> None:
+        """Switch the product mode (object|reading|navigation|scene|voice)."""
+        mode = (mode or "").strip().lower()
+        if mode not in self.VALID_MODES:
+            raise ValueError(
+                f"unknown mode {mode!r}; expected one of {self.VALID_MODES}")
+        self._cfg.mode = mode
+        self._set_state(mode=mode)
+        _logger.info("Mode -> %s", mode)
+
+    def handle_command(self, parsed) -> bool:
+        """Execute a parsed voice command (or the raw text).
+
+        Returns True when the command was recognised and dispatched.
+        """
+        if parsed is None:
+            return False
+        if isinstance(parsed, str):  # raw utterance: parse first
+            from src.speech.command_parser import parse_command
+
+            parsed = parse_command(parsed)
+
+        from src.speech.commands import Command
+
+        command = getattr(parsed, "command", None)
+        if command is None:
+            return False
+        name = command.value if isinstance(command, Command) else command
+        if name is None:
+            return False
+
+        # Map recognized commands onto pipeline behaviour.
+        if name == Command.READ_TEXT.value:
+            text = self._state.get("ocr_text", "")
+            if text and self._speech_callback:
+                self._speech_callback(f"Text reads: {text}")
+            return True
+        if name == Command.WHAT_DO_YOU_SEE.value:
+            dets = self._state.get("detections", [])
+            if dets:
+                labels = ", ".join(f"{d['label']} {d['direction']}"
+                                   for d in dets[:5])
+                phrase = f"You are near {labels}"
+            else:
+                phrase = "I do not see any objects"
+            if self._speech_callback:
+                self._speech_callback(phrase)
+            return True
+        if name == Command.DESCRIBE_SCENE.value:
+            scene = self._latest_scene
+            if scene is not None:
+                from src.vision.vlm import DeterministicVLM
+
+                text = DeterministicVLM().describe(scene)
+            else:
+                text = "I do not see any objects yet"
+            if self._speech_callback:
+                self._speech_callback(text)
+            return True
+        if name == Command.REPEAT.value:
+            if self._planner is not None and self._planner.history:
+                last = self._planner.history[-1]
+                if self._speech_callback:
+                    self._speech_callback(last)
+            return True
+        if name == Command.HELP.value:
+            from src.speech.commands import CommandRegistry
+
+            if self._speech_callback:
+                self._speech_callback(CommandRegistry().help_text())
+            return True
+        if name in (Command.START_OCR.value, Command.STOP_OCR.value):
+            self._cfg.ocr_enabled = (name == Command.START_OCR.value)
+            return True
+        if name in (Command.ENABLE_NAVIGATION.value,
+                    Command.DISABLE_NAVIGATION.value):
+            self._cfg.navigation_enabled = (
+                name == Command.ENABLE_NAVIGATION.value)
+            return True
+        if name == Command.STOP_SPEAKING.value:
+            self._speech_callback = None
+            return True
+        return False
 
     # ------------------------------------------------------------------
     # Workers
@@ -284,7 +385,7 @@ class AsyncVisionPipeline:
 
             ocr_items = (
                 self._ocr_worker.latest_result()
-                if self._ocr_worker is not None else []
+                if self._ocr_worker is not None and cfg.ocr_enabled else []
             )
 
             # Deterministic scene context (world model for downstream).
@@ -309,16 +410,28 @@ class AsyncVisionPipeline:
             risk = self._safety.assess(scene)
             self._latest_risk = risk
 
-            phrases = monitor.events(tracks, frame.shape[1], frame.shape[0])
-            summary = FrameSummary(
-                detections=list(tracks),
-                ocr_items=ocr_items,
-                frame_w=frame.shape[1],
-                frame_h=frame.shape[0],
-            )
-            phrase = engine.decide(summary, already_spoken=phrases)
-            if phrase:
-                phrases.append(phrase)
+            phrases: List[str] = []
+            if cfg.navigation_enabled:
+                phrases = monitor.events(
+                    tracks, frame.shape[1], frame.shape[0])
+                summary = FrameSummary(
+                    detections=list(tracks),
+                    ocr_items=ocr_items,
+                    frame_w=frame.shape[1],
+                    frame_h=frame.shape[0],
+                )
+                phrase = engine.decide(summary, already_spoken=phrases)
+                if phrase:
+                    phrases.append(phrase)
+            else:
+                # Navigation off: no guidance, but the SafetyEngine is
+                # still assessed (it is independent of this toggle).
+                summary = FrameSummary(
+                    detections=list(tracks),
+                    ocr_items=ocr_items,
+                    frame_w=frame.shape[1],
+                    frame_h=frame.shape[0],
+                )
 
             # Response planner arbitrates everything (priority/dedup/
             # cooldown); urgent safety bypasses the cooldown.
@@ -377,7 +490,8 @@ class AsyncVisionPipeline:
             self._update_state(tracks, ocr_items, phrases, frame)
 
             # Publish a fresh frame to the OCR worker every N frames.
-            if frame_index % cfg.ocr_every == 0:
+            if (cfg.ocr_enabled and
+                    frame_index % cfg.ocr_every == 0):
                 self._ocr_worker.submit(frame)
 
             self._stop.wait(0.02)

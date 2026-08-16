@@ -105,7 +105,7 @@ class OcrWorker:
 
     def stop(self, join_timeout: float = 3.0) -> None:
         self._stop.set()
-        if self._thread is not None:
+        if self._thread is not None and self._thread.is_alive():
             self._thread.join(timeout=join_timeout)
             self._thread = None
 

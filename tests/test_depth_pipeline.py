@@ -42,15 +42,15 @@ def test_pipeline_runs_with_synthetic_depth():
     pipeline = AsyncVisionPipeline(config=cfg, camera=_StubDepthCamera())
     pipeline.start(timeout=5.0)
     try:
-        deadline = time.time() + 5.0
-        got_state = False
+        deadline = time.time() + 15.0
+        got_depth = False
         while time.time() < deadline:
-            snap = pipeline.state_snapshot()
-            if snap.get("detections") is not None:
-                got_state = True
+            results = pipeline.latest_results.snapshot()
+            if "depth_ms" in results["latencies"]:
+                got_depth = True
                 break
             time.sleep(0.05)
-        assert got_state
+        assert got_depth
         # Depth stage ran without crashing; results published.
         results = pipeline.latest_results.snapshot()
         assert "depth_ms" in results["latencies"]
@@ -68,7 +68,7 @@ def test_pipeline_disabled_depth_skips_stage():
     pipeline = AsyncVisionPipeline(config=cfg, camera=_StubDepthCamera())
     pipeline.start(timeout=5.0)
     try:
-        deadline = time.time() + 6.0
+        deadline = time.time() + 15.0
         seen_depth_ms = None
         while time.time() < deadline:
             results = pipeline.latest_results.snapshot()

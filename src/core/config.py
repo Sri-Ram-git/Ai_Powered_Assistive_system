@@ -42,6 +42,8 @@ class PipelineConfig:
     depth_model_path: str = ""
     planner_cooldown: float = 2.5
     planner_dedupe: bool = True
+    ocr_enabled: bool = True
+    navigation_enabled: bool = True
 
     @classmethod
     def from_yaml(cls, path: str) -> "PipelineConfig":

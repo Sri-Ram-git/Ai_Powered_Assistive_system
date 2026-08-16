@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Assistive Vision — Live</title>
+<link rel="stylesheet" href="/static/dashboard.css"/>
+</head>
+<body>
+<nav>
+  <div class="brand">Assistive Vision <small>AI Vision Assistant</small></div>
+  <div class="pills">
+    <div class="pill"><span class="dot green"></span><span id="sysStatus">System Ready</span></div>
+    <div class="pill"><span class="dot cyan"></span><span id="camStatus">Camera Active</span></div>
+    <div class="pill">Mode: <b id="mode">object</b></div>
+  </div>
+</nav>
+<main>
+  <section class="feed-wrap">
+    <img id="feed" class="feed" src="/video_feed" alt="camera feed"/>
+    <div class="rec"><span class="r"></span><span id="recTime">REC 00:00:00</span></div>
+  </section>
+  <aside>
+    <div class="card">
+      <h2>&#x1F9E0; AI Guidance</h2>
+      <p class="guidance" id="guidance">Scanning the environment...</p>
+      <div class="speech" id="speechRow" style="visibility:hidden">
+        <span>&#x1F50A;</span><div class="bars"><span></span><span></span><span></span><span></span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>&#x1F517; Product Mode</h2>
+      <div class="modes">
+        <button class="mode-btn" onclick="setMode('object')">Object</button>
+        <button class="mode-btn" onclick="setMode('reading')">Reading</button>
+        <button class="mode-btn" onclick="setMode('navigation')">Navigation</button>
+        <button class="mode-btn" onclick="setMode('scene')">Scene</button>
+        <button class="mode-btn" onclick="setMode('voice')">Voice</button>
+      </div>
+    </div>
+    <div class="card" style="flex:1; display:flex; flex-direction:column;">
+      <h2>&#x1F441; Current Detections</h2>
+      <div class="list" id="detList"></div>
+    </div>
+  </aside>
+</main>
+<footer>
+  <span>&copy; 2026 Assistive Vision AI</span>
+  <span>FPS: <b id="fps">--</b> &nbsp; Res: <b id="res">--</b> &nbsp; AI: <b id="aiStat" style="color:var(--safe)">Active</b> &nbsp; Latency: <b id="latency">--</b></span>
+</footer>
+<script src="/static/dashboard.js"></script>
+</body>
+</html>
