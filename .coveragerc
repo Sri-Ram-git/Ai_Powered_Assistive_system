@@ -1,0 +1,27 @@
+[run]
+# Coverage measured on src/, excluding interactive demo/playground modules
+# that require a display, camera hardware, or interactive user input and
+# therefore cannot be meaningfully unit-tested.
+source = src
+omit =
+    src/playground/*
+    src/image_fundamentals/image_demo.py
+    src/image_fundamentals/interactive_*.py
+    src/image_processing/processing_demo.py
+    src/image_processing/interactive_processing.py
+    src/morphology/demo.py
+    src/camera/camera_test.py
+    src/assist/assist_app.py
+    src/evaluation/distance_metrics.py
+    src/safety/hazards.py
+
+[report]
+show_missing = True
+fail_under = 80
+precision = 1
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if self.__class__ == type
+    if __name__ == "__main__":
+    raise NotImplementedError
