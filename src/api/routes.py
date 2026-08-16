@@ -41,6 +41,16 @@ def create_api(pipeline) -> Blueprint:
 
         return jsonify(public_config(pipeline.config))
 
+    @api.get("/metrics")
+    def metrics() -> Response:
+        """Prometheus text format (content-type text/plain)."""
+        registry = getattr(pipeline, "metrics", None)
+        if registry is None:
+            return jsonify({"ok": False, "error": "metrics disabled"}), 404
+        body = registry.render()
+        resp = Response(body, mimetype="text/plain; version=0.0.4")
+        return resp
+
     @api.post("/command")
     def command() -> Response:
         body = request.get_json(silent=True) or {}

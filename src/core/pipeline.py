@@ -28,6 +28,7 @@ from src.core.frame_manager import FrameManager
 from src.core.results import LatestResults
 from src.decision import DecisionEngine, FrameSummary
 from src.detection import YoloDetector
+from src.metrics import MetricsRegistry
 from src.ocr import OcrEngine, OcrResult
 from src.ocr.worker import OcrWorker
 from src.tracking import IoUTracker, TrackingMonitor
@@ -95,6 +96,9 @@ class AsyncVisionPipeline:
         self._safety = None
         self._latest_risk = None
         self._planner = None
+
+        # Observability (Prometheus-style metrics).
+        self._metrics = MetricsRegistry() if self._cfg.metrics else None
 
     # ------------------------------------------------------------------
     # Lifecycle
@@ -167,6 +171,11 @@ class AsyncVisionPipeline:
     def config(self) -> PipelineConfig:
         """Effective pipeline configuration (read-only consumer view)."""
         return self._cfg
+
+    @property
+    def metrics(self):
+        """Metrics registry (None when metrics disabled)."""
+        return self._metrics
 
     @property
     def latest_scene(self):
@@ -334,8 +343,11 @@ class AsyncVisionPipeline:
             now = time.time()
             if now - last_fps_time >= 1.0:
                 last_fps_time = now
+                fps = self._frames.fps()
                 with self._state_lock:
-                    self._state["fps"] = self._frames.fps()
+                    self._state["fps"] = fps
+                if self._metrics is not None:
+                    self._metrics.set("camera_fps", fps)
 
     def _detect_loop(self) -> None:
         cfg = self._cfg
@@ -471,21 +483,30 @@ class AsyncVisionPipeline:
                     except Exception:  # pragma: no cover
                         pass
 
+            latencies = {
+                "yolo_ms": round(
+                    (time.time() - started) * 1000.0, 1),
+                "ocr_ms": round(
+                    self._ocr_worker.last_latency_ms, 1)
+                if self._ocr_worker is not None else 0.0,
+                "depth_ms": round(depth_result.latency_ms, 1)
+                if depth_result else 0.0,
+            }
+            if self._metrics is not None:
+                self._metrics.observe("yolo_latency_ms", latencies["yolo_ms"])
+                self._metrics.observe("ocr_latency_ms", latencies["ocr_ms"])
+                self._metrics.observe("depth_latency_ms", latencies["depth_ms"])
+                self._metrics.inc("frames_processed")
+                if detections:
+                    self._metrics.inc("detections_found", amount=len(detections))
+
             self._results.update(
                 detections=detections,
                 tracks=tracks,
                 ocr_items=ocr_items,
                 depth_map=depth_result.map if depth_result else None,
                 guidance=phrases,
-                latencies={
-                    "yolo_ms": round(
-                        (time.time() - started) * 1000.0, 1),
-                    "ocr_ms": round(
-                        self._ocr_worker.last_latency_ms, 1)
-                    if self._ocr_worker is not None else 0.0,
-                    "depth_ms": round(depth_result.latency_ms, 1)
-                    if depth_result else 0.0,
-                },
+                latencies=latencies,
             )
             self._update_state(tracks, ocr_items, phrases, frame)
 
