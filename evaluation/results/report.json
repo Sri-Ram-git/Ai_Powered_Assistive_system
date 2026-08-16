@@ -1,0 +1,27 @@
+{
+  "dataset": "synthetic-v0.1",
+  "n_images": 6,
+  "statistical_caveat": "Only 6 image(s) \u2014 too small for statistically meaningful claims; treat as a smoke evaluation.",
+  "object_detection": {
+    "precision": 0.8055555555555555,
+    "recall": 1.0,
+    "mAP@50": 0.9444444444444446,
+    "mAP@50:95": 0.902777777777778,
+    "false_positives": 3,
+    "false_negatives": 0
+  },
+  "ocr": {
+    "character_error_rate": 0.0,
+    "word_error_rate": 0.0,
+    "detection_success_rate": 1.0
+  },
+  "assistive": {
+    "cases": 5,
+    "correct_guidance": 3,
+    "incorrect_guidance": 2,
+    "missed_object": 0,
+    "false_warning": 0,
+    "response_latency_ms": 312.0,
+    "accuracy": 0.6
+  }
+}
