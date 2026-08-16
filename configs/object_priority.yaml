@@ -1,0 +1,103 @@
+# Object priority for guidance + speech (Phase 2).
+#
+# NOTE (16 Aug 2026): the live speech/priority source is now the object
+# vocabulary manifest — data/vocabulary/object_vocabulary.yaml (1551
+# words with tiers, built from real labelled-image datasets).  This file
+# is kept as the original COCO-80 reference for the model's own classes.
+#
+# Tiers determine how urgently an object is announced:
+#
+#   critical   immediate safety — must be spoken first, without delay
+#   high       important / fast-moving — announced promptly
+#   normal     routine everyday objects — announced normally
+#   low        background clutter — announced rarely or never
+#
+# Only classes the model can detect are listed.  Everything else in the
+# COCO-80 label set is treated as "normal".
+
+tiers:
+  critical:
+    - person            # primary hazard — pedestrians, the user, falls
+    - car               # moving/approaching vehicles
+    - bus
+    - truck
+    - motorcycle
+    - bicycle
+    - stop sign
+    - traffic light
+
+  high:
+    - train
+    - airplane
+    - boat
+    - dog
+    - cat
+    - fire hydrant
+    - potted plant       # trip hazard at ground level
+    - bench              # knee-height obstacle
+    - chair
+    - couch
+    - dining table       # broad, low obstacle
+    - refrigerator
+    - oven
+    - sink
+    - toilet
+    - microwave
+    - tv
+    - laptop
+    - cell phone
+
+  normal:
+    - backpack
+    - umbrella
+    - handbag
+    - suitcase
+    - frisbee
+    - skis
+    - snowboard
+    - sports ball
+    - kite
+    - baseball bat
+    - baseball glove
+    - skateboard
+    - surfboard
+    - tennis racket
+    - bottle
+    - wine glass
+    - cup
+    - fork
+    - knife
+    - spoon
+    - bowl
+    - banana
+    - apple
+    - sandwich
+    - orange
+    - broccoli
+    - carrot
+    - hot dog
+    - pizza
+    - donut
+    - cake
+    - book
+    - clock
+    - vase
+    - scissors
+    - teddy bear
+    - hair drier
+    - toothbrush
+    - keyboard
+    - mouse
+    - remote
+    - parking meter
+    - bird
+    - horse
+    - sheep
+    - cow
+    - elephant
+    - bear
+    - zebra
+    - giraffe
+
+  low:
+    - tie

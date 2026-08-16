@@ -1,0 +1,16 @@
+services:
+  assistive-vision:
+    build: .
+    image: assistive-vision:latest
+    ports:
+      - "5000:5000"
+    environment:
+      ASSIST_HEADLESS: "1"
+    # Pass through a real camera if running on the host with one.
+    # Comment out if using a virtual camera or no camera.
+    # devices:
+    #   - "/dev/video0:/dev/video0"
+    volumes:
+      # Model weights are git-ignored; mount them if present.
+      - ./models:/app/models:ro
+    restart: unless-stopped

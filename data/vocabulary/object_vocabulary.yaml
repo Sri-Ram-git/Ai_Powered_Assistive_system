@@ -1,0 +1,1570 @@
+# Object vocabulary manifest (AUTO-GENERATED — edit the builder,
+# not this file).  Every word is a real category that exists in a
+# labelled image dataset, so each word has labelled images available.
+#
+# Regenerate:  python scripts/vocabulary/build_vocabulary.py
+# Runtime API:  src/vocabulary (ObjectVocabulary.load()).
+#
+version: 1
+word_count: 1551
+tiers:
+  critical: 56
+  high: 112
+  normal: 1333
+  low: 50
+sources:
+  lvis: "LVIS v1 — 1203 categories (labelled images on COCO images)"
+  openimages: "OpenImages — 601 boxable classes (labelled images)"
+  coco: "COCO-80 — the model labels (labelled images)"
+words:
+  - {word: "Accordion", tier: "normal", category: "object", openimages_id: "/m/0mkg"}
+  - {word: "Adhesive tape", tier: "normal", category: "tool", openimages_id: "/m/03m3vtv"}
+  - {word: "aerosol_can", tier: "normal", category: "drink", aliases: ["aerosol_can", "spray_can"], lvis_id: 1}
+  - {word: "air_conditioner", tier: "normal", category: "object", aliases: ["air_conditioner"], lvis_id: 2}
+  - {word: "Aircraft", tier: "normal", category: "object", openimages_id: "/m/0k5j"}
+  - {word: "airplane", tier: "critical", category: "vehicle", aliases: ["aeroplane", "airplane"], coco_id: 4, lvis_id: 3, openimages_id: "/m/0cmf2"}
+  - {word: "Alarm clock", tier: "normal", category: "electronics", aliases: ["alarm_clock"], lvis_id: 4, openimages_id: "/m/046dlr"}
+  - {word: "alcohol", tier: "normal", category: "object", aliases: ["alcohol", "alcoholic_beverage"], lvis_id: 5}
+  - {word: "alligator", tier: "normal", category: "object", aliases: ["alligator", "gator"], lvis_id: 6}
+  - {word: "almond", tier: "normal", category: "object", aliases: ["almond"], lvis_id: 7}
+  - {word: "Alpaca", tier: "normal", category: "object", openimages_id: "/m/0pcr"}
+  - {word: "Ambulance", tier: "critical", category: "vehicle", aliases: ["ambulance"], lvis_id: 8, openimages_id: "/m/012n7d"}
+  - {word: "amplifier", tier: "normal", category: "object", aliases: ["amplifier"], lvis_id: 9}
+  - {word: "Animal", tier: "normal", category: "object", openimages_id: "/m/0jbk"}
+  - {word: "anklet", tier: "normal", category: "object", aliases: ["ankle_bracelet", "anklet"], lvis_id: 10}
+  - {word: "Ant", tier: "normal", category: "object", openimages_id: "/m/0_k2"}
+  - {word: "Antelope", tier: "normal", category: "object", openimages_id: "/m/0czz2"}
+  - {word: "antenna", tier: "normal", category: "object", aliases: ["aerial", "antenna", "transmitting_aerial"], lvis_id: 11}
+  - {word: "apple", tier: "normal", category: "food", aliases: ["apple"], coco_id: 47, lvis_id: 12, openimages_id: "/m/014j1m"}
+  - {word: "applesauce", tier: "normal", category: "object", aliases: ["applesauce"], lvis_id: 13}
+  - {word: "apricot", tier: "normal", category: "object", aliases: ["apricot"], lvis_id: 14}
+  - {word: "apron", tier: "normal", category: "clothing", aliases: ["apron"], lvis_id: 15}
+  - {word: "aquarium", tier: "normal", category: "object", aliases: ["aquarium", "fish_tank"], lvis_id: 16}
+  - {word: "arctic_(type_of_shoe)", tier: "normal", category: "object", aliases: ["arctic_(type_of_shoe)", "galosh", "golosh", "gumshoe", "rubber_(type_of_shoe)"], lvis_id: 17}
+  - {word: "Armadillo", tier: "normal", category: "object", openimages_id: "/m/0xfy"}
+  - {word: "armband", tier: "normal", category: "object", aliases: ["armband"], lvis_id: 18}
+  - {word: "armchair", tier: "normal", category: "object", aliases: ["armchair"], lvis_id: 19}
+  - {word: "armoire", tier: "normal", category: "object", aliases: ["armoire"], lvis_id: 20}
+  - {word: "armor", tier: "normal", category: "object", aliases: ["armor", "armour"], lvis_id: 21}
+  - {word: "army_tank", tier: "normal", category: "object", aliases: ["armored_combat_vehicle", "armoured_combat_vehicle", "army_tank"], lvis_id: 1058}
+  - {word: "Artichoke", tier: "normal", category: "object", aliases: ["artichoke"], lvis_id: 22, openimages_id: "/m/047v4b"}
+  - {word: "ashtray", tier: "normal", category: "object", aliases: ["ashtray"], lvis_id: 24}
+  - {word: "Asparagus", tier: "normal", category: "object", aliases: ["asparagus"], lvis_id: 25, openimages_id: "/m/0cjs7"}
+  - {word: "atomizer", tier: "normal", category: "object", aliases: ["atomiser", "atomizer", "nebuliser", "nebulizer", "spray", "sprayer"], lvis_id: 26}
+  - {word: "Auto part", tier: "normal", category: "object", openimages_id: "/m/08dz3q"}
+  - {word: "automatic_washer", tier: "high", category: "appliance", aliases: ["automatic_washer", "washing_machine"], lvis_id: 1160}
+  - {word: "avocado", tier: "normal", category: "object", aliases: ["avocado"], lvis_id: 27}
+  - {word: "award", tier: "normal", category: "object", aliases: ["accolade", "award"], lvis_id: 28}
+  - {word: "awning", tier: "normal", category: "object", aliases: ["awning"], lvis_id: 29}
+  - {word: "ax", tier: "normal", category: "object", aliases: ["ax", "axe"], lvis_id: 30}
+  - {word: "Axe", tier: "normal", category: "object", openimages_id: "/m/0c2jj"}
+  - {word: "baboon", tier: "normal", category: "object", aliases: ["baboon"], lvis_id: 31}
+  - {word: "baby_buggy", tier: "critical", category: "person", aliases: ["baby_buggy", "baby_carriage", "perambulator", "pram", "stroller"], lvis_id: 32}
+  - {word: "backpack", tier: "normal", category: "clothing", aliases: ["backpack", "haversack", "knapsack", "packsack", "rucksack"], coco_id: 24, lvis_id: 34, openimages_id: "/m/01940j"}
+  - {word: "Bagel", tier: "normal", category: "object", aliases: ["bagel", "beigel"], lvis_id: 37, openimages_id: "/m/01fb_0"}
+  - {word: "bagpipe", tier: "normal", category: "object", aliases: ["bagpipe"], lvis_id: 38}
+  - {word: "baguet", tier: "normal", category: "object", aliases: ["baguet", "baguette"], lvis_id: 39}
+  - {word: "bait", tier: "normal", category: "object", aliases: ["bait", "lure"], lvis_id: 40}
+  - {word: "Baked goods", tier: "normal", category: "object", openimages_id: "/m/052lwg6"}
+  - {word: "Balance beam", tier: "normal", category: "object", openimages_id: "/m/0l3ms"}
+  - {word: "Ball", tier: "normal", category: "sport", aliases: ["ball"], lvis_id: 41, openimages_id: "/m/018xm"}
+  - {word: "ballet_skirt", tier: "normal", category: "object", aliases: ["ballet_skirt", "tutu"], lvis_id: 42}
+  - {word: "Balloon", tier: "normal", category: "object", aliases: ["balloon"], lvis_id: 43, openimages_id: "/m/01j51"}
+  - {word: "bamboo", tier: "normal", category: "object", aliases: ["bamboo"], lvis_id: 44}
+  - {word: "banana", tier: "normal", category: "food", aliases: ["banana"], coco_id: 46, lvis_id: 45, openimages_id: "/m/09qck"}
+  - {word: "Band_Aid", tier: "normal", category: "object", aliases: ["Band_Aid"], lvis_id: 46}
+  - {word: "Band-aid", tier: "normal", category: "object", openimages_id: "/m/0j496"}
+  - {word: "bandage", tier: "normal", category: "medical", aliases: ["bandage"], lvis_id: 47}
+  - {word: "bandanna", tier: "normal", category: "object", aliases: ["bandana", "bandanna"], lvis_id: 48}
+  - {word: "Banjo", tier: "normal", category: "object", aliases: ["banjo"], lvis_id: 49, openimages_id: "/m/018j2"}
+  - {word: "banner", tier: "low", category: "object", aliases: ["banner", "streamer"], lvis_id: 50}
+  - {word: "barbell", tier: "normal", category: "object", aliases: ["barbell"], lvis_id: 51}
+  - {word: "Barge", tier: "normal", category: "object", aliases: ["barge"], lvis_id: 52, openimages_id: "/m/01btn"}
+  - {word: "Barrel", tier: "normal", category: "object", aliases: ["barrel", "cask"], lvis_id: 53, openimages_id: "/m/02zn6n"}
+  - {word: "barrette", tier: "normal", category: "object", aliases: ["barrette"], lvis_id: 54}
+  - {word: "barrow", tier: "normal", category: "object", aliases: ["barrow", "garden_cart", "lawn_cart", "wheelbarrow"], lvis_id: 55}
+  - {word: "baseball", tier: "normal", category: "object", aliases: ["baseball"], lvis_id: 57}
+  - {word: "baseball_base", tier: "normal", category: "object", aliases: ["baseball_base"], lvis_id: 56}
+  - {word: "baseball bat", tier: "normal", category: "sport", aliases: ["baseball_bat"], coco_id: 34, lvis_id: 58, openimages_id: "/m/03g8mr"}
+  - {word: "baseball_cap", tier: "normal", category: "clothing", aliases: ["baseball_cap", "golf_cap", "jockey_cap"], lvis_id: 59}
+  - {word: "baseball glove", tier: "normal", category: "clothing", aliases: ["baseball_glove", "baseball_mitt"], coco_id: 35, lvis_id: 60, openimages_id: "/m/03grzl"}
+  - {word: "basket", tier: "normal", category: "container", aliases: ["basket", "handbasket"], lvis_id: 61}
+  - {word: "basketball", tier: "normal", category: "object", aliases: ["basketball"], lvis_id: 62}
+  - {word: "basketball_backboard", tier: "normal", category: "object", aliases: ["basketball_backboard"], lvis_id: 33}
+  - {word: "bass_horn", tier: "normal", category: "object", aliases: ["bass_horn", "sousaphone", "tuba"], lvis_id: 63}
+  - {word: "Bat", tier: "normal", category: "sport", openimages_id: "/m/01h44"}
+  - {word: "bat_(animal)", tier: "normal", category: "sport", aliases: ["bat_(animal)"], lvis_id: 64}
+  - {word: "bath_mat", tier: "normal", category: "object", aliases: ["bath_mat"], lvis_id: 65}
+  - {word: "bath_towel", tier: "low", category: "object", aliases: ["bath_towel"], lvis_id: 66}
+  - {word: "bathrobe", tier: "normal", category: "object", aliases: ["bathrobe"], lvis_id: 67}
+  - {word: "Bathroom accessory", tier: "normal", category: "object", openimages_id: "/m/0h8nr_l"}
+  - {word: "Bathroom cabinet", tier: "high", category: "furniture", openimages_id: "/m/04y4h8h"}
+  - {word: "Bathtub", tier: "high", category: "appliance", aliases: ["bathing_tub", "bathtub"], lvis_id: 68, openimages_id: "/m/03dnzn"}
+  - {word: "batter_(food)", tier: "normal", category: "object", aliases: ["batter_(food)"], lvis_id: 69}
+  - {word: "battery", tier: "normal", category: "object", aliases: ["battery"], lvis_id: 70}
+  - {word: "beachball", tier: "normal", category: "object", aliases: ["beachball"], lvis_id: 71}
+  - {word: "bead", tier: "normal", category: "object", aliases: ["bead"], lvis_id: 72}
+  - {word: "Beaker", tier: "normal", category: "object", openimages_id: "/m/0d20w4"}
+  - {word: "bean_curd", tier: "normal", category: "object", aliases: ["bean_curd", "tofu"], lvis_id: 73}
+  - {word: "beanbag", tier: "normal", category: "object", aliases: ["beanbag"], lvis_id: 74}
+  - {word: "beanie", tier: "normal", category: "object", aliases: ["beanie", "beany"], lvis_id: 75}
+  - {word: "bear", tier: "high", category: "animal", aliases: ["bear"], coco_id: 21, lvis_id: 76, openimages_id: "/m/01dws"}
+  - {word: "bed", tier: "high", category: "furniture", aliases: ["bed"], coco_id: 59, lvis_id: 77, openimages_id: "/m/03ssj5"}
+  - {word: "bedpan", tier: "normal", category: "object", aliases: ["bedpan"], lvis_id: 78}
+  - {word: "bedspread", tier: "normal", category: "object", aliases: ["bed_covering", "bedcover", "bedspread", "counterpane", "spread"], lvis_id: 79}
+  - {word: "Bee", tier: "normal", category: "object", openimages_id: "/m/01h3n"}
+  - {word: "beef_(food)", tier: "normal", category: "object", aliases: ["beef_(food)", "boeuf_(food)"], lvis_id: 81}
+  - {word: "Beehive", tier: "normal", category: "object", openimages_id: "/m/01gllr"}
+  - {word: "beeper", tier: "normal", category: "object", aliases: ["beeper", "pager"], lvis_id: 82}
+  - {word: "Beer", tier: "normal", category: "drink", openimages_id: "/m/01599"}
+  - {word: "beer_bottle", tier: "normal", category: "drink", aliases: ["beer_bottle"], lvis_id: 83}
+  - {word: "beer_can", tier: "normal", category: "drink", aliases: ["beer_can"], lvis_id: 84}
+  - {word: "Beetle", tier: "normal", category: "object", aliases: ["beetle"], lvis_id: 85, openimages_id: "/m/020jm"}
+  - {word: "bell", tier: "normal", category: "object", aliases: ["bell"], lvis_id: 86}
+  - {word: "Bell pepper", tier: "normal", category: "object", aliases: ["bell_pepper", "capsicum"], lvis_id: 87, openimages_id: "/m/0jg57"}
+  - {word: "Belt", tier: "normal", category: "clothing", aliases: ["belt"], lvis_id: 88, openimages_id: "/m/0176mf"}
+  - {word: "belt_buckle", tier: "normal", category: "clothing", aliases: ["belt_buckle"], lvis_id: 89}
+  - {word: "bench", tier: "high", category: "furniture", aliases: ["bench"], coco_id: 13, lvis_id: 90, openimages_id: "/m/0cvnqh"}
+  - {word: "beret", tier: "normal", category: "object", aliases: ["beret"], lvis_id: 91}
+  - {word: "bib", tier: "normal", category: "object", aliases: ["bib"], lvis_id: 92}
+  - {word: "Bible", tier: "normal", category: "object", aliases: ["Bible"], lvis_id: 93}
+  - {word: "bicycle", tier: "critical", category: "vehicle", aliases: ["bicycle", "bike_(bicycle)"], coco_id: 1, lvis_id: 94, openimages_id: "/m/0199g"}
+  - {word: "Bicycle helmet", tier: "critical", category: "vehicle", openimages_id: "/m/03p3bw"}
+  - {word: "Bicycle wheel", tier: "critical", category: "vehicle", openimages_id: "/m/01bqk0"}
+  - {word: "Bidet", tier: "normal", category: "object", openimages_id: "/m/01vbnl"}
+  - {word: "Billboard", tier: "normal", category: "object", aliases: ["billboard"], lvis_id: 96, openimages_id: "/m/01knjb"}
+  - {word: "Billiard table", tier: "high", category: "furniture", openimages_id: "/m/04p0qw"}
+  - {word: "binder", tier: "normal", category: "object", aliases: ["binder", "ring-binder"], lvis_id: 97}
+  - {word: "Binoculars", tier: "normal", category: "object", aliases: ["binoculars", "field_glasses", "opera_glasses"], lvis_id: 98, openimages_id: "/m/0lt4_"}
+  - {word: "bird", tier: "high", category: "animal", aliases: ["bird"], coco_id: 14, lvis_id: 99, openimages_id: "/m/015p6"}
+  - {word: "birdbath", tier: "normal", category: "object", aliases: ["birdbath"], lvis_id: 101}
+  - {word: "birdcage", tier: "normal", category: "object", aliases: ["birdcage"], lvis_id: 102}
+  - {word: "birdfeeder", tier: "normal", category: "object", aliases: ["birdfeeder"], lvis_id: 100}
+  - {word: "birdhouse", tier: "normal", category: "object", aliases: ["birdhouse"], lvis_id: 103}
+  - {word: "birthday_cake", tier: "normal", category: "food", aliases: ["birthday_cake"], lvis_id: 104}
+  - {word: "birthday_card", tier: "normal", category: "object", aliases: ["birthday_card"], lvis_id: 105}
+  - {word: "black_sheep", tier: "high", category: "animal", aliases: ["black_sheep"], lvis_id: 107}
+  - {word: "blackberry", tier: "normal", category: "object", aliases: ["blackberry"], lvis_id: 108}
+  - {word: "blackboard", tier: "normal", category: "object", aliases: ["blackboard", "chalkboard"], lvis_id: 109}
+  - {word: "blanket", tier: "low", category: "object", aliases: ["blanket"], lvis_id: 110}
+  - {word: "blazer", tier: "normal", category: "object", aliases: ["blazer", "sport_coat", "sport_jacket", "sports_coat", "sports_jacket"], lvis_id: 111}
+  - {word: "Blender", tier: "normal", category: "appliance", aliases: ["blender", "liquidiser", "liquidizer"], lvis_id: 112, openimages_id: "/m/02pjr4"}
+  - {word: "blimp", tier: "normal", category: "object", aliases: ["blimp"], lvis_id: 113}
+  - {word: "blinder_(for_horses)", tier: "normal", category: "object", aliases: ["blinder_(for_horses)"], lvis_id: 1191}
+  - {word: "blinker", tier: "normal", category: "object", aliases: ["blinker", "flasher"], lvis_id: 114}
+  - {word: "blouse", tier: "normal", category: "object", aliases: ["blouse"], lvis_id: 115}
+  - {word: "Blue jay", tier: "normal", category: "object", openimages_id: "/m/01f8m5"}
+  - {word: "blueberry", tier: "normal", category: "object", aliases: ["blueberry"], lvis_id: 116}
+  - {word: "boat", tier: "critical", category: "vehicle", aliases: ["boat", "ship_(boat)"], coco_id: 8, lvis_id: 118, openimages_id: "/m/019jd"}
+  - {word: "bob", tier: "normal", category: "object", aliases: ["bob", "bobber", "bobfloat"], lvis_id: 119}
+  - {word: "bobbin", tier: "normal", category: "object", aliases: ["bobbin", "reel", "spool"], lvis_id: 120}
+  - {word: "bobby_pin", tier: "normal", category: "object", aliases: ["bobby_pin", "hairgrip"], lvis_id: 121}
+  - {word: "boiled_egg", tier: "normal", category: "food", aliases: ["boiled_egg", "coddled_egg"], lvis_id: 122}
+  - {word: "bolo_tie", tier: "normal", category: "object", aliases: ["bola", "bola_tie", "bolo", "bolo_tie"], lvis_id: 123}
+  - {word: "bolt", tier: "normal", category: "object", aliases: ["bolt"], lvis_id: 125}
+  - {word: "Bomb", tier: "normal", category: "object", openimages_id: "/m/0ct4f"}
+  - {word: "bonnet", tier: "normal", category: "object", aliases: ["bonnet"], lvis_id: 126}
+  - {word: "book", tier: "low", category: "stationery", aliases: ["book"], coco_id: 73, lvis_id: 127, openimages_id: "/m/0bt_c3"}
+  - {word: "Bookcase", tier: "normal", category: "furniture", aliases: ["bookcase"], lvis_id: 128, openimages_id: "/m/03__z0"}
+  - {word: "booklet", tier: "normal", category: "object", aliases: ["booklet", "brochure", "leaflet", "pamphlet"], lvis_id: 129}
+  - {word: "bookmark", tier: "normal", category: "object", aliases: ["bookmark", "bookmarker"], lvis_id: 130}
+  - {word: "boom_microphone", tier: "normal", category: "music", aliases: ["boom_microphone", "microphone_boom"], lvis_id: 131}
+  - {word: "Boot", tier: "normal", category: "clothing", aliases: ["boot"], lvis_id: 132, openimages_id: "/m/01b638"}
+  - {word: "bottle", tier: "normal", category: "drink", aliases: ["bottle"], coco_id: 39, lvis_id: 133, openimages_id: "/m/04dr76w"}
+  - {word: "bottle_cap", tier: "normal", category: "clothing", aliases: ["bottle_cap", "cap_(container_lid)"], lvis_id: 204}
+  - {word: "Bottle opener", tier: "normal", category: "drink", aliases: ["bottle_opener"], lvis_id: 134, openimages_id: "/m/04f5ws"}
+  - {word: "bouquet", tier: "normal", category: "object", aliases: ["bouquet"], lvis_id: 135}
+  - {word: "bow_(decorative_ribbons)", tier: "normal", category: "object", aliases: ["bow_(decorative_ribbons)"], lvis_id: 137}
+  - {word: "bow_(weapon)", tier: "normal", category: "object", aliases: ["bow_(weapon)"], lvis_id: 136}
+  - {word: "Bow and arrow", tier: "normal", category: "object", openimages_id: "/m/01g3x7"}
+  - {word: "bow-tie", tier: "normal", category: "object", aliases: ["bow-tie", "bowtie"], lvis_id: 138}
+  - {word: "bowl", tier: "normal", category: "kitchen", aliases: ["bowl"], coco_id: 45, lvis_id: 139, openimages_id: "/m/04kkgm"}
+  - {word: "bowler_hat", tier: "normal", category: "clothing", aliases: ["bowler", "bowler_hat", "derby", "derby_hat", "plug_hat"], lvis_id: 141}
+  - {word: "bowling_ball", tier: "normal", category: "sport", aliases: ["bowling_ball"], lvis_id: 142}
+  - {word: "Bowling equipment", tier: "normal", category: "object", openimages_id: "/m/07pj7bq"}
+  - {word: "Box", tier: "normal", category: "container", aliases: ["box"], lvis_id: 143, openimages_id: "/m/025dyy"}
+  - {word: "boxing_glove", tier: "normal", category: "clothing", aliases: ["boxing_glove"], lvis_id: 144}
+  - {word: "Boy", tier: "normal", category: "object", openimages_id: "/m/01bl7v"}
+  - {word: "bracelet", tier: "normal", category: "clothing", aliases: ["bangle", "bracelet"], lvis_id: 146}
+  - {word: "brake_light", tier: "normal", category: "object", aliases: ["brake_light"], lvis_id: 1020}
+  - {word: "brass_plaque", tier: "normal", category: "object", aliases: ["brass_plaque"], lvis_id: 147}
+  - {word: "Brassiere", tier: "normal", category: "object", aliases: ["bandeau", "bra", "brassiere"], lvis_id: 148, openimages_id: "/m/01gmv2"}
+  - {word: "Bread", tier: "normal", category: "food", aliases: ["bread"], lvis_id: 150, openimages_id: "/m/09728"}
+  - {word: "bread-bin", tier: "normal", category: "object", aliases: ["bread-bin", "breadbox"], lvis_id: 149}
+  - {word: "breechcloth", tier: "normal", category: "object", aliases: ["breechcloth", "breechclout", "loincloth"], lvis_id: 151}
+  - {word: "bridal_gown", tier: "normal", category: "object", aliases: ["bridal_gown", "wedding_dress", "wedding_gown"], lvis_id: 152}
+  - {word: "Briefcase", tier: "normal", category: "object", aliases: ["briefcase"], lvis_id: 153, openimages_id: "/m/0584n8"}
+  - {word: "broach", tier: "normal", category: "object", aliases: ["broach"], lvis_id: 155}
+  - {word: "broccoli", tier: "normal", category: "food", aliases: ["broccoli"], coco_id: 50, lvis_id: 154, openimages_id: "/m/0hkxq"}
+  - {word: "Bronze sculpture", tier: "low", category: "object", openimages_id: "/m/01yx86"}
+  - {word: "broom", tier: "normal", category: "object", aliases: ["broom"], lvis_id: 156}
+  - {word: "Brown bear", tier: "high", category: "animal", openimages_id: "/m/01dxs"}
+  - {word: "brownie", tier: "normal", category: "object", aliases: ["brownie"], lvis_id: 157}
+  - {word: "brussels_sprouts", tier: "normal", category: "object", aliases: ["brussels_sprouts"], lvis_id: 158}
+  - {word: "bubble_gum", tier: "normal", category: "object", aliases: ["bubble_gum"], lvis_id: 159}
+  - {word: "bucket", tier: "normal", category: "container", aliases: ["bucket", "pail"], lvis_id: 160}
+  - {word: "Building", tier: "normal", category: "building", openimages_id: "/m/0cgh4"}
+  - {word: "Bull", tier: "normal", category: "object", aliases: ["horned_cow"], lvis_id: 162, openimages_id: "/m/0cnyhnx"}
+  - {word: "bulldog", tier: "normal", category: "object", aliases: ["bulldog"], lvis_id: 163}
+  - {word: "bulldozer", tier: "critical", category: "vehicle", aliases: ["bulldozer", "dozer"], lvis_id: 164}
+  - {word: "bullet_train", tier: "critical", category: "vehicle", aliases: ["bullet_train"], lvis_id: 165}
+  - {word: "bulletin_board", tier: "normal", category: "object", aliases: ["bulletin_board", "notice_board"], lvis_id: 166}
+  - {word: "bulletproof_vest", tier: "normal", category: "object", aliases: ["bulletproof_vest"], lvis_id: 167}
+  - {word: "bullhorn", tier: "normal", category: "object", aliases: ["bullhorn", "megaphone"], lvis_id: 168}
+  - {word: "bun", tier: "normal", category: "object", aliases: ["bun", "roll"], lvis_id: 169}
+  - {word: "bunk_bed", tier: "high", category: "furniture", aliases: ["bunk_bed"], lvis_id: 170}
+  - {word: "buoy", tier: "normal", category: "object", aliases: ["buoy"], lvis_id: 171}
+  - {word: "Burrito", tier: "normal", category: "object", aliases: ["burrito"], lvis_id: 172, openimages_id: "/m/01j3zr"}
+  - {word: "bus", tier: "critical", category: "vehicle", coco_id: 5, openimages_id: "/m/01bjv"}
+  - {word: "bus_(vehicle)", tier: "critical", category: "vehicle", aliases: ["autobus", "bus_(vehicle)", "charabanc", "double-decker", "motorbus", "motorcoach"], lvis_id: 173}
+  - {word: "business_card", tier: "normal", category: "object", aliases: ["business_card"], lvis_id: 174}
+  - {word: "Bust", tier: "normal", category: "object", openimages_id: "/m/04yqq2"}
+  - {word: "butter", tier: "normal", category: "object", aliases: ["butter"], lvis_id: 175}
+  - {word: "Butterfly", tier: "normal", category: "object", aliases: ["butterfly"], lvis_id: 176, openimages_id: "/m/0cyf8"}
+  - {word: "button", tier: "normal", category: "object", aliases: ["button"], lvis_id: 177}
+  - {word: "cab_(taxi)", tier: "normal", category: "object", aliases: ["cab_(taxi)", "taxi", "taxicab"], lvis_id: 178}
+  - {word: "cabana", tier: "normal", category: "object", aliases: ["cabana"], lvis_id: 179}
+  - {word: "Cabbage", tier: "normal", category: "object", openimages_id: "/m/0fbw6"}
+  - {word: "cabin_car", tier: "critical", category: "vehicle", aliases: ["cabin_car", "caboose"], lvis_id: 180}
+  - {word: "cabinet", tier: "high", category: "furniture", aliases: ["cabinet"], lvis_id: 181}
+  - {word: "Cabinetry", tier: "normal", category: "object", openimages_id: "/m/01s105"}
+  - {word: "cake", tier: "normal", category: "food", aliases: ["cake"], coco_id: 55, lvis_id: 183, openimages_id: "/m/0fszt"}
+  - {word: "Cake stand", tier: "normal", category: "food", openimages_id: "/m/0h8n6ft"}
+  - {word: "Calculator", tier: "normal", category: "object", aliases: ["calculator"], lvis_id: 184, openimages_id: "/m/024d2"}
+  - {word: "calendar", tier: "normal", category: "object", aliases: ["calendar"], lvis_id: 185}
+  - {word: "calf", tier: "normal", category: "object", aliases: ["calf"], lvis_id: 186}
+  - {word: "camcorder", tier: "normal", category: "object", aliases: ["camcorder"], lvis_id: 187}
+  - {word: "Camel", tier: "normal", category: "object", aliases: ["camel"], lvis_id: 188, openimages_id: "/m/01x_v"}
+  - {word: "Camera", tier: "normal", category: "electronics", aliases: ["camera"], lvis_id: 189, openimages_id: "/m/0dv5r"}
+  - {word: "camera_lens", tier: "normal", category: "electronics", aliases: ["camera_lens"], lvis_id: 190}
+  - {word: "camper_(vehicle)", tier: "normal", category: "object", aliases: ["camper_(vehicle)", "camping_bus", "motor_home"], lvis_id: 191}
+  - {word: "can", tier: "normal", category: "drink", aliases: ["can", "tin_can"], lvis_id: 192}
+  - {word: "Can opener", tier: "normal", category: "drink", aliases: ["can_opener", "tin_opener"], lvis_id: 193, openimages_id: "/m/02mqfb"}
+  - {word: "Canary", tier: "normal", category: "object", openimages_id: "/m/0ccs93"}
+  - {word: "Candle", tier: "low", category: "object", aliases: ["candle", "candlestick"], lvis_id: 194, openimages_id: "/m/0c06p"}
+  - {word: "candle_holder", tier: "low", category: "object", aliases: ["candle_holder"], lvis_id: 195}
+  - {word: "Candy", tier: "normal", category: "object", openimages_id: "/m/0gm28"}
+  - {word: "candy_bar", tier: "normal", category: "object", aliases: ["candy_bar"], lvis_id: 196}
+  - {word: "candy_cane", tier: "normal", category: "object", aliases: ["candy_cane"], lvis_id: 197}
+  - {word: "canister", tier: "normal", category: "object", aliases: ["canister", "cannister"], lvis_id: 199}
+  - {word: "Cannon", tier: "normal", category: "object", openimages_id: "/m/020kz"}
+  - {word: "Canoe", tier: "normal", category: "object", aliases: ["canoe"], lvis_id: 200, openimages_id: "/m/0ph39"}
+  - {word: "cantaloup", tier: "normal", category: "object", aliases: ["cantaloup", "cantaloupe"], lvis_id: 201}
+  - {word: "Cantaloupe", tier: "normal", category: "object", openimages_id: "/m/0kpt_"}
+  - {word: "canteen", tier: "normal", category: "object", aliases: ["canteen"], lvis_id: 202}
+  - {word: "cap_(headwear)", tier: "normal", category: "clothing", aliases: ["cap_(headwear)"], lvis_id: 203}
+  - {word: "cape", tier: "normal", category: "object", aliases: ["cape"], lvis_id: 205}
+  - {word: "cappuccino", tier: "normal", category: "object", aliases: ["cappuccino", "coffee_cappuccino"], lvis_id: 206}
+  - {word: "car", tier: "critical", category: "vehicle", coco_id: 2, openimages_id: "/m/0k4j"}
+  - {word: "car_(automobile)", tier: "critical", category: "vehicle", aliases: ["auto_(automobile)", "automobile", "car_(automobile)"], lvis_id: 207}
+  - {word: "car_battery", tier: "critical", category: "vehicle", aliases: ["automobile_battery", "car_battery"], lvis_id: 210}
+  - {word: "card", tier: "normal", category: "object", aliases: ["card"], lvis_id: 212}
+  - {word: "cardigan", tier: "normal", category: "object", aliases: ["cardigan"], lvis_id: 213}
+  - {word: "cargo_ship", tier: "critical", category: "vehicle", aliases: ["cargo_ship", "cargo_vessel"], lvis_id: 214}
+  - {word: "carnation", tier: "normal", category: "object", aliases: ["carnation"], lvis_id: 215}
+  - {word: "Carnivore", tier: "normal", category: "object", openimages_id: "/m/01lrl"}
+  - {word: "carrot", tier: "normal", category: "food", aliases: ["carrot"], coco_id: 51, lvis_id: 217, openimages_id: "/m/0fj52s"}
+  - {word: "Cart", tier: "normal", category: "object", aliases: ["cart"], lvis_id: 219, openimages_id: "/m/018p4k"}
+  - {word: "carton", tier: "normal", category: "object", aliases: ["carton"], lvis_id: 220}
+  - {word: "cash_register", tier: "normal", category: "object", aliases: ["cash_register", "register_(for_cash_transactions)"], lvis_id: 221}
+  - {word: "casserole", tier: "normal", category: "object", aliases: ["casserole"], lvis_id: 222}
+  - {word: "cassette", tier: "normal", category: "object", aliases: ["cassette"], lvis_id: 223}
+  - {word: "Cassette deck", tier: "normal", category: "object", openimages_id: "/m/01432t"}
+  - {word: "cast", tier: "normal", category: "object", aliases: ["cast", "plaster_bandage", "plaster_cast"], lvis_id: 224}
+  - {word: "Castle", tier: "normal", category: "object", openimages_id: "/m/0d5gx"}
+  - {word: "cat", tier: "high", category: "animal", aliases: ["cat"], coco_id: 15, lvis_id: 225, openimages_id: "/m/01yrx"}
+  - {word: "Cat furniture", tier: "high", category: "animal", openimages_id: "/m/0h8nm9j"}
+  - {word: "Caterpillar", tier: "normal", category: "object", openimages_id: "/m/0cydv"}
+  - {word: "Cattle", tier: "normal", category: "object", openimages_id: "/m/01xq0k1"}
+  - {word: "cauliflower", tier: "normal", category: "object", aliases: ["cauliflower"], lvis_id: 226}
+  - {word: "cayenne_(spice)", tier: "normal", category: "object", aliases: ["cayenne_(spice)", "cayenne_pepper_(spice)", "red_pepper_(spice)"], lvis_id: 227}
+  - {word: "CD_player", tier: "normal", category: "object", aliases: ["CD_player"], lvis_id: 228}
+  - {word: "Ceiling fan", tier: "normal", category: "appliance", openimages_id: "/m/03ldnb"}
+  - {word: "celery", tier: "normal", category: "object", aliases: ["celery"], lvis_id: 229}
+  - {word: "cell phone", tier: "normal", category: "electronics", coco_id: 67}
+  - {word: "Cello", tier: "normal", category: "music", openimages_id: "/m/01xqw"}
+  - {word: "cellular_telephone", tier: "normal", category: "object", aliases: ["cellphone", "cellular_phone", "cellular_telephone", "mobile_phone", "smart_phone"], lvis_id: 230}
+  - {word: "Centipede", tier: "normal", category: "object", openimages_id: "/m/019h78"}
+  - {word: "chain_mail", tier: "normal", category: "tool", aliases: ["chain_armor", "chain_armour", "chain_mail", "ring_armor", "ring_armour", "ring_mail"], lvis_id: 231}
+  - {word: "Chainsaw", tier: "normal", category: "object", openimages_id: "/m/01j4z9"}
+  - {word: "chair", tier: "high", category: "furniture", aliases: ["chair"], coco_id: 56, lvis_id: 232, openimages_id: "/m/01mzpv"}
+  - {word: "chaise_longue", tier: "normal", category: "object", aliases: ["chaise", "chaise_longue", "daybed"], lvis_id: 233}
+  - {word: "chalice", tier: "normal", category: "object", aliases: ["chalice"], lvis_id: 234}
+  - {word: "chandelier", tier: "low", category: "object", aliases: ["chandelier"], lvis_id: 235}
+  - {word: "chap", tier: "normal", category: "object", aliases: ["chap"], lvis_id: 236}
+  - {word: "checkbook", tier: "normal", category: "object", aliases: ["checkbook", "chequebook"], lvis_id: 237}
+  - {word: "checkerboard", tier: "normal", category: "object", aliases: ["checkerboard"], lvis_id: 238}
+  - {word: "Cheese", tier: "normal", category: "food", openimages_id: "/m/01nkt"}
+  - {word: "Cheetah", tier: "normal", category: "object", openimages_id: "/m/0cd4d"}
+  - {word: "cherry", tier: "normal", category: "object", aliases: ["cherry"], lvis_id: 239}
+  - {word: "chessboard", tier: "normal", category: "object", aliases: ["chessboard"], lvis_id: 240}
+  - {word: "Chest of drawers", tier: "normal", category: "object", openimages_id: "/m/05kyg_"}
+  - {word: "Chicken", tier: "high", category: "animal", openimages_id: "/m/09b5t"}
+  - {word: "chicken_(animal)", tier: "high", category: "animal", aliases: ["chicken_(animal)"], lvis_id: 241}
+  - {word: "chickpea", tier: "normal", category: "object", aliases: ["chickpea", "garbanzo"], lvis_id: 242}
+  - {word: "chili_(vegetable)", tier: "normal", category: "object", aliases: ["chile_(vegetable)", "chili_(vegetable)", "chili_pepper_(vegetable)", "chilli_(vegetable)", "chilly_(vegetable)"], lvis_id: 243}
+  - {word: "Chime", tier: "normal", category: "object", aliases: ["chime", "gong"], lvis_id: 244, openimages_id: "/m/0f8s22"}
+  - {word: "chinaware", tier: "normal", category: "object", aliases: ["chinaware"], lvis_id: 245}
+  - {word: "Chisel", tier: "normal", category: "object", openimages_id: "/m/0_dqb"}
+  - {word: "chocolate_bar", tier: "normal", category: "object", aliases: ["chocolate_bar"], lvis_id: 248}
+  - {word: "chocolate_cake", tier: "normal", category: "food", aliases: ["chocolate_cake"], lvis_id: 249}
+  - {word: "chocolate_milk", tier: "normal", category: "food", aliases: ["chocolate_milk"], lvis_id: 250}
+  - {word: "chocolate_mousse", tier: "normal", category: "object", aliases: ["chocolate_mousse"], lvis_id: 251}
+  - {word: "choker", tier: "normal", category: "object", aliases: ["choker", "collar", "neckband"], lvis_id: 252}
+  - {word: "chopping_board", tier: "normal", category: "object", aliases: ["chopping_block", "chopping_board", "cutting_board"], lvis_id: 253}
+  - {word: "chopstick", tier: "normal", category: "object", aliases: ["chopstick"], lvis_id: 254}
+  - {word: "Chopsticks", tier: "normal", category: "object", openimages_id: "/m/01_5g"}
+  - {word: "Christmas tree", tier: "high", category: "outdoor", aliases: ["Christmas_tree"], lvis_id: 255, openimages_id: "/m/025nd"}
+  - {word: "cider", tier: "normal", category: "object", aliases: ["cider", "cyder"], lvis_id: 257}
+  - {word: "cigar_box", tier: "normal", category: "container", aliases: ["cigar_box"], lvis_id: 258}
+  - {word: "cigarette", tier: "normal", category: "object", aliases: ["cigarette"], lvis_id: 259}
+  - {word: "cigarette_case", tier: "normal", category: "object", aliases: ["cigarette_case", "cigarette_pack"], lvis_id: 260}
+  - {word: "cincture", tier: "normal", category: "object", aliases: ["cincture", "sash", "waistband", "waistcloth"], lvis_id: 497}
+  - {word: "cistern", tier: "normal", category: "object", aliases: ["cistern", "water_tank"], lvis_id: 261}
+  - {word: "clarinet", tier: "normal", category: "object", aliases: ["clarinet"], lvis_id: 262}
+  - {word: "clasp", tier: "normal", category: "object", aliases: ["clasp"], lvis_id: 263}
+  - {word: "cleansing_agent", tier: "normal", category: "object", aliases: ["cleaner", "cleanser", "cleansing_agent"], lvis_id: 264}
+  - {word: "cleat_(for_securing_rope)", tier: "normal", category: "object", aliases: ["cleat_(for_securing_rope)"], lvis_id: 265}
+  - {word: "clementine", tier: "normal", category: "object", aliases: ["clementine"], lvis_id: 266}
+  - {word: "clip", tier: "normal", category: "object", aliases: ["clip"], lvis_id: 267}
+  - {word: "clipboard", tier: "normal", category: "object", aliases: ["clipboard"], lvis_id: 268}
+  - {word: "clippers_(for_plants)", tier: "normal", category: "object", aliases: ["clippers_(for_plants)"], lvis_id: 269}
+  - {word: "cloak", tier: "normal", category: "object", aliases: ["cloak"], lvis_id: 270}
+  - {word: "clock", tier: "normal", category: "electronics", aliases: ["clock", "timekeeper", "timepiece"], coco_id: 74, lvis_id: 271, openimages_id: "/m/01x3z"}
+  - {word: "clock_tower", tier: "normal", category: "electronics", aliases: ["clock_tower"], lvis_id: 272}
+  - {word: "Closet", tier: "normal", category: "object", openimages_id: "/m/0d4w1"}
+  - {word: "clothes_hamper", tier: "normal", category: "object", aliases: ["clothes_basket", "clothes_hamper", "laundry_basket"], lvis_id: 273}
+  - {word: "clothespin", tier: "normal", category: "object", aliases: ["clothes_peg", "clothespin"], lvis_id: 274}
+  - {word: "Clothing", tier: "normal", category: "object", openimages_id: "/m/09j2d"}
+  - {word: "clutch_bag", tier: "normal", category: "container", aliases: ["clutch_bag"], lvis_id: 275}
+  - {word: "coaster", tier: "normal", category: "object", aliases: ["coaster"], lvis_id: 276}
+  - {word: "Coat", tier: "normal", category: "clothing", aliases: ["coat"], lvis_id: 277, openimages_id: "/m/01xygc"}
+  - {word: "coat_hanger", tier: "normal", category: "clothing", aliases: ["clothes_hanger", "coat_hanger", "dress_hanger"], lvis_id: 278}
+  - {word: "coatrack", tier: "normal", category: "object", aliases: ["coatrack", "hatrack"], lvis_id: 279}
+  - {word: "cock", tier: "normal", category: "object", aliases: ["cock", "rooster"], lvis_id: 280}
+  - {word: "cockroach", tier: "normal", category: "object", aliases: ["cockroach"], lvis_id: 281}
+  - {word: "Cocktail", tier: "normal", category: "object", openimages_id: "/m/024g6"}
+  - {word: "Cocktail shaker", tier: "normal", category: "object", openimages_id: "/m/0440zs"}
+  - {word: "cocoa_(beverage)", tier: "normal", category: "object", aliases: ["cocoa_(beverage)", "drinking_chocolate", "hot_chocolate_(beverage)"], lvis_id: 282}
+  - {word: "Coconut", tier: "normal", category: "object", aliases: ["cocoanut", "coconut"], lvis_id: 283, openimages_id: "/m/0djtd"}
+  - {word: "Coffee", tier: "normal", category: "drink", openimages_id: "/m/02vqfm"}
+  - {word: "Coffee cup", tier: "normal", category: "drink", openimages_id: "/m/02p5f1q"}
+  - {word: "coffee_maker", tier: "high", category: "drink", aliases: ["coffee_machine", "coffee_maker"], lvis_id: 284}
+  - {word: "Coffee table", tier: "high", category: "furniture", aliases: ["cocktail_table", "coffee_table"], lvis_id: 285, openimages_id: "/m/078n6m"}
+  - {word: "Coffeemaker", tier: "normal", category: "object", openimages_id: "/m/07xyvk"}
+  - {word: "coffeepot", tier: "normal", category: "object", aliases: ["coffeepot"], lvis_id: 286}
+  - {word: "coil", tier: "normal", category: "object", aliases: ["coil"], lvis_id: 287}
+  - {word: "Coin", tier: "normal", category: "object", aliases: ["coin"], lvis_id: 288, openimages_id: "/m/0242l"}
+  - {word: "colander", tier: "normal", category: "object", aliases: ["colander", "cullender"], lvis_id: 289}
+  - {word: "coleslaw", tier: "normal", category: "object", aliases: ["coleslaw", "slaw"], lvis_id: 290}
+  - {word: "coloring_material", tier: "normal", category: "object", aliases: ["coloring_material", "colouring_material"], lvis_id: 291}
+  - {word: "combination_lock", tier: "normal", category: "object", aliases: ["combination_lock"], lvis_id: 292}
+  - {word: "comic_book", tier: "low", category: "stationery", aliases: ["comic_book"], lvis_id: 294}
+  - {word: "Common fig", tier: "normal", category: "object", openimages_id: "/m/043nyj"}
+  - {word: "compass", tier: "normal", category: "object", aliases: ["compass"], lvis_id: 295}
+  - {word: "Computer keyboard", tier: "normal", category: "electronics", aliases: ["computer_keyboard", "keyboard_(computer)"], lvis_id: 296, openimages_id: "/m/01m2v"}
+  - {word: "Computer monitor", tier: "normal", category: "electronics", openimages_id: "/m/02522"}
+  - {word: "Computer mouse", tier: "normal", category: "electronics", openimages_id: "/m/020lf"}
+  - {word: "condiment", tier: "normal", category: "object", aliases: ["condiment"], lvis_id: 297}
+  - {word: "cone", tier: "normal", category: "object", aliases: ["cone", "traffic_cone"], lvis_id: 298}
+  - {word: "Container", tier: "normal", category: "object", openimages_id: "/m/011q46kg"}
+  - {word: "control", tier: "normal", category: "object", aliases: ["control", "controller"], lvis_id: 299}
+  - {word: "Convenience store", tier: "normal", category: "object", openimages_id: "/m/0crjs"}
+  - {word: "convertible_(automobile)", tier: "normal", category: "object", aliases: ["convertible_(automobile)"], lvis_id: 300}
+  - {word: "cooker", tier: "normal", category: "object", aliases: ["cooker"], lvis_id: 302}
+  - {word: "Cookie", tier: "normal", category: "food", aliases: ["biscuit_(cookie)", "cookie", "cooky"], lvis_id: 303, openimages_id: "/m/021mn"}
+  - {word: "Cooking spray", tier: "normal", category: "object", openimages_id: "/m/07mcwg"}
+  - {word: "cooking_utensil", tier: "normal", category: "object", aliases: ["cooking_utensil"], lvis_id: 304}
+  - {word: "cooler_(for_food)", tier: "normal", category: "object", aliases: ["cooler_(for_food)", "ice_chest"], lvis_id: 305}
+  - {word: "Corded phone", tier: "normal", category: "electronics", openimages_id: "/m/0h8lkj8"}
+  - {word: "cork_(bottle_plug)", tier: "normal", category: "object", aliases: ["bottle_cork", "cork_(bottle_plug)"], lvis_id: 306}
+  - {word: "corkboard", tier: "normal", category: "object", aliases: ["corkboard"], lvis_id: 307}
+  - {word: "corkscrew", tier: "normal", category: "object", aliases: ["bottle_screw", "corkscrew"], lvis_id: 308}
+  - {word: "cornbread", tier: "normal", category: "object", aliases: ["cornbread"], lvis_id: 310}
+  - {word: "cornet", tier: "normal", category: "object", aliases: ["cornet", "horn", "trumpet"], lvis_id: 311}
+  - {word: "cornice", tier: "normal", category: "object", aliases: ["cornice", "pelmet", "valance", "valance_board"], lvis_id: 312}
+  - {word: "cornmeal", tier: "normal", category: "object", aliases: ["cornmeal"], lvis_id: 313}
+  - {word: "corset", tier: "normal", category: "object", aliases: ["corset", "girdle"], lvis_id: 314}
+  - {word: "Cosmetics", tier: "normal", category: "object", openimages_id: "/m/014trl"}
+  - {word: "costume", tier: "normal", category: "object", aliases: ["costume"], lvis_id: 315}
+  - {word: "couch", tier: "high", category: "furniture", coco_id: 57, openimages_id: "/m/02crq1"}
+  - {word: "cougar", tier: "normal", category: "object", aliases: ["catamount", "cougar", "mountain_lion", "panther", "puma"], lvis_id: 316}
+  - {word: "Countertop", tier: "normal", category: "object", openimages_id: "/m/0b3fp9"}
+  - {word: "cover", tier: "normal", category: "object", aliases: ["cover"], lvis_id: 1105}
+  - {word: "coverall", tier: "normal", category: "object", aliases: ["coverall"], lvis_id: 317}
+  - {word: "cow", tier: "high", category: "animal", aliases: ["cow"], coco_id: 19, lvis_id: 80}
+  - {word: "cowbell", tier: "normal", category: "object", aliases: ["cowbell"], lvis_id: 318}
+  - {word: "Cowboy hat", tier: "normal", category: "clothing", aliases: ["cowboy_hat", "ten-gallon_hat"], lvis_id: 319, openimages_id: "/m/025rp__"}
+  - {word: "Crab", tier: "normal", category: "object", openimages_id: "/m/0n28_"}
+  - {word: "crab_(animal)", tier: "normal", category: "object", aliases: ["crab_(animal)"], lvis_id: 320}
+  - {word: "crabmeat", tier: "normal", category: "object", aliases: ["crabmeat"], lvis_id: 321}
+  - {word: "cracker", tier: "normal", category: "object", aliases: ["cracker"], lvis_id: 322}
+  - {word: "crape", tier: "normal", category: "object", aliases: ["French_pancake", "crape", "crepe"], lvis_id: 323}
+  - {word: "crate", tier: "normal", category: "container", aliases: ["crate"], lvis_id: 324}
+  - {word: "crawfish", tier: "normal", category: "object", aliases: ["crawfish", "crayfish"], lvis_id: 998}
+  - {word: "crayon", tier: "normal", category: "object", aliases: ["crayon", "wax_crayon"], lvis_id: 325}
+  - {word: "Cream", tier: "normal", category: "object", openimages_id: "/m/08p92x"}
+  - {word: "cream_pitcher", tier: "normal", category: "object", aliases: ["cream_pitcher"], lvis_id: 326}
+  - {word: "crescent_roll", tier: "normal", category: "object", aliases: ["crescent_roll", "croissant"], lvis_id: 327}
+  - {word: "crib", tier: "normal", category: "object", aliases: ["cot", "crib"], lvis_id: 328}
+  - {word: "Cricket ball", tier: "normal", category: "sport", openimages_id: "/m/02ctlc"}
+  - {word: "crisp_(potato_chip)", tier: "normal", category: "object", aliases: ["crisp_(potato_chip)", "potato_chip"], lvis_id: 246}
+  - {word: "crock_pot", tier: "normal", category: "kitchen", aliases: ["crock_pot", "earthenware_jar"], lvis_id: 329}
+  - {word: "Crocodile", tier: "normal", category: "object", openimages_id: "/m/09f_2"}
+  - {word: "Croissant", tier: "normal", category: "object", openimages_id: "/m/015wgc"}
+  - {word: "crossbar", tier: "normal", category: "object", aliases: ["crossbar"], lvis_id: 330}
+  - {word: "crouton", tier: "normal", category: "object", aliases: ["crouton"], lvis_id: 331}
+  - {word: "crow", tier: "normal", category: "object", aliases: ["crow"], lvis_id: 332}
+  - {word: "crowbar", tier: "normal", category: "object", aliases: ["crowbar", "pry_bar", "wrecking_bar"], lvis_id: 333}
+  - {word: "Crown", tier: "normal", category: "object", aliases: ["crown"], lvis_id: 334, openimages_id: "/m/0nl46"}
+  - {word: "crucifix", tier: "normal", category: "object", aliases: ["crucifix"], lvis_id: 335}
+  - {word: "cruise_ship", tier: "critical", category: "vehicle", aliases: ["cruise_liner", "cruise_ship"], lvis_id: 336}
+  - {word: "crumb", tier: "normal", category: "object", aliases: ["crumb"], lvis_id: 338}
+  - {word: "Crutch", tier: "critical", category: "medical", aliases: ["crutch"], lvis_id: 339, openimages_id: "/m/05441v"}
+  - {word: "cub_(animal)", tier: "normal", category: "object", aliases: ["cub_(animal)"], lvis_id: 340}
+  - {word: "cube", tier: "normal", category: "object", aliases: ["cube", "square_block"], lvis_id: 341}
+  - {word: "Cucumber", tier: "normal", category: "object", aliases: ["cucumber", "cuke"], lvis_id: 342, openimages_id: "/m/015x4r"}
+  - {word: "cufflink", tier: "normal", category: "object", aliases: ["cufflink"], lvis_id: 343}
+  - {word: "cup", tier: "normal", category: "drink", aliases: ["cup"], coco_id: 41, lvis_id: 344}
+  - {word: "Cupboard", tier: "normal", category: "object", aliases: ["closet", "cupboard"], lvis_id: 346, openimages_id: "/m/0642b4"}
+  - {word: "cupcake", tier: "normal", category: "food", aliases: ["cupcake"], lvis_id: 347}
+  - {word: "curling_iron", tier: "normal", category: "object", aliases: ["curling_iron"], lvis_id: 349}
+  - {word: "Curtain", tier: "low", category: "object", aliases: ["curtain", "drapery"], lvis_id: 350, openimages_id: "/m/03rszm"}
+  - {word: "cushion", tier: "low", category: "furniture", aliases: ["cushion"], lvis_id: 351}
+  - {word: "Cutting board", tier: "normal", category: "object", openimages_id: "/m/02pdsw"}
+  - {word: "cylinder", tier: "normal", category: "object", aliases: ["cylinder"], lvis_id: 352}
+  - {word: "cymbal", tier: "normal", category: "object", aliases: ["cymbal"], lvis_id: 353}
+  - {word: "Dagger", tier: "normal", category: "object", aliases: ["dagger"], lvis_id: 354, openimages_id: "/m/02gzp"}
+  - {word: "Dairy", tier: "normal", category: "object", openimages_id: "/m/0284d"}
+  - {word: "dalmatian", tier: "normal", category: "object", aliases: ["dalmatian"], lvis_id: 355}
+  - {word: "dartboard", tier: "normal", category: "object", aliases: ["dartboard"], lvis_id: 356}
+  - {word: "date_(fruit)", tier: "normal", category: "object", aliases: ["date_(fruit)"], lvis_id: 357}
+  - {word: "deadbolt", tier: "normal", category: "object", aliases: ["deadbolt"], lvis_id: 124}
+  - {word: "deck_chair", tier: "high", category: "furniture", aliases: ["beach_chair", "deck_chair"], lvis_id: 358}
+  - {word: "Deer", tier: "high", category: "animal", aliases: ["cervid", "deer"], lvis_id: 359, openimages_id: "/m/09kx5"}
+  - {word: "dental_floss", tier: "normal", category: "object", aliases: ["dental_floss", "floss"], lvis_id: 360}
+  - {word: "Desk", tier: "high", category: "furniture", aliases: ["desk"], lvis_id: 361, openimages_id: "/m/01y9k5"}
+  - {word: "Dessert", tier: "normal", category: "object", openimages_id: "/m/0270h"}
+  - {word: "detergent", tier: "normal", category: "object", aliases: ["detergent"], lvis_id: 362}
+  - {word: "Diaper", tier: "normal", category: "object", aliases: ["diaper"], lvis_id: 363, openimages_id: "/m/0f571"}
+  - {word: "diary", tier: "normal", category: "object", aliases: ["diary", "journal"], lvis_id: 364}
+  - {word: "Dice", tier: "normal", category: "object", openimages_id: "/m/029b3"}
+  - {word: "die", tier: "normal", category: "object", aliases: ["dice", "die"], lvis_id: 365}
+  - {word: "Digital clock", tier: "normal", category: "electronics", openimages_id: "/m/06_72j"}
+  - {word: "dinghy", tier: "normal", category: "object", aliases: ["dinghy", "dory", "rowboat"], lvis_id: 366}
+  - {word: "dining table", tier: "high", category: "furniture", aliases: ["dining_table"], coco_id: 60, lvis_id: 367}
+  - {word: "Dinosaur", tier: "normal", category: "object", openimages_id: "/m/029tx"}
+  - {word: "dirt_bike", tier: "critical", category: "vehicle", aliases: ["dirt_bike"], lvis_id: 1113}
+  - {word: "dish", tier: "normal", category: "object", aliases: ["dish"], lvis_id: 369}
+  - {word: "dish_antenna", tier: "normal", category: "object", aliases: ["dish_antenna"], lvis_id: 370}
+  - {word: "dishrag", tier: "normal", category: "object", aliases: ["dishcloth", "dishrag"], lvis_id: 371}
+  - {word: "dishtowel", tier: "normal", category: "object", aliases: ["dishtowel", "tea_towel"], lvis_id: 372}
+  - {word: "Dishwasher", tier: "high", category: "appliance", aliases: ["dishwasher", "dishwashing_machine"], lvis_id: 373, openimages_id: "/m/0ky7b"}
+  - {word: "dishwasher_detergent", tier: "high", category: "appliance", aliases: ["dishsoap", "dishwasher_detergent", "dishwashing_detergent", "dishwashing_liquid"], lvis_id: 374}
+  - {word: "dispenser", tier: "normal", category: "object", aliases: ["dispenser"], lvis_id: 375}
+  - {word: "diving_board", tier: "normal", category: "object", aliases: ["diving_board"], lvis_id: 376}
+  - {word: "Dixie_cup", tier: "normal", category: "drink", aliases: ["Dixie_cup", "paper_cup"], lvis_id: 377}
+  - {word: "dog", tier: "high", category: "animal", aliases: ["dog"], coco_id: 16, lvis_id: 378, openimages_id: "/m/0bt9lr"}
+  - {word: "Dog bed", tier: "high", category: "animal", openimages_id: "/m/0h8n6f9"}
+  - {word: "dog_collar", tier: "high", category: "animal", aliases: ["dog_collar"], lvis_id: 379}
+  - {word: "Doll", tier: "normal", category: "toy", aliases: ["doll"], lvis_id: 380, openimages_id: "/m/0167gd"}
+  - {word: "dollar", tier: "normal", category: "object", aliases: ["dollar", "dollar_bill", "one_dollar_bill"], lvis_id: 381}
+  - {word: "dollhouse", tier: "normal", category: "object", aliases: ["doll's_house", "dollhouse"], lvis_id: 382}
+  - {word: "Dolphin", tier: "normal", category: "object", aliases: ["dolphin"], lvis_id: 383, openimages_id: "/m/02hj4"}
+  - {word: "domestic_ass", tier: "normal", category: "object", aliases: ["domestic_ass", "donkey"], lvis_id: 384}
+  - {word: "donut", tier: "normal", category: "food", coco_id: 54}
+  - {word: "Door", tier: "high", category: "building", openimages_id: "/m/02dgv"}
+  - {word: "Door handle", tier: "high", category: "building", openimages_id: "/m/03c7gz"}
+  - {word: "doorknob", tier: "normal", category: "object", aliases: ["doorhandle", "doorknob"], lvis_id: 385}
+  - {word: "doormat", tier: "low", category: "object", aliases: ["doormat", "welcome_mat"], lvis_id: 386}
+  - {word: "Doughnut", tier: "normal", category: "object", aliases: ["donut", "doughnut"], lvis_id: 387, openimages_id: "/m/0jy4k"}
+  - {word: "dove", tier: "normal", category: "object", aliases: ["dove"], lvis_id: 388}
+  - {word: "Dragonfly", tier: "normal", category: "object", aliases: ["dragonfly"], lvis_id: 389, openimages_id: "/m/0ft9s"}
+  - {word: "Drawer", tier: "normal", category: "object", aliases: ["drawer"], lvis_id: 390, openimages_id: "/m/0fqfqc"}
+  - {word: "Dress", tier: "normal", category: "clothing", aliases: ["dress", "frock"], lvis_id: 392, openimages_id: "/m/01d40f"}
+  - {word: "dress_hat", tier: "normal", category: "clothing", aliases: ["dress_hat", "high_hat", "opera_hat", "silk_hat", "top_hat"], lvis_id: 393}
+  - {word: "dress_suit", tier: "normal", category: "clothing", aliases: ["dress_suit"], lvis_id: 394}
+  - {word: "dresser", tier: "high", category: "furniture", aliases: ["dresser"], lvis_id: 395}
+  - {word: "Drill", tier: "normal", category: "tool", aliases: ["drill"], lvis_id: 396, openimages_id: "/m/01d380"}
+  - {word: "Drink", tier: "normal", category: "object", openimages_id: "/m/0271t"}
+  - {word: "Drinking straw", tier: "normal", category: "object", openimages_id: "/m/03v5tg"}
+  - {word: "drone", tier: "normal", category: "object", aliases: ["drone"], lvis_id: 397}
+  - {word: "dropper", tier: "normal", category: "object", aliases: ["dropper", "eye_dropper"], lvis_id: 398}
+  - {word: "Drum", tier: "normal", category: "music", openimages_id: "/m/026t6"}
+  - {word: "drum_(musical_instrument)", tier: "normal", category: "music", aliases: ["drum_(musical_instrument)"], lvis_id: 399}
+  - {word: "drumstick", tier: "normal", category: "object", aliases: ["drumstick"], lvis_id: 400}
+  - {word: "Duck", tier: "high", category: "animal", aliases: ["duck"], lvis_id: 401, openimages_id: "/m/09ddx"}
+  - {word: "duckling", tier: "normal", category: "object", aliases: ["duckling"], lvis_id: 402}
+  - {word: "duct_tape", tier: "normal", category: "tool", aliases: ["duct_tape"], lvis_id: 403}
+  - {word: "duffel_bag", tier: "normal", category: "container", aliases: ["duffel", "duffel_bag", "duffle", "duffle_bag"], lvis_id: 404}
+  - {word: "Dumbbell", tier: "normal", category: "object", aliases: ["dumbbell"], lvis_id: 405, openimages_id: "/m/04h8sr"}
+  - {word: "dumpster", tier: "normal", category: "object", aliases: ["dumpster"], lvis_id: 406}
+  - {word: "dustpan", tier: "normal", category: "object", aliases: ["dustpan"], lvis_id: 407}
+  - {word: "Eagle", tier: "normal", category: "object", aliases: ["eagle"], lvis_id: 408, openimages_id: "/m/09csl"}
+  - {word: "earphone", tier: "normal", category: "object", aliases: ["earphone", "earpiece", "headphone"], lvis_id: 409}
+  - {word: "earplug", tier: "normal", category: "object", aliases: ["earplug"], lvis_id: 410}
+  - {word: "earring", tier: "low", category: "object", aliases: ["earring"], lvis_id: 411}
+  - {word: "Earrings", tier: "normal", category: "object", openimages_id: "/m/01r546"}
+  - {word: "easel", tier: "normal", category: "object", aliases: ["easel"], lvis_id: 412}
+  - {word: "eclair", tier: "normal", category: "object", aliases: ["eclair"], lvis_id: 413}
+  - {word: "edible_corn", tier: "normal", category: "object", aliases: ["corn", "edible_corn", "maize"], lvis_id: 309}
+  - {word: "eel", tier: "normal", category: "object", aliases: ["eel"], lvis_id: 414}
+  - {word: "Egg", tier: "normal", category: "food", aliases: ["egg", "eggs"], lvis_id: 415, openimages_id: "/m/033cnk"}
+  - {word: "egg_roll", tier: "normal", category: "food", aliases: ["egg_roll", "spring_roll"], lvis_id: 416}
+  - {word: "egg_yolk", tier: "normal", category: "food", aliases: ["egg_yolk", "yolk_(egg)"], lvis_id: 417}
+  - {word: "eggbeater", tier: "normal", category: "object", aliases: ["eggbeater", "eggwhisk"], lvis_id: 418}
+  - {word: "eggplant", tier: "normal", category: "object", aliases: ["aubergine", "eggplant"], lvis_id: 419}
+  - {word: "electric_chair", tier: "high", category: "furniture", aliases: ["electric_chair"], lvis_id: 420}
+  - {word: "elephant", tier: "high", category: "animal", aliases: ["elephant"], coco_id: 20, lvis_id: 422, openimages_id: "/m/0bwd_0j"}
+  - {word: "elevator_car", tier: "critical", category: "vehicle", aliases: ["elevator_car"], lvis_id: 209}
+  - {word: "elk", tier: "normal", category: "object", aliases: ["elk", "moose"], lvis_id: 423}
+  - {word: "Envelope", tier: "normal", category: "stationery", aliases: ["envelope"], lvis_id: 424, openimages_id: "/m/0frqm"}
+  - {word: "Eraser", tier: "low", category: "stationery", aliases: ["eraser"], lvis_id: 425, openimages_id: "/m/02fh7f"}
+  - {word: "escargot", tier: "normal", category: "object", aliases: ["escargot"], lvis_id: 426}
+  - {word: "eyepatch", tier: "normal", category: "object", aliases: ["eyepatch"], lvis_id: 427}
+  - {word: "Face powder", tier: "normal", category: "body", openimages_id: "/m/02xb7qb"}
+  - {word: "Facial tissue holder", tier: "normal", category: "object", openimages_id: "/m/0h8nsvg"}
+  - {word: "Falcon", tier: "normal", category: "object", aliases: ["falcon"], lvis_id: 428, openimages_id: "/m/0f6wt"}
+  - {word: "fan", tier: "normal", category: "appliance", aliases: ["fan"], lvis_id: 429}
+  - {word: "Fashion accessory", tier: "normal", category: "object", openimages_id: "/m/0463sg"}
+  - {word: "Fast food", tier: "normal", category: "object", openimages_id: "/m/01_bhs"}
+  - {word: "faucet", tier: "normal", category: "object", aliases: ["faucet", "spigot", "tap"], lvis_id: 430}
+  - {word: "Fax", tier: "normal", category: "object", openimages_id: "/m/02xqq"}
+  - {word: "Fedora", tier: "normal", category: "object", aliases: ["fedora"], lvis_id: 431, openimages_id: "/m/02fq_6"}
+  - {word: "ferret", tier: "normal", category: "object", aliases: ["ferret"], lvis_id: 432}
+  - {word: "Ferris_wheel", tier: "normal", category: "object", aliases: ["Ferris_wheel"], lvis_id: 433}
+  - {word: "ferry", tier: "critical", category: "vehicle", aliases: ["ferry", "ferryboat"], lvis_id: 434}
+  - {word: "fig_(fruit)", tier: "normal", category: "object", aliases: ["fig_(fruit)"], lvis_id: 435}
+  - {word: "fighter_jet", tier: "normal", category: "object", aliases: ["attack_aircraft", "fighter_aircraft", "fighter_jet"], lvis_id: 436}
+  - {word: "figurine", tier: "low", category: "object", aliases: ["figurine"], lvis_id: 437}
+  - {word: "file_(tool)", tier: "normal", category: "object", aliases: ["file_(tool)"], lvis_id: 439}
+  - {word: "file_cabinet", tier: "high", category: "furniture", aliases: ["file_cabinet", "filing_cabinet"], lvis_id: 438}
+  - {word: "Filing cabinet", tier: "high", category: "furniture", openimages_id: "/m/047j0r"}
+  - {word: "fire_alarm", tier: "high", category: "object", aliases: ["fire_alarm", "smoke_alarm"], lvis_id: 440}
+  - {word: "fire_engine", tier: "normal", category: "object", aliases: ["fire_engine", "fire_truck"], lvis_id: 441}
+  - {word: "fire_extinguisher", tier: "high", category: "object", aliases: ["extinguisher", "fire_extinguisher"], lvis_id: 442}
+  - {word: "fire_hose", tier: "normal", category: "object", aliases: ["fire_hose"], lvis_id: 443}
+  - {word: "fire hydrant", tier: "critical", category: "outdoor", coco_id: 10, openimages_id: "/m/01pns0"}
+  - {word: "Fireplace", tier: "high", category: "object", aliases: ["fireplace"], lvis_id: 444, openimages_id: "/m/03tw93"}
+  - {word: "fireplug", tier: "normal", category: "object", aliases: ["fire_hydrant", "fireplug", "hydrant"], lvis_id: 445}
+  - {word: "first-aid_kit", tier: "normal", category: "object", aliases: ["first-aid_kit"], lvis_id: 446}
+  - {word: "Fish", tier: "high", category: "animal", aliases: ["fish"], lvis_id: 447, openimages_id: "/m/0ch_cf"}
+  - {word: "fish_(food)", tier: "high", category: "animal", aliases: ["fish_(food)"], lvis_id: 448}
+  - {word: "fishbowl", tier: "normal", category: "object", aliases: ["fishbowl", "goldfish_bowl"], lvis_id: 449}
+  - {word: "fishing_rod", tier: "normal", category: "object", aliases: ["fishing_pole", "fishing_rod"], lvis_id: 450}
+  - {word: "Flag", tier: "low", category: "object", aliases: ["flag"], lvis_id: 451, openimages_id: "/m/03120"}
+  - {word: "flagpole", tier: "normal", category: "object", aliases: ["flagpole", "flagstaff"], lvis_id: 452}
+  - {word: "flamingo", tier: "normal", category: "object", aliases: ["flamingo"], lvis_id: 453}
+  - {word: "flannel", tier: "normal", category: "object", aliases: ["flannel"], lvis_id: 454}
+  - {word: "flap", tier: "normal", category: "object", aliases: ["flap"], lvis_id: 455}
+  - {word: "flash", tier: "normal", category: "object", aliases: ["flash", "flashbulb"], lvis_id: 456}
+  - {word: "Flashlight", tier: "normal", category: "object", aliases: ["flashlight", "torch"], lvis_id: 457, openimages_id: "/m/01kb5b"}
+  - {word: "fleece", tier: "normal", category: "object", aliases: ["fleece"], lvis_id: 458}
+  - {word: "flip-flop_(sandal)", tier: "normal", category: "object", aliases: ["flip-flop_(sandal)"], lvis_id: 459}
+  - {word: "flipper_(footwear)", tier: "normal", category: "object", aliases: ["fin_(footwear)", "flipper_(footwear)"], lvis_id: 460}
+  - {word: "Flower", tier: "normal", category: "outdoor", openimages_id: "/m/0c9ph5"}
+  - {word: "flower_arrangement", tier: "normal", category: "outdoor", aliases: ["floral_arrangement", "flower_arrangement"], lvis_id: 461}
+  - {word: "Flowerpot", tier: "normal", category: "object", aliases: ["flowerpot"], lvis_id: 837, openimages_id: "/m/0fm3zh"}
+  - {word: "Flute", tier: "normal", category: "music", openimages_id: "/m/0l14j_"}
+  - {word: "flute_glass", tier: "normal", category: "drink", aliases: ["champagne_flute", "flute_glass"], lvis_id: 462}
+  - {word: "Flying disc", tier: "normal", category: "object", openimages_id: "/m/02wmf"}
+  - {word: "foal", tier: "normal", category: "object", aliases: ["foal"], lvis_id: 463}
+  - {word: "folding_chair", tier: "high", category: "furniture", aliases: ["folding_chair"], lvis_id: 464}
+  - {word: "Food", tier: "normal", category: "object", openimages_id: "/m/02wbm"}
+  - {word: "Food processor", tier: "normal", category: "object", aliases: ["food_processor"], lvis_id: 465, openimages_id: "/m/03y6mg"}
+  - {word: "Football", tier: "normal", category: "object", openimages_id: "/m/01226z"}
+  - {word: "football_(American)", tier: "normal", category: "object", aliases: ["football_(American)"], lvis_id: 466}
+  - {word: "Football helmet", tier: "normal", category: "clothing", aliases: ["football_helmet"], lvis_id: 467, openimages_id: "/m/07qxg_"}
+  - {word: "footstool", tier: "normal", category: "object", aliases: ["footrest", "footstool"], lvis_id: 468}
+  - {word: "Footwear", tier: "normal", category: "object", openimages_id: "/m/09j5n"}
+  - {word: "fork", tier: "normal", category: "kitchen", aliases: ["fork"], coco_id: 42, lvis_id: 469, openimages_id: "/m/0dt3t"}
+  - {word: "forklift", tier: "critical", category: "vehicle", aliases: ["forklift"], lvis_id: 470}
+  - {word: "Fountain", tier: "normal", category: "outdoor", openimages_id: "/m/0220r2"}
+  - {word: "Fox", tier: "high", category: "animal", openimages_id: "/m/0306r"}
+  - {word: "freight_car", tier: "critical", category: "vehicle", aliases: ["freight_car"], lvis_id: 471}
+  - {word: "French fries", tier: "normal", category: "object", openimages_id: "/m/02y6n"}
+  - {word: "French_toast", tier: "normal", category: "object", aliases: ["French_toast"], lvis_id: 472}
+  - {word: "freshener", tier: "normal", category: "object", aliases: ["air_freshener", "freshener"], lvis_id: 473}
+  - {word: "frisbee", tier: "normal", category: "sport", aliases: ["frisbee"], coco_id: 29, lvis_id: 474}
+  - {word: "Frog", tier: "normal", category: "object", aliases: ["frog", "toad", "toad_frog"], lvis_id: 475, openimages_id: "/m/09ld4"}
+  - {word: "Fruit", tier: "normal", category: "object", openimages_id: "/m/02xwb"}
+  - {word: "fruit_juice", tier: "normal", category: "food", aliases: ["fruit_juice"], lvis_id: 476}
+  - {word: "Frying pan", tier: "normal", category: "kitchen", aliases: ["frying_pan", "frypan", "skillet"], lvis_id: 477, openimages_id: "/m/04v6l4"}
+  - {word: "fudge", tier: "normal", category: "object", aliases: ["fudge"], lvis_id: 478}
+  - {word: "fume_hood", tier: "normal", category: "object", aliases: ["exhaust_hood", "fume_hood"], lvis_id: 565}
+  - {word: "funnel", tier: "normal", category: "object", aliases: ["funnel"], lvis_id: 479}
+  - {word: "Furniture", tier: "normal", category: "object", openimages_id: "/m/0c_jw"}
+  - {word: "futon", tier: "normal", category: "object", aliases: ["futon"], lvis_id: 480}
+  - {word: "gag", tier: "normal", category: "object", aliases: ["gag", "muzzle"], lvis_id: 481}
+  - {word: "gameboard", tier: "normal", category: "object", aliases: ["gameboard"], lvis_id: 117}
+  - {word: "garbage", tier: "critical", category: "object", aliases: ["garbage"], lvis_id: 482}
+  - {word: "garbage_truck", tier: "critical", category: "vehicle", aliases: ["garbage_truck"], lvis_id: 483}
+  - {word: "garden_hose", tier: "normal", category: "object", aliases: ["garden_hose"], lvis_id: 484}
+  - {word: "gargle", tier: "normal", category: "object", aliases: ["gargle", "mouthwash"], lvis_id: 485}
+  - {word: "gargoyle", tier: "normal", category: "object", aliases: ["gargoyle"], lvis_id: 486}
+  - {word: "garlic", tier: "normal", category: "object", aliases: ["ail", "garlic"], lvis_id: 487}
+  - {word: "Gas stove", tier: "high", category: "appliance", openimages_id: "/m/02wv84t"}
+  - {word: "gasmask", tier: "normal", category: "object", aliases: ["gas_helmet", "gasmask", "respirator"], lvis_id: 488}
+  - {word: "gazelle", tier: "normal", category: "object", aliases: ["gazelle"], lvis_id: 489}
+  - {word: "gelatin", tier: "normal", category: "object", aliases: ["gelatin", "jelly"], lvis_id: 490}
+  - {word: "gemstone", tier: "normal", category: "object", aliases: ["gemstone"], lvis_id: 491}
+  - {word: "generator", tier: "normal", category: "object", aliases: ["generator"], lvis_id: 492}
+  - {word: "giant_panda", tier: "normal", category: "object", aliases: ["giant_panda", "panda", "panda_bear"], lvis_id: 493}
+  - {word: "gift_wrap", tier: "normal", category: "object", aliases: ["gift_wrap"], lvis_id: 494}
+  - {word: "ginger", tier: "normal", category: "object", aliases: ["ginger", "gingerroot"], lvis_id: 495}
+  - {word: "giraffe", tier: "high", category: "animal", aliases: ["giraffe"], coco_id: 23, lvis_id: 496, openimages_id: "/m/03bk1"}
+  - {word: "Girl", tier: "normal", category: "object", openimages_id: "/m/05r655"}
+  - {word: "glass_(drink_container)", tier: "normal", category: "drink", aliases: ["drinking_glass", "glass_(drink_container)"], lvis_id: 498}
+  - {word: "Glasses", tier: "normal", category: "object", openimages_id: "/m/0jyfg"}
+  - {word: "globe", tier: "normal", category: "object", aliases: ["globe"], lvis_id: 499}
+  - {word: "Glove", tier: "normal", category: "clothing", aliases: ["glove"], lvis_id: 500, openimages_id: "/m/0174n1"}
+  - {word: "Goat", tier: "high", category: "animal", aliases: ["goat"], lvis_id: 501, openimages_id: "/m/03fwl"}
+  - {word: "Goggles", tier: "normal", category: "object", aliases: ["goggles"], lvis_id: 502, openimages_id: "/m/02_n6y"}
+  - {word: "Goldfish", tier: "normal", category: "object", aliases: ["goldfish"], lvis_id: 503, openimages_id: "/m/03fj2"}
+  - {word: "Golf ball", tier: "normal", category: "sport", openimages_id: "/m/044r5d"}
+  - {word: "Golf cart", tier: "normal", category: "object", openimages_id: "/m/0323sq"}
+  - {word: "golf_club", tier: "normal", category: "object", aliases: ["golf-club", "golf_club"], lvis_id: 504}
+  - {word: "golfcart", tier: "normal", category: "object", aliases: ["golfcart"], lvis_id: 505}
+  - {word: "Gondola", tier: "normal", category: "object", openimages_id: "/m/02068x"}
+  - {word: "gondola_(boat)", tier: "normal", category: "object", aliases: ["gondola_(boat)"], lvis_id: 506}
+  - {word: "Goose", tier: "high", category: "animal", aliases: ["goose"], lvis_id: 507, openimages_id: "/m/0dbvp"}
+  - {word: "gorilla", tier: "normal", category: "object", aliases: ["gorilla"], lvis_id: 508}
+  - {word: "gourd", tier: "normal", category: "object", aliases: ["gourd"], lvis_id: 509}
+  - {word: "Grape", tier: "normal", category: "object", aliases: ["grape"], lvis_id: 510, openimages_id: "/m/0388q"}
+  - {word: "Grapefruit", tier: "normal", category: "object", openimages_id: "/m/0hqkz"}
+  - {word: "grater", tier: "normal", category: "object", aliases: ["grater"], lvis_id: 511}
+  - {word: "gravestone", tier: "normal", category: "object", aliases: ["gravestone", "headstone", "tombstone"], lvis_id: 512}
+  - {word: "gravy_boat", tier: "critical", category: "vehicle", aliases: ["gravy_boat", "gravy_holder"], lvis_id: 513}
+  - {word: "green_bean", tier: "normal", category: "object", aliases: ["green_bean"], lvis_id: 514}
+  - {word: "green_onion", tier: "normal", category: "object", aliases: ["green_onion", "scallion", "spring_onion"], lvis_id: 515}
+  - {word: "griddle", tier: "normal", category: "object", aliases: ["griddle"], lvis_id: 516}
+  - {word: "grill", tier: "normal", category: "object", aliases: ["grill", "grille", "grillwork", "radiator_grille"], lvis_id: 517}
+  - {word: "Grinder", tier: "normal", category: "object", openimages_id: "/m/0h8jyh6"}
+  - {word: "grits", tier: "normal", category: "object", aliases: ["grits", "hominy_grits"], lvis_id: 518}
+  - {word: "grizzly", tier: "normal", category: "object", aliases: ["grizzly", "grizzly_bear"], lvis_id: 519}
+  - {word: "grocery_bag", tier: "normal", category: "container", aliases: ["grocery_bag"], lvis_id: 520}
+  - {word: "Guacamole", tier: "normal", category: "object", openimages_id: "/m/02g30s"}
+  - {word: "Guitar", tier: "normal", category: "music", aliases: ["guitar"], lvis_id: 521, openimages_id: "/m/0342h"}
+  - {word: "gull", tier: "normal", category: "object", aliases: ["gull", "seagull"], lvis_id: 522}
+  - {word: "gun", tier: "normal", category: "object", aliases: ["gun"], lvis_id: 523}
+  - {word: "hair_curler", tier: "normal", category: "object", aliases: ["hair_crimper", "hair_curler", "hair_roller"], lvis_id: 348}
+  - {word: "hair drier", tier: "normal", category: "object", coco_id: 78}
+  - {word: "Hair dryer", tier: "high", category: "appliance", aliases: ["hair_dryer"], lvis_id: 534, openimages_id: "/m/03wvsk"}
+  - {word: "Hair spray", tier: "normal", category: "object", openimages_id: "/m/05w9t9"}
+  - {word: "hairbrush", tier: "normal", category: "object", aliases: ["hairbrush"], lvis_id: 524}
+  - {word: "hairnet", tier: "normal", category: "object", aliases: ["hairnet"], lvis_id: 525}
+  - {word: "hairpin", tier: "normal", category: "object", aliases: ["hairpin"], lvis_id: 526}
+  - {word: "halter_top", tier: "normal", category: "object", aliases: ["halter_top"], lvis_id: 527}
+  - {word: "ham", tier: "normal", category: "object", aliases: ["gammon", "ham", "jambon"], lvis_id: 528}
+  - {word: "Hamburger", tier: "normal", category: "object", aliases: ["beefburger", "burger", "hamburger"], lvis_id: 529, openimages_id: "/m/0cdn1"}
+  - {word: "Hammer", tier: "normal", category: "tool", aliases: ["hammer"], lvis_id: 530, openimages_id: "/m/03l9g"}
+  - {word: "hammock", tier: "normal", category: "object", aliases: ["hammock"], lvis_id: 531}
+  - {word: "hamper", tier: "normal", category: "object", aliases: ["hamper"], lvis_id: 532}
+  - {word: "Hamster", tier: "normal", category: "object", aliases: ["hamster"], lvis_id: 533, openimages_id: "/m/03qrc"}
+  - {word: "Hand dryer", tier: "high", category: "appliance", openimages_id: "/m/0c3m8g"}
+  - {word: "hand_glass", tier: "normal", category: "drink", aliases: ["hand_glass", "hand_mirror"], lvis_id: 535}
+  - {word: "hand_towel", tier: "low", category: "body", aliases: ["face_towel", "hand_towel"], lvis_id: 536}
+  - {word: "handbag", tier: "normal", category: "clothing", aliases: ["handbag", "pocketbook", "purse"], coco_id: 26, lvis_id: 35, openimages_id: "/m/080hkjn"}
+  - {word: "handcart", tier: "normal", category: "object", aliases: ["hand_truck", "handcart", "pushcart"], lvis_id: 537}
+  - {word: "handcuff", tier: "normal", category: "object", aliases: ["handcuff"], lvis_id: 538}
+  - {word: "Handgun", tier: "normal", category: "object", openimages_id: "/m/0gxl3"}
+  - {word: "handkerchief", tier: "normal", category: "object", aliases: ["handkerchief"], lvis_id: 539}
+  - {word: "handle", tier: "normal", category: "object", aliases: ["grip", "handgrip", "handle"], lvis_id: 540}
+  - {word: "handsaw", tier: "normal", category: "object", aliases: ["carpenter's_saw", "handsaw"], lvis_id: 541}
+  - {word: "Harbor seal", tier: "normal", category: "object", openimages_id: "/m/02l8p9"}
+  - {word: "hardback_book", tier: "low", category: "stationery", aliases: ["hardback_book", "hardcover_book"], lvis_id: 542}
+  - {word: "Harmonica", tier: "normal", category: "object", openimages_id: "/m/03qjg"}
+  - {word: "harmonium", tier: "normal", category: "object", aliases: ["harmonium", "organ_(musical_instrument)", "reed_organ_(musical_instrument)"], lvis_id: 543}
+  - {word: "Harp", tier: "normal", category: "object", openimages_id: "/m/03m5k"}
+  - {word: "Harpsichord", tier: "normal", category: "object", openimages_id: "/m/03q5t"}
+  - {word: "Hat", tier: "normal", category: "clothing", aliases: ["hat"], lvis_id: 544, openimages_id: "/m/02dl1y"}
+  - {word: "hatbox", tier: "normal", category: "object", aliases: ["hatbox"], lvis_id: 545}
+  - {word: "headband", tier: "normal", category: "clothing", aliases: ["headband"], lvis_id: 547}
+  - {word: "headboard", tier: "normal", category: "object", aliases: ["headboard"], lvis_id: 548}
+  - {word: "headlight", tier: "normal", category: "object", aliases: ["headlamp", "headlight"], lvis_id: 549}
+  - {word: "Headphones", tier: "normal", category: "electronics", openimages_id: "/m/01b7fy"}
+  - {word: "headscarf", tier: "normal", category: "object", aliases: ["headscarf"], lvis_id: 550}
+  - {word: "headset", tier: "normal", category: "object", aliases: ["headset"], lvis_id: 551}
+  - {word: "headstall_(for_horses)", tier: "normal", category: "object", aliases: ["headpiece_(for_horses)", "headstall_(for_horses)"], lvis_id: 552}
+  - {word: "heart", tier: "normal", category: "object", aliases: ["heart"], lvis_id: 553}
+  - {word: "Heater", tier: "normal", category: "object", aliases: ["heater", "warmer"], lvis_id: 554, openimages_id: "/m/03qhv5"}
+  - {word: "Hedgehog", tier: "normal", category: "object", openimages_id: "/m/0cl4p"}
+  - {word: "Helicopter", tier: "critical", category: "vehicle", aliases: ["helicopter"], lvis_id: 555, openimages_id: "/m/09ct_"}
+  - {word: "Helmet", tier: "normal", category: "clothing", aliases: ["helmet"], lvis_id: 556, openimages_id: "/m/0zvk5"}
+  - {word: "heron", tier: "normal", category: "object", aliases: ["heron"], lvis_id: 557}
+  - {word: "High heels", tier: "normal", category: "object", openimages_id: "/m/06k2mb"}
+  - {word: "highchair", tier: "normal", category: "object", aliases: ["feeding_chair", "highchair"], lvis_id: 558}
+  - {word: "Hiking equipment", tier: "normal", category: "object", openimages_id: "/m/0268lbt"}
+  - {word: "hinge", tier: "normal", category: "object", aliases: ["hinge"], lvis_id: 559}
+  - {word: "Hippopotamus", tier: "normal", category: "object", aliases: ["hippopotamus"], lvis_id: 560, openimages_id: "/m/09f20"}
+  - {word: "hockey_stick", tier: "normal", category: "object", aliases: ["hockey_stick"], lvis_id: 561}
+  - {word: "hog", tier: "normal", category: "object", aliases: ["hog", "pig"], lvis_id: 562}
+  - {word: "Home appliance", tier: "normal", category: "object", openimages_id: "/m/019dx1"}
+  - {word: "home_plate_(baseball)", tier: "normal", category: "kitchen", aliases: ["home_base_(baseball)", "home_plate_(baseball)"], lvis_id: 563}
+  - {word: "honey", tier: "normal", category: "object", aliases: ["honey"], lvis_id: 564}
+  - {word: "Honeycomb", tier: "normal", category: "object", openimages_id: "/m/0fz0h"}
+  - {word: "hook", tier: "normal", category: "object", aliases: ["hook"], lvis_id: 566}
+  - {word: "hookah", tier: "normal", category: "object", aliases: ["hookah", "narghile", "nargileh", "sheesha", "shisha", "water_pipe"], lvis_id: 567}
+  - {word: "Horizontal bar", tier: "normal", category: "object", openimages_id: "/m/0cqn2"}
+  - {word: "Horn", tier: "normal", category: "object", openimages_id: "/m/0319l"}
+  - {word: "hornet", tier: "normal", category: "object", aliases: ["hornet"], lvis_id: 568}
+  - {word: "horse", tier: "high", category: "animal", aliases: ["horse"], coco_id: 17, lvis_id: 569, openimages_id: "/m/03k3r"}
+  - {word: "horse_buggy", tier: "high", category: "animal", aliases: ["horse_buggy"], lvis_id: 161}
+  - {word: "horse_carriage", tier: "high", category: "animal", aliases: ["horse_carriage"], lvis_id: 216}
+  - {word: "hose", tier: "normal", category: "object", aliases: ["hose", "hosepipe"], lvis_id: 570}
+  - {word: "hot dog", tier: "high", category: "animal", coco_id: 52, openimages_id: "/m/01b9xk"}
+  - {word: "hot_sauce", tier: "normal", category: "object", aliases: ["hot_sauce"], lvis_id: 573}
+  - {word: "hot-air_balloon", tier: "normal", category: "object", aliases: ["hot-air_balloon"], lvis_id: 571}
+  - {word: "hotplate", tier: "normal", category: "object", aliases: ["hotplate"], lvis_id: 572}
+  - {word: "hourglass", tier: "normal", category: "object", aliases: ["hourglass"], lvis_id: 574}
+  - {word: "House", tier: "normal", category: "building", openimages_id: "/m/03jm5"}
+  - {word: "houseboat", tier: "normal", category: "object", aliases: ["houseboat"], lvis_id: 575}
+  - {word: "Houseplant", tier: "normal", category: "object", openimages_id: "/m/03fp41"}
+  - {word: "Human arm", tier: "normal", category: "body", openimages_id: "/m/0dzf4"}
+  - {word: "Human beard", tier: "normal", category: "object", openimages_id: "/m/015h_t"}
+  - {word: "Human body", tier: "normal", category: "object", openimages_id: "/m/02p0tk3"}
+  - {word: "Human ear", tier: "normal", category: "body", openimages_id: "/m/039xj_"}
+  - {word: "Human eye", tier: "normal", category: "body", openimages_id: "/m/014sv8"}
+  - {word: "Human face", tier: "normal", category: "body", openimages_id: "/m/0dzct"}
+  - {word: "Human foot", tier: "normal", category: "body", openimages_id: "/m/031n1"}
+  - {word: "Human hair", tier: "normal", category: "object", openimages_id: "/m/03q69"}
+  - {word: "Human hand", tier: "normal", category: "body", openimages_id: "/m/0k65p"}
+  - {word: "Human head", tier: "normal", category: "body", openimages_id: "/m/04hgtk"}
+  - {word: "Human leg", tier: "normal", category: "body", openimages_id: "/m/035r7c"}
+  - {word: "Human mouth", tier: "normal", category: "body", openimages_id: "/m/0283dt1"}
+  - {word: "Human nose", tier: "normal", category: "body", openimages_id: "/m/0k0pj"}
+  - {word: "Humidifier", tier: "normal", category: "object", openimages_id: "/m/04lvq_"}
+  - {word: "hummingbird", tier: "normal", category: "object", aliases: ["hummingbird"], lvis_id: 576}
+  - {word: "hummus", tier: "normal", category: "object", aliases: ["hommos", "hoummos", "hummus", "humous", "humus"], lvis_id: 577}
+  - {word: "Ice cream", tier: "normal", category: "object", openimages_id: "/m/0cxn2"}
+  - {word: "ice_maker", tier: "normal", category: "object", aliases: ["ice_maker"], lvis_id: 581}
+  - {word: "ice_pack", tier: "normal", category: "object", aliases: ["ice_bag", "ice_pack"], lvis_id: 582}
+  - {word: "ice_skate", tier: "normal", category: "object", aliases: ["ice_skate"], lvis_id: 583}
+  - {word: "icecream", tier: "normal", category: "object", aliases: ["icecream"], lvis_id: 579}
+  - {word: "identity_card", tier: "normal", category: "object", aliases: ["identity_card"], lvis_id: 211}
+  - {word: "igniter", tier: "normal", category: "object", aliases: ["igniter", "ignitor", "lighter"], lvis_id: 584}
+  - {word: "Indoor rower", tier: "normal", category: "object", openimages_id: "/m/03wym"}
+  - {word: "Infant bed", tier: "high", category: "furniture", openimages_id: "/m/061hd_"}
+  - {word: "inhaler", tier: "normal", category: "object", aliases: ["inhalator", "inhaler"], lvis_id: 585}
+  - {word: "inkpad", tier: "normal", category: "object", aliases: ["inking_pad", "inkpad", "stamp_pad"], lvis_id: 743}
+  - {word: "Insect", tier: "normal", category: "object", openimages_id: "/m/03vt0"}
+  - {word: "Invertebrate", tier: "normal", category: "object", openimages_id: "/m/03xxp"}
+  - {word: "Ipod", tier: "normal", category: "object", aliases: ["iPod"], lvis_id: 586, openimages_id: "/m/0mcx2"}
+  - {word: "iron_(for_clothing)", tier: "normal", category: "object", aliases: ["iron_(for_clothing)", "smoothing_iron_(for_clothing)"], lvis_id: 587}
+  - {word: "ironing_board", tier: "normal", category: "object", aliases: ["ironing_board"], lvis_id: 588}
+  - {word: "Isopod", tier: "normal", category: "object", openimages_id: "/m/035vxb"}
+  - {word: "Jacket", tier: "normal", category: "clothing", aliases: ["jacket"], lvis_id: 589, openimages_id: "/m/032b3c"}
+  - {word: "Jacuzzi", tier: "normal", category: "object", openimages_id: "/m/065h6l"}
+  - {word: "Jaguar", tier: "normal", category: "object", openimages_id: "/m/0449p"}
+  - {word: "jam", tier: "normal", category: "object", aliases: ["jam"], lvis_id: 590}
+  - {word: "jar", tier: "normal", category: "container", aliases: ["jar"], lvis_id: 591}
+  - {word: "jean", tier: "normal", category: "object", aliases: ["blue_jean", "denim", "jean"], lvis_id: 592}
+  - {word: "Jeans", tier: "normal", category: "clothing", openimages_id: "/m/0fly7"}
+  - {word: "jeep", tier: "normal", category: "object", aliases: ["jeep", "landrover"], lvis_id: 593}
+  - {word: "jelly_bean", tier: "normal", category: "object", aliases: ["jelly_bean", "jelly_egg"], lvis_id: 594}
+  - {word: "Jellyfish", tier: "normal", category: "object", openimages_id: "/m/0d8zb"}
+  - {word: "jersey", tier: "normal", category: "object", aliases: ["T-shirt", "jersey", "tee_shirt"], lvis_id: 595}
+  - {word: "jet_plane", tier: "normal", category: "object", aliases: ["jet-propelled_plane", "jet_plane"], lvis_id: 596}
+  - {word: "Jet ski", tier: "normal", category: "object", openimages_id: "/m/01xs3r"}
+  - {word: "jewel", tier: "normal", category: "object", aliases: ["gem", "jewel", "precious_stone"], lvis_id: 597}
+  - {word: "jewelry", tier: "low", category: "object", aliases: ["jewellery", "jewelry"], lvis_id: 598}
+  - {word: "joystick", tier: "normal", category: "object", aliases: ["joystick"], lvis_id: 599}
+  - {word: "Jug", tier: "normal", category: "object", openimages_id: "/m/08hvt4"}
+  - {word: "Juice", tier: "normal", category: "food", openimages_id: "/m/01z1kdw"}
+  - {word: "jumpsuit", tier: "normal", category: "object", aliases: ["jumpsuit"], lvis_id: 600}
+  - {word: "Kangaroo", tier: "normal", category: "object", openimages_id: "/m/04c0y"}
+  - {word: "kayak", tier: "normal", category: "object", aliases: ["kayak"], lvis_id: 601}
+  - {word: "keg", tier: "normal", category: "object", aliases: ["keg"], lvis_id: 602}
+  - {word: "kennel", tier: "normal", category: "object", aliases: ["doghouse", "kennel"], lvis_id: 603}
+  - {word: "Kettle", tier: "normal", category: "appliance", aliases: ["boiler", "kettle"], lvis_id: 604, openimages_id: "/m/03s_tn"}
+  - {word: "key", tier: "normal", category: "object", aliases: ["key"], lvis_id: 605}
+  - {word: "keyboard", tier: "normal", category: "electronics", coco_id: 66}
+  - {word: "keycard", tier: "normal", category: "object", aliases: ["keycard"], lvis_id: 606}
+  - {word: "kilt", tier: "normal", category: "object", aliases: ["kilt"], lvis_id: 607}
+  - {word: "kimono", tier: "normal", category: "object", aliases: ["kimono"], lvis_id: 608}
+  - {word: "Kitchen & dining room table", tier: "high", category: "furniture", openimages_id: "/m/0h8n5zk"}
+  - {word: "Kitchen appliance", tier: "normal", category: "object", openimages_id: "/m/0h99cwc"}
+  - {word: "Kitchen knife", tier: "normal", category: "kitchen", openimages_id: "/m/058qzx"}
+  - {word: "kitchen_sink", tier: "high", category: "appliance", aliases: ["kitchen_sink"], lvis_id: 609}
+  - {word: "kitchen_table", tier: "high", category: "furniture", aliases: ["kitchen_table"], lvis_id: 610}
+  - {word: "Kitchen utensil", tier: "normal", category: "object", openimages_id: "/m/03hlz0c"}
+  - {word: "Kitchenware", tier: "normal", category: "object", openimages_id: "/m/03_wxk"}
+  - {word: "kite", tier: "normal", category: "sport", aliases: ["kite"], coco_id: 33, lvis_id: 611, openimages_id: "/m/02zt3"}
+  - {word: "kitten", tier: "normal", category: "object", aliases: ["kitten", "kitty"], lvis_id: 612}
+  - {word: "kiwi_fruit", tier: "normal", category: "object", aliases: ["kiwi_fruit"], lvis_id: 613}
+  - {word: "knee_pad", tier: "normal", category: "object", aliases: ["knee_pad"], lvis_id: 614}
+  - {word: "knife", tier: "normal", category: "kitchen", aliases: ["knife"], coco_id: 43, lvis_id: 615, openimages_id: "/m/04ctx"}
+  - {word: "knitting_needle", tier: "normal", category: "object", aliases: ["knitting_needle"], lvis_id: 616}
+  - {word: "knob", tier: "normal", category: "object", aliases: ["knob"], lvis_id: 617}
+  - {word: "knocker_(on_a_door)", tier: "normal", category: "object", aliases: ["doorknocker", "knocker_(on_a_door)"], lvis_id: 618}
+  - {word: "Koala", tier: "normal", category: "object", aliases: ["koala", "koala_bear"], lvis_id: 619, openimages_id: "/m/04cp_"}
+  - {word: "lab_coat", tier: "normal", category: "clothing", aliases: ["lab_coat", "laboratory_coat"], lvis_id: 620}
+  - {word: "Ladder", tier: "normal", category: "object", aliases: ["ladder"], lvis_id: 621, openimages_id: "/m/012w5l"}
+  - {word: "Ladle", tier: "normal", category: "kitchen", aliases: ["ladle"], lvis_id: 622, openimages_id: "/m/027rl48"}
+  - {word: "Ladybug", tier: "normal", category: "object", aliases: ["ladybeetle", "ladybird_beetle", "ladybug"], lvis_id: 623, openimages_id: "/m/0gj37"}
+  - {word: "lamb_(animal)", tier: "normal", category: "object", aliases: ["lamb_(animal)"], lvis_id: 624}
+  - {word: "lamb-chop", tier: "normal", category: "object", aliases: ["lamb-chop", "lambchop"], lvis_id: 625}
+  - {word: "Lamp", tier: "high", category: "outdoor", aliases: ["lamp"], lvis_id: 626, openimages_id: "/m/0dtln"}
+  - {word: "lamppost", tier: "normal", category: "object", aliases: ["lamppost"], lvis_id: 627}
+  - {word: "lampshade", tier: "normal", category: "object", aliases: ["lampshade"], lvis_id: 628}
+  - {word: "Land vehicle", tier: "normal", category: "object", openimages_id: "/m/01prls"}
+  - {word: "Lantern", tier: "normal", category: "object", aliases: ["lantern"], lvis_id: 629, openimages_id: "/m/01jfsr"}
+  - {word: "lanyard", tier: "normal", category: "object", aliases: ["laniard", "lanyard"], lvis_id: 630}
+  - {word: "laptop", tier: "normal", category: "electronics", coco_id: 63, openimages_id: "/m/01c648"}
+  - {word: "laptop_computer", tier: "normal", category: "electronics", aliases: ["laptop_computer", "notebook_computer"], lvis_id: 631}
+  - {word: "lasagna", tier: "normal", category: "object", aliases: ["lasagna", "lasagne"], lvis_id: 632}
+  - {word: "latch", tier: "normal", category: "object", aliases: ["latch"], lvis_id: 633}
+  - {word: "Lavender", tier: "normal", category: "object", openimages_id: "/m/04gth"}
+  - {word: "lawn_mower", tier: "high", category: "object", aliases: ["lawn_mower"], lvis_id: 634}
+  - {word: "leather", tier: "normal", category: "object", aliases: ["leather"], lvis_id: 635}
+  - {word: "legging_(clothing)", tier: "normal", category: "object", aliases: ["leg_covering", "legging_(clothing)", "leging_(clothing)"], lvis_id: 636}
+  - {word: "Lego", tier: "normal", category: "toy", aliases: ["Lego", "Lego_set"], lvis_id: 637}
+  - {word: "legume", tier: "normal", category: "object", aliases: ["legume"], lvis_id: 638}
+  - {word: "Lemon", tier: "normal", category: "object", aliases: ["lemon"], lvis_id: 639, openimages_id: "/m/09k_b"}
+  - {word: "lemonade", tier: "normal", category: "object", aliases: ["lemonade"], lvis_id: 640}
+  - {word: "Leopard", tier: "normal", category: "object", openimages_id: "/m/0c29q"}
+  - {word: "lettuce", tier: "normal", category: "object", aliases: ["lettuce"], lvis_id: 641}
+  - {word: "license_plate", tier: "normal", category: "kitchen", aliases: ["license_plate", "numberplate"], lvis_id: 642}
+  - {word: "life_buoy", tier: "normal", category: "object", aliases: ["life_belt", "life_buoy", "life_ring", "lifesaver"], lvis_id: 643}
+  - {word: "life_jacket", tier: "normal", category: "clothing", aliases: ["life_jacket", "life_vest"], lvis_id: 644}
+  - {word: "Lifejacket", tier: "normal", category: "object", openimages_id: "/m/054xkw"}
+  - {word: "Light bulb", tier: "normal", category: "object", openimages_id: "/m/0h8l4fh"}
+  - {word: "Light switch", tier: "normal", category: "object", openimages_id: "/m/03jbxj"}
+  - {word: "lightbulb", tier: "normal", category: "object", aliases: ["lightbulb"], lvis_id: 645}
+  - {word: "Lighthouse", tier: "normal", category: "object", openimages_id: "/m/04h7h"}
+  - {word: "lightning_rod", tier: "normal", category: "object", aliases: ["lightning_conductor", "lightning_rod"], lvis_id: 646}
+  - {word: "Lily", tier: "normal", category: "object", openimages_id: "/m/0jqgx"}
+  - {word: "lime", tier: "normal", category: "object", aliases: ["lime"], lvis_id: 647}
+  - {word: "Limousine", tier: "normal", category: "object", aliases: ["limousine"], lvis_id: 648, openimages_id: "/m/01lcw4"}
+  - {word: "Lion", tier: "high", category: "animal", aliases: ["lion"], lvis_id: 649, openimages_id: "/m/096mb"}
+  - {word: "lip_balm", tier: "normal", category: "object", aliases: ["lip_balm"], lvis_id: 650}
+  - {word: "Lipstick", tier: "normal", category: "object", openimages_id: "/m/06c7f7"}
+  - {word: "liquor", tier: "normal", category: "object", aliases: ["cordial", "hard_liquor", "liqueur", "liquor", "spirits"], lvis_id: 651}
+  - {word: "Lizard", tier: "normal", category: "object", aliases: ["lizard"], lvis_id: 652, openimages_id: "/m/04m9y"}
+  - {word: "Lobster", tier: "normal", category: "object", openimages_id: "/m/0cjq5"}
+  - {word: "locker", tier: "normal", category: "object", aliases: ["locker", "storage_locker"], lvis_id: 182}
+  - {word: "log", tier: "normal", category: "object", aliases: ["log"], lvis_id: 653}
+  - {word: "lollipop", tier: "normal", category: "object", aliases: ["lollipop"], lvis_id: 654}
+  - {word: "Loveseat", tier: "normal", category: "object", aliases: ["loveseat"], lvis_id: 656, openimages_id: "/m/0703r8"}
+  - {word: "Luggage and bags", tier: "normal", category: "object", openimages_id: "/m/0hf58v5"}
+  - {word: "Lynx", tier: "normal", category: "object", openimages_id: "/m/04g2r"}
+  - {word: "machine_gun", tier: "normal", category: "object", aliases: ["machine_gun"], lvis_id: 657}
+  - {word: "magazine", tier: "low", category: "stationery", aliases: ["magazine"], lvis_id: 658}
+  - {word: "magnet", tier: "normal", category: "object", aliases: ["magnet"], lvis_id: 659}
+  - {word: "Magpie", tier: "normal", category: "object", openimages_id: "/m/012074"}
+  - {word: "mail_slot", tier: "normal", category: "object", aliases: ["mail_slot"], lvis_id: 660}
+  - {word: "mailbox_(at_home)", tier: "normal", category: "object", aliases: ["letter_box_(at_home)", "mailbox_(at_home)"], lvis_id: 661}
+  - {word: "mallard", tier: "normal", category: "object", aliases: ["mallard"], lvis_id: 662}
+  - {word: "mallet", tier: "normal", category: "object", aliases: ["mallet"], lvis_id: 663}
+  - {word: "Mammal", tier: "normal", category: "object", openimages_id: "/m/04rky"}
+  - {word: "mammoth", tier: "normal", category: "object", aliases: ["mammoth"], lvis_id: 664}
+  - {word: "Man", tier: "critical", category: "person", openimages_id: "/m/04yx4"}
+  - {word: "manatee", tier: "normal", category: "object", aliases: ["manatee"], lvis_id: 665}
+  - {word: "mandarin_orange", tier: "normal", category: "food", aliases: ["mandarin_orange"], lvis_id: 666}
+  - {word: "manger", tier: "normal", category: "object", aliases: ["manger", "trough"], lvis_id: 667}
+  - {word: "Mango", tier: "normal", category: "object", openimages_id: "/m/0fldg"}
+  - {word: "manhole", tier: "normal", category: "object", aliases: ["manhole"], lvis_id: 668}
+  - {word: "map", tier: "normal", category: "object", aliases: ["map"], lvis_id: 669}
+  - {word: "Maple", tier: "normal", category: "object", openimages_id: "/m/0cffdh"}
+  - {word: "Maracas", tier: "normal", category: "object", openimages_id: "/m/0xzly"}
+  - {word: "Marine invertebrates", tier: "normal", category: "object", openimages_id: "/m/03hl4l9"}
+  - {word: "Marine mammal", tier: "normal", category: "object", openimages_id: "/m/0gd2v"}
+  - {word: "marker", tier: "normal", category: "stationery", aliases: ["marker"], lvis_id: 670}
+  - {word: "martini", tier: "normal", category: "object", aliases: ["martini"], lvis_id: 671}
+  - {word: "mascot", tier: "normal", category: "object", aliases: ["mascot"], lvis_id: 672}
+  - {word: "mashed_potato", tier: "normal", category: "object", aliases: ["mashed_potato"], lvis_id: 673}
+  - {word: "masher", tier: "normal", category: "object", aliases: ["masher"], lvis_id: 674}
+  - {word: "mask", tier: "normal", category: "object", aliases: ["facemask", "mask"], lvis_id: 675}
+  - {word: "mast", tier: "normal", category: "object", aliases: ["mast"], lvis_id: 676}
+  - {word: "mat_(gym_equipment)", tier: "normal", category: "object", aliases: ["gym_mat", "mat_(gym_equipment)"], lvis_id: 677}
+  - {word: "matchbox", tier: "normal", category: "object", aliases: ["matchbox"], lvis_id: 678}
+  - {word: "mattress", tier: "normal", category: "furniture", aliases: ["mattress"], lvis_id: 679}
+  - {word: "Measuring cup", tier: "normal", category: "drink", aliases: ["measuring_cup"], lvis_id: 680, openimages_id: "/m/07v9_z"}
+  - {word: "measuring_stick", tier: "normal", category: "object", aliases: ["measuring_rod", "measuring_stick", "ruler_(measuring_stick)"], lvis_id: 681}
+  - {word: "meatball", tier: "normal", category: "object", aliases: ["meatball"], lvis_id: 682}
+  - {word: "Mechanical fan", tier: "normal", category: "appliance", openimages_id: "/m/02x984l"}
+  - {word: "Medical equipment", tier: "normal", category: "object", openimages_id: "/m/01xgg_"}
+  - {word: "medicine", tier: "normal", category: "medical", aliases: ["medicine"], lvis_id: 683}
+  - {word: "melon", tier: "normal", category: "object", aliases: ["melon"], lvis_id: 684}
+  - {word: "Microphone", tier: "normal", category: "music", aliases: ["microphone"], lvis_id: 685, openimages_id: "/m/0hg7b"}
+  - {word: "microscope", tier: "normal", category: "object", aliases: ["microscope"], lvis_id: 686}
+  - {word: "microwave", tier: "high", category: "appliance", coco_id: 68}
+  - {word: "Microwave oven", tier: "high", category: "appliance", aliases: ["microwave_oven"], lvis_id: 687, openimages_id: "/m/0fx9l"}
+  - {word: "milestone", tier: "normal", category: "object", aliases: ["milepost", "milestone"], lvis_id: 688}
+  - {word: "Milk", tier: "normal", category: "food", aliases: ["milk"], lvis_id: 689, openimages_id: "/m/04zpv"}
+  - {word: "milk_can", tier: "normal", category: "food", aliases: ["milk_can"], lvis_id: 690}
+  - {word: "milkshake", tier: "normal", category: "object", aliases: ["milkshake"], lvis_id: 691}
+  - {word: "Miniskirt", tier: "normal", category: "object", openimages_id: "/m/01cmb2"}
+  - {word: "minivan", tier: "normal", category: "object", aliases: ["minivan"], lvis_id: 692}
+  - {word: "mint_candy", tier: "normal", category: "object", aliases: ["mint_candy"], lvis_id: 693}
+  - {word: "Mirror", tier: "low", category: "object", aliases: ["mirror"], lvis_id: 694, openimages_id: "/m/054_l"}
+  - {word: "Missile", tier: "normal", category: "object", openimages_id: "/m/04ylt"}
+  - {word: "mitten", tier: "normal", category: "object", aliases: ["mitten"], lvis_id: 695}
+  - {word: "Mixer", tier: "normal", category: "object", openimages_id: "/m/063rgb"}
+  - {word: "mixer_(kitchen_tool)", tier: "normal", category: "object", aliases: ["mixer_(kitchen_tool)", "stand_mixer"], lvis_id: 696}
+  - {word: "Mixing bowl", tier: "normal", category: "kitchen", openimages_id: "/m/03hj559"}
+  - {word: "Mobile phone", tier: "normal", category: "electronics", openimages_id: "/m/050k8"}
+  - {word: "money", tier: "normal", category: "object", aliases: ["money"], lvis_id: 697}
+  - {word: "monitor_(computer_equipment) computer_monitor", tier: "normal", category: "electronics", aliases: ["monitor_(computer_equipment) computer_monitor"], lvis_id: 698}
+  - {word: "Monkey", tier: "high", category: "animal", aliases: ["monkey"], lvis_id: 699, openimages_id: "/m/08pbxl"}
+  - {word: "mop", tier: "normal", category: "object", aliases: ["mop"], lvis_id: 1039}
+  - {word: "Moths and butterflies", tier: "normal", category: "object", openimages_id: "/m/0d_2m"}
+  - {word: "motor", tier: "normal", category: "object", aliases: ["motor"], lvis_id: 700}
+  - {word: "motor_scooter", tier: "critical", category: "vehicle", aliases: ["motor_scooter", "scooter"], lvis_id: 701}
+  - {word: "motor_vehicle", tier: "normal", category: "object", aliases: ["automotive_vehicle", "motor_vehicle"], lvis_id: 702}
+  - {word: "motorcycle", tier: "critical", category: "vehicle", aliases: ["motorcycle"], coco_id: 3, lvis_id: 703, openimages_id: "/m/04_sv"}
+  - {word: "mound_(baseball)", tier: "normal", category: "object", aliases: ["mound_(baseball)", "pitcher's_mound"], lvis_id: 704}
+  - {word: "mouse", tier: "normal", category: "electronics", coco_id: 64, openimages_id: "/m/04rmv"}
+  - {word: "mouse_(computer_equipment)", tier: "normal", category: "electronics", aliases: ["computer_mouse", "mouse_(computer_equipment)"], lvis_id: 705}
+  - {word: "mousepad", tier: "normal", category: "object", aliases: ["mousepad"], lvis_id: 706}
+  - {word: "Muffin", tier: "normal", category: "food", aliases: ["muffin"], lvis_id: 707, openimages_id: "/m/01tcjp"}
+  - {word: "Mug", tier: "normal", category: "drink", aliases: ["mug"], lvis_id: 708, openimages_id: "/m/02jvh9"}
+  - {word: "Mule", tier: "normal", category: "object", openimages_id: "/m/0dbzx"}
+  - {word: "Mushroom", tier: "normal", category: "object", aliases: ["mushroom"], lvis_id: 709, openimages_id: "/m/052sf"}
+  - {word: "music_stool", tier: "high", category: "furniture", aliases: ["music_stool", "piano_stool"], lvis_id: 710}
+  - {word: "Musical instrument", tier: "normal", category: "object", aliases: ["instrument_(musical)", "musical_instrument"], lvis_id: 711, openimages_id: "/m/04szw"}
+  - {word: "Musical keyboard", tier: "normal", category: "electronics", openimages_id: "/m/057cc"}
+  - {word: "Nail", tier: "normal", category: "tool", openimages_id: "/m/05bm6"}
+  - {word: "nailfile", tier: "normal", category: "object", aliases: ["nailfile"], lvis_id: 712}
+  - {word: "napkin", tier: "normal", category: "object", aliases: ["napkin", "serviette", "table_napkin"], lvis_id: 713}
+  - {word: "neckerchief", tier: "normal", category: "object", aliases: ["neckerchief"], lvis_id: 714}
+  - {word: "Necklace", tier: "low", category: "object", aliases: ["necklace"], lvis_id: 715, openimages_id: "/m/01llwg"}
+  - {word: "necktie", tier: "normal", category: "object", aliases: ["necktie", "tie_(necktie)"], lvis_id: 716}
+  - {word: "needle", tier: "normal", category: "object", aliases: ["needle"], lvis_id: 717}
+  - {word: "nest", tier: "normal", category: "object", aliases: ["nest"], lvis_id: 718}
+  - {word: "newspaper", tier: "low", category: "stationery", aliases: ["newspaper", "paper_(newspaper)"], lvis_id: 719}
+  - {word: "newsstand", tier: "normal", category: "object", aliases: ["newsstand"], lvis_id: 720}
+  - {word: "nightshirt", tier: "normal", category: "object", aliases: ["nightclothes", "nightshirt", "nightwear", "sleepwear"], lvis_id: 721}
+  - {word: "Nightstand", tier: "normal", category: "object", openimages_id: "/m/02z51p"}
+  - {word: "nosebag_(for_animals)", tier: "normal", category: "object", aliases: ["feedbag", "nosebag_(for_animals)"], lvis_id: 722}
+  - {word: "noseband_(for_animals)", tier: "normal", category: "object", aliases: ["noseband_(for_animals)", "nosepiece_(for_animals)"], lvis_id: 723}
+  - {word: "notebook", tier: "normal", category: "stationery", aliases: ["notebook"], lvis_id: 724}
+  - {word: "notepad", tier: "normal", category: "object", aliases: ["notepad"], lvis_id: 725}
+  - {word: "nut", tier: "normal", category: "object", aliases: ["nut"], lvis_id: 726}
+  - {word: "nutcracker", tier: "normal", category: "object", aliases: ["nutcracker"], lvis_id: 727}
+  - {word: "oar", tier: "normal", category: "object", aliases: ["oar"], lvis_id: 728}
+  - {word: "Oboe", tier: "normal", category: "object", openimages_id: "/m/05kms"}
+  - {word: "octopus_(animal)", tier: "normal", category: "object", aliases: ["octopus_(animal)"], lvis_id: 730}
+  - {word: "octopus_(food)", tier: "normal", category: "object", aliases: ["octopus_(food)"], lvis_id: 729}
+  - {word: "Office building", tier: "normal", category: "building", openimages_id: "/m/021sj1"}
+  - {word: "Office supplies", tier: "normal", category: "object", openimages_id: "/m/02rdsp"}
+  - {word: "oil_lamp", tier: "high", category: "outdoor", aliases: ["kerosene_lamp", "kerosine_lamp", "oil_lamp"], lvis_id: 731}
+  - {word: "olive_oil", tier: "normal", category: "object", aliases: ["olive_oil"], lvis_id: 732}
+  - {word: "omelet", tier: "normal", category: "object", aliases: ["omelet", "omelette"], lvis_id: 733}
+  - {word: "onion", tier: "normal", category: "object", aliases: ["onion"], lvis_id: 734}
+  - {word: "orange", tier: "normal", category: "food", coco_id: 49, openimages_id: "/m/0cyhj_"}
+  - {word: "orange_(fruit)", tier: "normal", category: "food", aliases: ["orange_(fruit)"], lvis_id: 735}
+  - {word: "orange_juice", tier: "normal", category: "food", aliases: ["orange_juice"], lvis_id: 736}
+  - {word: "Organ", tier: "normal", category: "music", openimages_id: "/m/013y1f"}
+  - {word: "Ostrich", tier: "normal", category: "object", aliases: ["ostrich"], lvis_id: 737, openimages_id: "/m/05n4y"}
+  - {word: "Otter", tier: "normal", category: "object", openimages_id: "/m/0cn6p"}
+  - {word: "ottoman", tier: "normal", category: "object", aliases: ["hassock", "ottoman", "pouf", "pouffe"], lvis_id: 738}
+  - {word: "oven", tier: "high", category: "appliance", aliases: ["oven"], coco_id: 69, lvis_id: 739, openimages_id: "/m/029bxz"}
+  - {word: "overalls_(clothing)", tier: "normal", category: "object", aliases: ["overalls_(clothing)"], lvis_id: 740}
+  - {word: "Owl", tier: "normal", category: "object", aliases: ["owl"], lvis_id: 741, openimages_id: "/m/09d5_"}
+  - {word: "Oyster", tier: "normal", category: "object", openimages_id: "/m/0_cp5"}
+  - {word: "pacifier", tier: "normal", category: "object", aliases: ["pacifier", "teething_ring"], lvis_id: 293}
+  - {word: "packet", tier: "normal", category: "object", aliases: ["packet"], lvis_id: 742}
+  - {word: "pad", tier: "normal", category: "object", aliases: ["pad"], lvis_id: 744}
+  - {word: "Paddle", tier: "normal", category: "object", aliases: ["boat_paddle", "paddle"], lvis_id: 745, openimages_id: "/m/014y4n"}
+  - {word: "padlock", tier: "normal", category: "object", aliases: ["padlock"], lvis_id: 746}
+  - {word: "paintbrush", tier: "normal", category: "object", aliases: ["paintbrush"], lvis_id: 747}
+  - {word: "painting", tier: "low", category: "object", aliases: ["painting"], lvis_id: 748}
+  - {word: "pajamas", tier: "normal", category: "object", aliases: ["pajamas", "pyjamas"], lvis_id: 749}
+  - {word: "palette", tier: "normal", category: "object", aliases: ["palette", "pallet"], lvis_id: 750}
+  - {word: "Palm tree", tier: "high", category: "outdoor", openimages_id: "/m/0cdl1"}
+  - {word: "pan_(for_cooking)", tier: "normal", category: "kitchen", aliases: ["cooking_pan", "pan_(for_cooking)"], lvis_id: 751}
+  - {word: "pan_(metal_container)", tier: "normal", category: "kitchen", aliases: ["pan_(metal_container)"], lvis_id: 752}
+  - {word: "Pancake", tier: "normal", category: "object", aliases: ["pancake"], lvis_id: 753, openimages_id: "/m/01dwwc"}
+  - {word: "Panda", tier: "normal", category: "object", openimages_id: "/m/03bj1"}
+  - {word: "pantyhose", tier: "normal", category: "object", aliases: ["pantyhose"], lvis_id: 754}
+  - {word: "papaya", tier: "normal", category: "object", aliases: ["papaya"], lvis_id: 755}
+  - {word: "Paper cutter", tier: "normal", category: "stationery", openimages_id: "/m/080n7g"}
+  - {word: "paper_plate", tier: "normal", category: "kitchen", aliases: ["paper_plate"], lvis_id: 756}
+  - {word: "Paper towel", tier: "low", category: "stationery", aliases: ["paper_towel"], lvis_id: 757, openimages_id: "/m/02w3r3"}
+  - {word: "paperback_book", tier: "low", category: "stationery", aliases: ["paper-back_book", "paperback_book", "soft-cover_book", "softback_book"], lvis_id: 758}
+  - {word: "paperweight", tier: "normal", category: "object", aliases: ["paperweight"], lvis_id: 759}
+  - {word: "Parachute", tier: "normal", category: "object", aliases: ["parachute"], lvis_id: 760, openimages_id: "/m/0cyfs"}
+  - {word: "parakeet", tier: "normal", category: "object", aliases: ["parakeet", "paraquet", "paroquet", "parrakeet", "parroket", "parroquet"], lvis_id: 761}
+  - {word: "parasail_(sports)", tier: "normal", category: "object", aliases: ["parasail_(sports)"], lvis_id: 762}
+  - {word: "parasol", tier: "normal", category: "object", aliases: ["parasol", "sunshade"], lvis_id: 763}
+  - {word: "parchment", tier: "normal", category: "object", aliases: ["parchment"], lvis_id: 764}
+  - {word: "parka", tier: "normal", category: "object", aliases: ["anorak", "parka"], lvis_id: 765}
+  - {word: "parking meter", tier: "normal", category: "object", aliases: ["parking_meter"], coco_id: 12, lvis_id: 766, openimages_id: "/m/015qbp"}
+  - {word: "Parrot", tier: "normal", category: "object", aliases: ["parrot"], lvis_id: 767, openimages_id: "/m/0gv1x"}
+  - {word: "passenger_car_(part_of_a_train)", tier: "critical", category: "vehicle", aliases: ["coach_(part_of_a_train)", "passenger_car_(part_of_a_train)"], lvis_id: 768}
+  - {word: "passenger_ship", tier: "critical", category: "vehicle", aliases: ["passenger_ship"], lvis_id: 769}
+  - {word: "passport", tier: "normal", category: "object", aliases: ["passport"], lvis_id: 770}
+  - {word: "Pasta", tier: "normal", category: "food", openimages_id: "/m/05z55"}
+  - {word: "Pastry", tier: "normal", category: "object", aliases: ["pastry"], lvis_id: 771, openimages_id: "/m/0hnyx"}
+  - {word: "patty_(food)", tier: "normal", category: "object", aliases: ["patty_(food)"], lvis_id: 772}
+  - {word: "pea_(food)", tier: "normal", category: "object", aliases: ["pea_(food)"], lvis_id: 773}
+  - {word: "Peach", tier: "normal", category: "object", aliases: ["peach"], lvis_id: 774, openimages_id: "/m/0dj6p"}
+  - {word: "peanut_butter", tier: "normal", category: "object", aliases: ["peanut_butter"], lvis_id: 775}
+  - {word: "Pear", tier: "normal", category: "object", aliases: ["pear"], lvis_id: 776, openimages_id: "/m/061_f"}
+  - {word: "peeler_(tool_for_fruit_and_vegetables)", tier: "normal", category: "object", aliases: ["peeler_(tool_for_fruit_and_vegetables)"], lvis_id: 777}
+  - {word: "pegboard", tier: "normal", category: "object", aliases: ["pegboard"], lvis_id: 779}
+  - {word: "pelican", tier: "normal", category: "object", aliases: ["pelican"], lvis_id: 780}
+  - {word: "Pen", tier: "low", category: "stationery", aliases: ["pen"], lvis_id: 781, openimages_id: "/m/0k1tl"}
+  - {word: "pencil", tier: "low", category: "stationery", aliases: ["pencil"], lvis_id: 782}
+  - {word: "pencil_box", tier: "low", category: "container", aliases: ["pencil_box", "pencil_case"], lvis_id: 783}
+  - {word: "Pencil case", tier: "low", category: "stationery", openimages_id: "/m/05676x"}
+  - {word: "Pencil sharpener", tier: "low", category: "stationery", aliases: ["pencil_sharpener"], lvis_id: 784, openimages_id: "/m/02ddwp"}
+  - {word: "pendulum", tier: "normal", category: "object", aliases: ["pendulum"], lvis_id: 785}
+  - {word: "Penguin", tier: "normal", category: "object", aliases: ["penguin"], lvis_id: 786, openimages_id: "/m/05z6w"}
+  - {word: "pennant", tier: "normal", category: "object", aliases: ["pennant"], lvis_id: 787}
+  - {word: "penny_(coin)", tier: "normal", category: "object", aliases: ["penny_(coin)"], lvis_id: 788}
+  - {word: "pepper", tier: "normal", category: "object", aliases: ["pepper", "peppercorn"], lvis_id: 789}
+  - {word: "pepper_mill", tier: "normal", category: "object", aliases: ["pepper_grinder", "pepper_mill"], lvis_id: 790}
+  - {word: "Perfume", tier: "normal", category: "object", aliases: ["perfume"], lvis_id: 791, openimages_id: "/m/0p833"}
+  - {word: "persimmon", tier: "normal", category: "object", aliases: ["persimmon"], lvis_id: 792}
+  - {word: "person", tier: "critical", category: "person", aliases: ["baby", "boy", "child", "girl", "human", "man", "person", "woman"], coco_id: 0, lvis_id: 793, openimages_id: "/m/01g317"}
+  - {word: "Personal care", tier: "normal", category: "object", openimages_id: "/m/02w3_ws"}
+  - {word: "pet", tier: "normal", category: "object", aliases: ["pet"], lvis_id: 794}
+  - {word: "pew_(church_bench)", tier: "normal", category: "object", aliases: ["church_bench", "pew_(church_bench)"], lvis_id: 795}
+  - {word: "phonebook", tier: "normal", category: "object", aliases: ["phonebook", "telephone_book", "telephone_directory"], lvis_id: 796}
+  - {word: "phonograph_record", tier: "normal", category: "object", aliases: ["phonograph_record", "phonograph_recording", "record_(phonograph_recording)"], lvis_id: 797}
+  - {word: "Piano", tier: "normal", category: "music", aliases: ["piano"], lvis_id: 798, openimages_id: "/m/05r5c"}
+  - {word: "pickle", tier: "normal", category: "object", aliases: ["pickle"], lvis_id: 799}
+  - {word: "pickup_truck", tier: "critical", category: "vehicle", aliases: ["pickup_truck"], lvis_id: 800}
+  - {word: "Picnic basket", tier: "normal", category: "container", openimages_id: "/m/07kng9"}
+  - {word: "Picture frame", tier: "low", category: "object", openimages_id: "/m/06z37_"}
+  - {word: "pie", tier: "normal", category: "object", aliases: ["pie"], lvis_id: 801}
+  - {word: "Pig", tier: "high", category: "animal", openimages_id: "/m/068zj"}
+  - {word: "pigeon", tier: "normal", category: "object", aliases: ["pigeon"], lvis_id: 802}
+  - {word: "piggy_bank", tier: "normal", category: "object", aliases: ["penny_bank", "piggy_bank"], lvis_id: 803}
+  - {word: "Pillow", tier: "low", category: "furniture", aliases: ["pillow"], lvis_id: 804, openimages_id: "/m/034c16"}
+  - {word: "pin_(non_jewelry)", tier: "normal", category: "object", aliases: ["pin_(non_jewelry)"], lvis_id: 805}
+  - {word: "Pineapple", tier: "normal", category: "object", aliases: ["pineapple"], lvis_id: 806, openimages_id: "/m/0fp6w"}
+  - {word: "pinecone", tier: "normal", category: "object", aliases: ["pinecone"], lvis_id: 807}
+  - {word: "ping-pong_ball", tier: "normal", category: "sport", aliases: ["ping-pong_ball"], lvis_id: 808}
+  - {word: "pinwheel", tier: "normal", category: "object", aliases: ["pinwheel"], lvis_id: 809}
+  - {word: "pipe", tier: "normal", category: "object", aliases: ["pipe", "piping"], lvis_id: 811}
+  - {word: "pipe_bowl", tier: "normal", category: "kitchen", aliases: ["pipe_bowl"], lvis_id: 140}
+  - {word: "pirate_flag", tier: "low", category: "object", aliases: ["pirate_flag"], lvis_id: 106}
+  - {word: "pistol", tier: "normal", category: "object", aliases: ["handgun", "pistol"], lvis_id: 812}
+  - {word: "pita_(bread)", tier: "normal", category: "object", aliases: ["pita_(bread)", "pocket_bread"], lvis_id: 813}
+  - {word: "Pitcher", tier: "normal", category: "object", openimages_id: "/m/054fyh"}
+  - {word: "pitcher_(vessel_for_liquid)", tier: "normal", category: "object", aliases: ["ewer", "pitcher_(vessel_for_liquid)"], lvis_id: 814}
+  - {word: "pitchfork", tier: "normal", category: "object", aliases: ["pitchfork"], lvis_id: 815}
+  - {word: "pizza", tier: "normal", category: "food", aliases: ["pizza"], coco_id: 53, lvis_id: 816, openimages_id: "/m/0663v"}
+  - {word: "Pizza cutter", tier: "normal", category: "food", openimages_id: "/m/08ks85"}
+  - {word: "place_mat", tier: "normal", category: "object", aliases: ["place_mat"], lvis_id: 817}
+  - {word: "Plant", tier: "normal", category: "outdoor", openimages_id: "/m/05s2s"}
+  - {word: "Plastic bag", tier: "normal", category: "container", aliases: ["paper_bag", "plastic_bag"], lvis_id: 898, openimages_id: "/m/05gqfk"}
+  - {word: "Plate", tier: "normal", category: "kitchen", aliases: ["plate"], lvis_id: 818, openimages_id: "/m/050gv4"}
+  - {word: "Platter", tier: "normal", category: "object", aliases: ["platter"], lvis_id: 819, openimages_id: "/m/099ssp"}
+  - {word: "playpen", tier: "normal", category: "object", aliases: ["playpen"], lvis_id: 820}
+  - {word: "pliers", tier: "normal", category: "tool", aliases: ["pliers", "plyers"], lvis_id: 821}
+  - {word: "plow_(farm_equipment)", tier: "normal", category: "object", aliases: ["plough_(farm_equipment)", "plow_(farm_equipment)"], lvis_id: 822}
+  - {word: "Plumbing fixture", tier: "normal", category: "object", openimages_id: "/m/02pkr5"}
+  - {word: "plume", tier: "normal", category: "object", aliases: ["plume"], lvis_id: 823}
+  - {word: "pocket_watch", tier: "low", category: "clothing", aliases: ["pocket_watch"], lvis_id: 824}
+  - {word: "pocketknife", tier: "normal", category: "object", aliases: ["pocketknife"], lvis_id: 825}
+  - {word: "poker_(fire_stirring_tool)", tier: "normal", category: "object", aliases: ["fire_hook", "poker_(fire_stirring_tool)", "stove_poker"], lvis_id: 826}
+  - {word: "poker_chip", tier: "normal", category: "object", aliases: ["poker_chip"], lvis_id: 247}
+  - {word: "Polar bear", tier: "high", category: "animal", aliases: ["polar_bear"], lvis_id: 578, openimages_id: "/m/0633h"}
+  - {word: "pole", tier: "high", category: "building", aliases: ["pole", "post"], lvis_id: 827}
+  - {word: "police_cruiser", tier: "critical", category: "vehicle", aliases: ["patrol_car", "police_car", "police_cruiser", "squad_car"], lvis_id: 337}
+  - {word: "polo_shirt", tier: "normal", category: "clothing", aliases: ["polo_shirt", "sport_shirt"], lvis_id: 828}
+  - {word: "Pomegranate", tier: "normal", category: "object", openimages_id: "/m/0jwn_"}
+  - {word: "poncho", tier: "normal", category: "object", aliases: ["poncho"], lvis_id: 829}
+  - {word: "pony", tier: "normal", category: "object", aliases: ["pony"], lvis_id: 830}
+  - {word: "pool_table", tier: "high", category: "furniture", aliases: ["billiard_table", "pool_table", "snooker_table"], lvis_id: 831}
+  - {word: "pop_(soda)", tier: "normal", category: "object", aliases: ["pop_(soda)", "soda_(pop)", "soft_drink", "tonic"], lvis_id: 832}
+  - {word: "Popcorn", tier: "normal", category: "object", openimages_id: "/m/01hrv5"}
+  - {word: "popsicle", tier: "normal", category: "object", aliases: ["popsicle"], lvis_id: 580}
+  - {word: "Porch", tier: "normal", category: "building", openimages_id: "/m/04m6gz"}
+  - {word: "Porcupine", tier: "normal", category: "object", openimages_id: "/m/0c568"}
+  - {word: "postbox_(public)", tier: "normal", category: "object", aliases: ["mailbox_(public)", "postbox_(public)"], lvis_id: 833}
+  - {word: "postcard", tier: "normal", category: "object", aliases: ["mailing-card", "postal_card", "postcard"], lvis_id: 834}
+  - {word: "Poster", tier: "low", category: "object", aliases: ["placard", "poster"], lvis_id: 835, openimages_id: "/m/01n5jq"}
+  - {word: "pot", tier: "normal", category: "kitchen", aliases: ["pot"], lvis_id: 836}
+  - {word: "Potato", tier: "normal", category: "object", aliases: ["potato"], lvis_id: 838, openimages_id: "/m/05vtc"}
+  - {word: "potholder", tier: "normal", category: "object", aliases: ["potholder"], lvis_id: 839}
+  - {word: "potted plant", tier: "high", category: "outdoor", coco_id: 58}
+  - {word: "pottery", tier: "normal", category: "object", aliases: ["clayware", "pottery"], lvis_id: 840}
+  - {word: "pouch", tier: "normal", category: "object", aliases: ["pouch"], lvis_id: 841}
+  - {word: "Power plugs and sockets", tier: "normal", category: "object", openimages_id: "/m/03bbps"}
+  - {word: "power_shovel", tier: "normal", category: "object", aliases: ["digger", "excavator", "power_shovel"], lvis_id: 842}
+  - {word: "prawn", tier: "normal", category: "object", aliases: ["prawn", "shrimp"], lvis_id: 843}
+  - {word: "Pressure cooker", tier: "normal", category: "object", openimages_id: "/m/0h8ntjv"}
+  - {word: "Pretzel", tier: "normal", category: "food", aliases: ["pretzel"], lvis_id: 844, openimages_id: "/m/01f91_"}
+  - {word: "Printer", tier: "normal", category: "electronics", aliases: ["printer", "printing_machine"], lvis_id: 845, openimages_id: "/m/01m4t"}
+  - {word: "projectile_(weapon)", tier: "normal", category: "object", aliases: ["missile", "projectile_(weapon)"], lvis_id: 846}
+  - {word: "projector", tier: "normal", category: "electronics", aliases: ["projector"], lvis_id: 847}
+  - {word: "propeller", tier: "normal", category: "object", aliases: ["propeller", "propellor"], lvis_id: 848}
+  - {word: "prune", tier: "normal", category: "object", aliases: ["prune"], lvis_id: 849}
+  - {word: "pudding", tier: "normal", category: "object", aliases: ["pudding"], lvis_id: 850}
+  - {word: "puffer_(fish)", tier: "normal", category: "object", aliases: ["blowfish", "globefish", "puffer_(fish)", "pufferfish"], lvis_id: 851}
+  - {word: "puffin", tier: "normal", category: "object", aliases: ["puffin"], lvis_id: 852}
+  - {word: "pug-dog", tier: "normal", category: "object", aliases: ["pug-dog"], lvis_id: 853}
+  - {word: "Pumpkin", tier: "normal", category: "object", aliases: ["pumpkin"], lvis_id: 854, openimages_id: "/m/05zsy"}
+  - {word: "puncher", tier: "normal", category: "object", aliases: ["puncher"], lvis_id: 855}
+  - {word: "Punching bag", tier: "normal", category: "container", openimages_id: "/m/0420v5"}
+  - {word: "puppet", tier: "normal", category: "object", aliases: ["marionette", "puppet"], lvis_id: 856}
+  - {word: "puppy", tier: "normal", category: "object", aliases: ["puppy"], lvis_id: 857}
+  - {word: "quesadilla", tier: "normal", category: "object", aliases: ["quesadilla"], lvis_id: 858}
+  - {word: "quiche", tier: "normal", category: "object", aliases: ["quiche"], lvis_id: 859}
+  - {word: "quilt", tier: "low", category: "object", aliases: ["comforter", "quilt"], lvis_id: 860}
+  - {word: "Rabbit", tier: "high", category: "animal", aliases: ["rabbit"], lvis_id: 861, openimages_id: "/m/06mf6"}
+  - {word: "Raccoon", tier: "normal", category: "object", openimages_id: "/m/0dq75"}
+  - {word: "race_car", tier: "critical", category: "vehicle", aliases: ["race_car", "racing_car"], lvis_id: 862}
+  - {word: "Racket", tier: "normal", category: "sport", aliases: ["racket", "racquet"], lvis_id: 863, openimages_id: "/m/0dv9c"}
+  - {word: "radar", tier: "normal", category: "object", aliases: ["radar"], lvis_id: 864}
+  - {word: "radiator", tier: "normal", category: "object", aliases: ["radiator"], lvis_id: 865}
+  - {word: "radio_receiver", tier: "normal", category: "electronics", aliases: ["radio", "radio_receiver", "radio_set", "tuner_(radio)"], lvis_id: 866}
+  - {word: "Radish", tier: "normal", category: "object", aliases: ["daikon", "radish"], lvis_id: 867, openimages_id: "/m/015x5n"}
+  - {word: "raft", tier: "normal", category: "object", aliases: ["raft"], lvis_id: 868}
+  - {word: "rag_doll", tier: "normal", category: "toy", aliases: ["rag_doll"], lvis_id: 869}
+  - {word: "railcar_(part_of_a_train)", tier: "normal", category: "object", aliases: ["railcar_(part_of_a_train)", "railroad_car_(part_of_a_train)", "railway_car_(part_of_a_train)"], lvis_id: 208}
+  - {word: "raincoat", tier: "normal", category: "object", aliases: ["raincoat", "waterproof_jacket"], lvis_id: 870}
+  - {word: "ram_(animal)", tier: "normal", category: "object", aliases: ["ram_(animal)"], lvis_id: 871}
+  - {word: "raspberry", tier: "normal", category: "object", aliases: ["raspberry"], lvis_id: 872}
+  - {word: "rat", tier: "normal", category: "object", aliases: ["rat"], lvis_id: 873}
+  - {word: "Ratchet", tier: "normal", category: "object", openimages_id: "/m/02bm9n"}
+  - {word: "Raven", tier: "normal", category: "object", openimages_id: "/m/06j2d"}
+  - {word: "Rays and skates", tier: "normal", category: "object", openimages_id: "/m/0m53l"}
+  - {word: "razorblade", tier: "normal", category: "object", aliases: ["razorblade"], lvis_id: 874}
+  - {word: "reamer_(juicer)", tier: "normal", category: "object", aliases: ["juice_reamer", "juicer", "reamer_(juicer)"], lvis_id: 875}
+  - {word: "rearview_mirror", tier: "low", category: "object", aliases: ["rearview_mirror"], lvis_id: 876}
+  - {word: "receipt", tier: "normal", category: "object", aliases: ["receipt"], lvis_id: 877}
+  - {word: "recliner", tier: "normal", category: "object", aliases: ["lounger_(chair)", "recliner", "reclining_chair"], lvis_id: 878}
+  - {word: "record_player", tier: "normal", category: "object", aliases: ["phonograph_(record_player)", "record_player", "turntable"], lvis_id: 879}
+  - {word: "Red panda", tier: "normal", category: "object", openimages_id: "/m/06l9r"}
+  - {word: "reflector", tier: "normal", category: "object", aliases: ["reflector"], lvis_id: 880}
+  - {word: "refrigerator", tier: "high", category: "appliance", aliases: ["refrigerator"], coco_id: 72, lvis_id: 421, openimages_id: "/m/040b_t"}
+  - {word: "remote", tier: "normal", category: "electronics", coco_id: 65}
+  - {word: "Remote control", tier: "normal", category: "electronics", aliases: ["remote_control"], lvis_id: 881, openimages_id: "/m/0qjjc"}
+  - {word: "Reptile", tier: "normal", category: "object", openimages_id: "/m/06bt6"}
+  - {word: "Rhinoceros", tier: "normal", category: "object", aliases: ["rhinoceros"], lvis_id: 882, openimages_id: "/m/03d443"}
+  - {word: "rib_(food)", tier: "normal", category: "object", aliases: ["rib_(food)"], lvis_id: 883}
+  - {word: "Rifle", tier: "normal", category: "object", aliases: ["rifle"], lvis_id: 884, openimages_id: "/m/06c54"}
+  - {word: "ring", tier: "normal", category: "object", aliases: ["ring"], lvis_id: 885}
+  - {word: "Ring binder", tier: "normal", category: "object", openimages_id: "/m/04zwwv"}
+  - {word: "river_boat", tier: "critical", category: "vehicle", aliases: ["river_boat"], lvis_id: 886}
+  - {word: "road_map", tier: "normal", category: "object", aliases: ["road_map"], lvis_id: 887}
+  - {word: "robe", tier: "normal", category: "object", aliases: ["robe"], lvis_id: 888}
+  - {word: "Rocket", tier: "normal", category: "object", openimages_id: "/m/09rvcxw"}
+  - {word: "rocking_chair", tier: "high", category: "furniture", aliases: ["rocking_chair"], lvis_id: 889}
+  - {word: "rodent", tier: "normal", category: "object", aliases: ["rodent"], lvis_id: 890}
+  - {word: "roller_skate", tier: "normal", category: "object", aliases: ["roller_skate"], lvis_id: 891}
+  - {word: "Roller skates", tier: "normal", category: "object", openimages_id: "/m/02p3w7d"}
+  - {word: "Rollerblade", tier: "normal", category: "object", aliases: ["Rollerblade"], lvis_id: 892}
+  - {word: "rolling_pin", tier: "normal", category: "object", aliases: ["rolling_pin"], lvis_id: 893}
+  - {word: "root_beer", tier: "normal", category: "drink", aliases: ["root_beer"], lvis_id: 894}
+  - {word: "Rose", tier: "normal", category: "object", openimages_id: "/m/06m11"}
+  - {word: "router_(computer_equipment)", tier: "normal", category: "object", aliases: ["router_(computer_equipment)"], lvis_id: 895}
+  - {word: "rubber_band", tier: "normal", category: "object", aliases: ["elastic_band", "rubber_band"], lvis_id: 896}
+  - {word: "Rugby ball", tier: "normal", category: "sport", openimages_id: "/m/0wdt60w"}
+  - {word: "Ruler", tier: "normal", category: "stationery", openimages_id: "/m/0hdln"}
+  - {word: "runner_(carpet)", tier: "normal", category: "object", aliases: ["runner_(carpet)"], lvis_id: 897}
+  - {word: "saddle_(on_an_animal)", tier: "normal", category: "object", aliases: ["saddle_(on_an_animal)"], lvis_id: 899}
+  - {word: "saddle_blanket", tier: "low", category: "object", aliases: ["horse_blanket", "saddle_blanket", "saddlecloth"], lvis_id: 900}
+  - {word: "saddlebag", tier: "normal", category: "object", aliases: ["saddlebag"], lvis_id: 901}
+  - {word: "safety_pin", tier: "normal", category: "object", aliases: ["safety_pin"], lvis_id: 902}
+  - {word: "sail", tier: "normal", category: "object", aliases: ["sail"], lvis_id: 903}
+  - {word: "Salad", tier: "normal", category: "food", aliases: ["salad"], lvis_id: 904, openimages_id: "/m/0grw1"}
+  - {word: "salad_plate", tier: "normal", category: "food", aliases: ["salad_bowl", "salad_plate"], lvis_id: 905}
+  - {word: "salami", tier: "normal", category: "object", aliases: ["salami"], lvis_id: 906}
+  - {word: "salmon_(fish)", tier: "normal", category: "object", aliases: ["salmon_(fish)"], lvis_id: 907}
+  - {word: "salmon_(food)", tier: "normal", category: "object", aliases: ["salmon_(food)"], lvis_id: 908}
+  - {word: "salsa", tier: "normal", category: "object", aliases: ["salsa"], lvis_id: 909}
+  - {word: "Salt and pepper shakers", tier: "normal", category: "object", openimages_id: "/m/02x8cch"}
+  - {word: "saltshaker", tier: "normal", category: "object", aliases: ["saltshaker"], lvis_id: 910}
+  - {word: "Sandal", tier: "normal", category: "object", openimages_id: "/m/03nfch"}
+  - {word: "sandal_(type_of_shoe)", tier: "normal", category: "object", aliases: ["sandal_(type_of_shoe)"], lvis_id: 911}
+  - {word: "sandwich", tier: "normal", category: "food", aliases: ["sandwich"], coco_id: 48, lvis_id: 912, openimages_id: "/m/0l515"}
+  - {word: "satchel", tier: "normal", category: "object", aliases: ["satchel"], lvis_id: 913}
+  - {word: "saucepan", tier: "normal", category: "object", aliases: ["saucepan"], lvis_id: 914}
+  - {word: "Saucer", tier: "normal", category: "object", aliases: ["saucer"], lvis_id: 915, openimages_id: "/m/03q5c7"}
+  - {word: "sausage", tier: "normal", category: "object", aliases: ["sausage"], lvis_id: 916}
+  - {word: "sawhorse", tier: "normal", category: "object", aliases: ["sawbuck", "sawhorse"], lvis_id: 917}
+  - {word: "Saxophone", tier: "normal", category: "object", aliases: ["saxophone"], lvis_id: 918, openimages_id: "/m/06ncr"}
+  - {word: "Scale", tier: "normal", category: "object", openimages_id: "/m/03txqz"}
+  - {word: "scale_(measuring_instrument)", tier: "normal", category: "object", aliases: ["scale_(measuring_instrument)"], lvis_id: 919}
+  - {word: "scarecrow", tier: "normal", category: "object", aliases: ["scarecrow", "strawman"], lvis_id: 920}
+  - {word: "Scarf", tier: "normal", category: "clothing", aliases: ["scarf"], lvis_id: 921, openimages_id: "/m/02h19r"}
+  - {word: "school_bus", tier: "critical", category: "vehicle", aliases: ["school_bus"], lvis_id: 922}
+  - {word: "scissors", tier: "normal", category: "tool", aliases: ["scissors"], coco_id: 76, lvis_id: 923, openimages_id: "/m/01lsmm"}
+  - {word: "Scoreboard", tier: "normal", category: "object", aliases: ["scoreboard"], lvis_id: 924, openimages_id: "/m/057p5t"}
+  - {word: "Scorpion", tier: "normal", category: "object", openimages_id: "/m/0755b"}
+  - {word: "scraper", tier: "normal", category: "object", aliases: ["scraper"], lvis_id: 925}
+  - {word: "Screwdriver", tier: "normal", category: "tool", aliases: ["screwdriver"], lvis_id: 926, openimages_id: "/m/01bms0"}
+  - {word: "scrubbing_brush", tier: "normal", category: "object", aliases: ["scrubbing_brush"], lvis_id: 927}
+  - {word: "Sculpture", tier: "low", category: "object", aliases: ["sculpture"], lvis_id: 928, openimages_id: "/m/06msq"}
+  - {word: "Sea lion", tier: "high", category: "animal", openimages_id: "/m/0gd36"}
+  - {word: "Sea turtle", tier: "normal", category: "object", openimages_id: "/m/0120dh"}
+  - {word: "seabird", tier: "normal", category: "object", aliases: ["seabird", "seafowl"], lvis_id: 929}
+  - {word: "Seafood", tier: "normal", category: "object", openimages_id: "/m/06nwz"}
+  - {word: "Seahorse", tier: "normal", category: "object", aliases: ["seahorse"], lvis_id: 930, openimages_id: "/m/0nybt"}
+  - {word: "seaplane", tier: "normal", category: "object", aliases: ["hydroplane", "seaplane"], lvis_id: 931}
+  - {word: "seashell", tier: "normal", category: "object", aliases: ["seashell"], lvis_id: 932}
+  - {word: "Seat belt", tier: "normal", category: "clothing", openimages_id: "/m/0dkzw"}
+  - {word: "Segway", tier: "normal", category: "object", openimages_id: "/m/076bq"}
+  - {word: "Serving tray", tier: "normal", category: "kitchen", openimages_id: "/m/0h8n27j"}
+  - {word: "Sewing machine", tier: "normal", category: "object", aliases: ["sewing_machine"], lvis_id: 933, openimages_id: "/m/0llzx"}
+  - {word: "shaker", tier: "normal", category: "object", aliases: ["shaker"], lvis_id: 934}
+  - {word: "shampoo", tier: "normal", category: "object", aliases: ["shampoo"], lvis_id: 935}
+  - {word: "Shark", tier: "normal", category: "object", aliases: ["shark"], lvis_id: 936, openimages_id: "/m/0by6g"}
+  - {word: "sharpener", tier: "normal", category: "object", aliases: ["sharpener"], lvis_id: 937}
+  - {word: "Sharpie", tier: "normal", category: "object", aliases: ["Sharpie"], lvis_id: 938}
+  - {word: "shaver_(electric)", tier: "normal", category: "object", aliases: ["electric_razor", "electric_shaver", "shaver_(electric)"], lvis_id: 939}
+  - {word: "shaving_cream", tier: "normal", category: "object", aliases: ["shaving_cream", "shaving_soap"], lvis_id: 940}
+  - {word: "shawl", tier: "normal", category: "object", aliases: ["shawl"], lvis_id: 941}
+  - {word: "shears", tier: "normal", category: "object", aliases: ["shears"], lvis_id: 942}
+  - {word: "sheep", tier: "high", category: "animal", aliases: ["sheep"], coco_id: 18, lvis_id: 943, openimages_id: "/m/07bgp"}
+  - {word: "Shelf", tier: "normal", category: "furniture", openimages_id: "/m/0gjbg72"}
+  - {word: "Shellfish", tier: "normal", category: "object", openimages_id: "/m/0fbdv"}
+  - {word: "shepherd_dog", tier: "high", category: "animal", aliases: ["sheepdog", "shepherd_dog"], lvis_id: 944}
+  - {word: "sherbert", tier: "normal", category: "object", aliases: ["sherbert", "sherbet"], lvis_id: 945}
+  - {word: "shield", tier: "normal", category: "object", aliases: ["shield"], lvis_id: 946}
+  - {word: "Shirt", tier: "normal", category: "clothing", aliases: ["shirt"], lvis_id: 947, openimages_id: "/m/01n4qj"}
+  - {word: "shoe", tier: "normal", category: "clothing", aliases: ["shoe", "sneaker_(type_of_shoe)", "tennis_shoe"], lvis_id: 948}
+  - {word: "shopping_bag", tier: "normal", category: "container", aliases: ["shopping_bag"], lvis_id: 949}
+  - {word: "shopping_cart", tier: "normal", category: "object", aliases: ["shopping_cart"], lvis_id: 950}
+  - {word: "short_pants", tier: "normal", category: "clothing", aliases: ["short_pants", "shorts_(clothing)", "trunks_(clothing)"], lvis_id: 951}
+  - {word: "Shorts", tier: "normal", category: "object", openimages_id: "/m/01bfm9"}
+  - {word: "shot_glass", tier: "normal", category: "drink", aliases: ["shot_glass"], lvis_id: 952}
+  - {word: "Shotgun", tier: "normal", category: "object", openimages_id: "/m/06nrc"}
+  - {word: "shoulder_bag", tier: "normal", category: "container", aliases: ["shoulder_bag"], lvis_id: 953}
+  - {word: "shovel", tier: "normal", category: "object", aliases: ["shovel"], lvis_id: 954}
+  - {word: "Shower", tier: "normal", category: "object", openimages_id: "/m/02f9f_"}
+  - {word: "shower_cap", tier: "normal", category: "clothing", aliases: ["shower_cap"], lvis_id: 956}
+  - {word: "shower_curtain", tier: "low", category: "object", aliases: ["shower_curtain"], lvis_id: 957}
+  - {word: "shower_head", tier: "normal", category: "body", aliases: ["shower_head"], lvis_id: 955}
+  - {word: "shredder_(for_paper)", tier: "normal", category: "object", aliases: ["shredder_(for_paper)"], lvis_id: 958}
+  - {word: "Shrimp", tier: "normal", category: "object", openimages_id: "/m/0ll1f78"}
+  - {word: "signboard", tier: "normal", category: "object", aliases: ["signboard"], lvis_id: 959}
+  - {word: "silo", tier: "normal", category: "object", aliases: ["silo"], lvis_id: 960}
+  - {word: "sink", tier: "high", category: "appliance", aliases: ["sink"], coco_id: 71, lvis_id: 961, openimages_id: "/m/0130jx"}
+  - {word: "skateboard", tier: "critical", category: "vehicle", aliases: ["skateboard"], coco_id: 36, lvis_id: 962, openimages_id: "/m/06_fw"}
+  - {word: "skewer", tier: "normal", category: "object", aliases: ["skewer"], lvis_id: 963}
+  - {word: "Ski", tier: "normal", category: "object", aliases: ["ski"], lvis_id: 964, openimages_id: "/m/071p9"}
+  - {word: "ski_boot", tier: "normal", category: "clothing", aliases: ["ski_boot"], lvis_id: 965}
+  - {word: "ski_parka", tier: "normal", category: "object", aliases: ["ski_jacket", "ski_parka"], lvis_id: 966}
+  - {word: "ski_pole", tier: "high", category: "building", aliases: ["ski_pole"], lvis_id: 967}
+  - {word: "Skirt", tier: "normal", category: "object", aliases: ["skirt"], lvis_id: 968, openimages_id: "/m/02wv6h6"}
+  - {word: "skis", tier: "normal", category: "sport", coco_id: 30}
+  - {word: "Skull", tier: "normal", category: "object", openimages_id: "/m/016m2d"}
+  - {word: "skullcap", tier: "normal", category: "object", aliases: ["skullcap"], lvis_id: 969}
+  - {word: "Skunk", tier: "normal", category: "object", openimages_id: "/m/0km7z"}
+  - {word: "Skyscraper", tier: "normal", category: "object", openimages_id: "/m/079cl"}
+  - {word: "sled", tier: "normal", category: "object", aliases: ["sled", "sledge", "sleigh"], lvis_id: 970}
+  - {word: "sleeping_bag", tier: "normal", category: "container", aliases: ["sleeping_bag"], lvis_id: 971}
+  - {word: "slide", tier: "normal", category: "object", aliases: ["slide"], lvis_id: 256}
+  - {word: "sling_(bandage)", tier: "normal", category: "object", aliases: ["sling_(bandage)", "triangular_bandage"], lvis_id: 972}
+  - {word: "slipper_(footwear)", tier: "normal", category: "object", aliases: ["carpet_slipper_(footwear)", "slipper_(footwear)"], lvis_id: 973}
+  - {word: "Slow cooker", tier: "normal", category: "object", openimages_id: "/m/02tsc9"}
+  - {word: "smoothie", tier: "normal", category: "object", aliases: ["smoothie"], lvis_id: 974}
+  - {word: "Snack", tier: "normal", category: "object", openimages_id: "/m/01ww8y"}
+  - {word: "Snail", tier: "normal", category: "object", openimages_id: "/m/0f9_l"}
+  - {word: "Snake", tier: "normal", category: "object", aliases: ["serpent", "snake"], lvis_id: 975, openimages_id: "/m/078jl"}
+  - {word: "snowboard", tier: "normal", category: "sport", aliases: ["snowboard"], coco_id: 31, lvis_id: 976, openimages_id: "/m/06__v"}
+  - {word: "Snowman", tier: "normal", category: "object", aliases: ["snowman"], lvis_id: 977, openimages_id: "/m/0152hh"}
+  - {word: "Snowmobile", tier: "normal", category: "object", aliases: ["snowmobile"], lvis_id: 978, openimages_id: "/m/01x3jk"}
+  - {word: "Snowplow", tier: "normal", category: "object", openimages_id: "/m/04vv5k"}
+  - {word: "soap", tier: "low", category: "object", aliases: ["soap"], lvis_id: 979}
+  - {word: "Soap dispenser", tier: "low", category: "object", openimages_id: "/m/0c3mkw"}
+  - {word: "soccer_ball", tier: "normal", category: "sport", aliases: ["soccer_ball"], lvis_id: 980}
+  - {word: "Sock", tier: "normal", category: "clothing", aliases: ["sock"], lvis_id: 981, openimages_id: "/m/01nq26"}
+  - {word: "sofa", tier: "high", category: "furniture", aliases: ["couch", "lounge", "sofa"], lvis_id: 982}
+  - {word: "Sofa bed", tier: "high", category: "furniture", aliases: ["sofa_bed"], lvis_id: 301, openimages_id: "/m/03m3pdh"}
+  - {word: "softball", tier: "normal", category: "object", aliases: ["softball"], lvis_id: 983}
+  - {word: "solar_array", tier: "normal", category: "object", aliases: ["solar_array", "solar_battery", "solar_panel"], lvis_id: 984}
+  - {word: "Sombrero", tier: "normal", category: "object", aliases: ["sombrero"], lvis_id: 985, openimages_id: "/m/02jfl0"}
+  - {word: "soup", tier: "normal", category: "food", aliases: ["soup"], lvis_id: 986}
+  - {word: "soup_bowl", tier: "normal", category: "food", aliases: ["soup_bowl"], lvis_id: 987}
+  - {word: "soupspoon", tier: "normal", category: "object", aliases: ["soupspoon"], lvis_id: 988}
+  - {word: "sour_cream", tier: "normal", category: "object", aliases: ["sour_cream", "soured_cream"], lvis_id: 989}
+  - {word: "soya_milk", tier: "normal", category: "food", aliases: ["soya_milk", "soybean_milk", "soymilk"], lvis_id: 990}
+  - {word: "space_shuttle", tier: "normal", category: "object", aliases: ["space_shuttle"], lvis_id: 991}
+  - {word: "sparkler_(fireworks)", tier: "normal", category: "object", aliases: ["sparkler_(fireworks)"], lvis_id: 992}
+  - {word: "Sparrow", tier: "normal", category: "object", openimages_id: "/m/0h23m"}
+  - {word: "Spatula", tier: "normal", category: "kitchen", aliases: ["spatula"], lvis_id: 993, openimages_id: "/m/02d1br"}
+  - {word: "speaker_(stero_equipment)", tier: "normal", category: "electronics", aliases: ["speaker_(stero_equipment)"], lvis_id: 655}
+  - {word: "spear", tier: "normal", category: "object", aliases: ["lance", "spear"], lvis_id: 994}
+  - {word: "spectacles", tier: "normal", category: "object", aliases: ["eyeglasses", "glasses", "specs", "spectacles"], lvis_id: 995}
+  - {word: "Spice rack", tier: "normal", category: "object", aliases: ["spice_rack"], lvis_id: 996, openimages_id: "/m/0h8kx63"}
+  - {word: "Spider", tier: "normal", category: "object", aliases: ["spider"], lvis_id: 997, openimages_id: "/m/09kmb"}
+  - {word: "sponge", tier: "normal", category: "object", aliases: ["sponge"], lvis_id: 999}
+  - {word: "spoon", tier: "normal", category: "kitchen", aliases: ["spoon"], coco_id: 44, lvis_id: 1000, openimages_id: "/m/0cmx8"}
+  - {word: "sports ball", tier: "normal", category: "sport", coco_id: 32}
+  - {word: "Sports equipment", tier: "normal", category: "object", openimages_id: "/m/05y5lj"}
+  - {word: "Sports uniform", tier: "normal", category: "object", openimages_id: "/m/0h8mhzd"}
+  - {word: "sportswear", tier: "normal", category: "object", aliases: ["activewear", "athletic_wear", "sportswear"], lvis_id: 1001}
+  - {word: "spotlight", tier: "normal", category: "object", aliases: ["spotlight"], lvis_id: 1002}
+  - {word: "Squash", tier: "normal", category: "object", openimages_id: "/m/0dv77"}
+  - {word: "Squid", tier: "normal", category: "object", openimages_id: "/m/09gys"}
+  - {word: "squid_(food)", tier: "normal", category: "object", aliases: ["calamari", "calamary", "squid_(food)"], lvis_id: 1003}
+  - {word: "Squirrel", tier: "normal", category: "object", aliases: ["squirrel"], lvis_id: 1004, openimages_id: "/m/071qp"}
+  - {word: "stagecoach", tier: "normal", category: "object", aliases: ["stagecoach"], lvis_id: 1005}
+  - {word: "Stairs", tier: "normal", category: "object", openimages_id: "/m/01lynh"}
+  - {word: "Stapler", tier: "normal", category: "object", openimages_id: "/m/025fsf"}
+  - {word: "stapler_(stapling_machine)", tier: "normal", category: "object", aliases: ["stapler_(stapling_machine)"], lvis_id: 1006}
+  - {word: "Starfish", tier: "normal", category: "object", aliases: ["sea_star", "starfish"], lvis_id: 1007, openimages_id: "/m/01h8tj"}
+  - {word: "Stationary bicycle", tier: "critical", category: "vehicle", openimages_id: "/m/03kt2w"}
+  - {word: "statue_(sculpture)", tier: "normal", category: "object", aliases: ["statue_(sculpture)"], lvis_id: 1008}
+  - {word: "steak_(food)", tier: "normal", category: "object", aliases: ["steak_(food)"], lvis_id: 1009}
+  - {word: "steak_knife", tier: "normal", category: "kitchen", aliases: ["steak_knife"], lvis_id: 1010}
+  - {word: "steering_wheel", tier: "normal", category: "object", aliases: ["steering_wheel"], lvis_id: 1011}
+  - {word: "step_stool", tier: "high", category: "furniture", aliases: ["step_stool"], lvis_id: 1013}
+  - {word: "stepladder", tier: "normal", category: "object", aliases: ["stepladder"], lvis_id: 1012}
+  - {word: "stereo_(sound_system)", tier: "normal", category: "object", aliases: ["stereo_(sound_system)"], lvis_id: 1014}
+  - {word: "Stethoscope", tier: "normal", category: "medical", openimages_id: "/m/073g6"}
+  - {word: "stew", tier: "normal", category: "object", aliases: ["stew"], lvis_id: 1015}
+  - {word: "stirrer", tier: "normal", category: "object", aliases: ["stirrer"], lvis_id: 1016}
+  - {word: "stirrup", tier: "normal", category: "object", aliases: ["stirrup"], lvis_id: 1017}
+  - {word: "Stool", tier: "high", category: "furniture", aliases: ["stool"], lvis_id: 1018, openimages_id: "/m/0fqt361"}
+  - {word: "stop sign", tier: "critical", category: "outdoor", aliases: ["stop_sign"], coco_id: 11, lvis_id: 1019, openimages_id: "/m/02pv19"}
+  - {word: "stove", tier: "high", category: "appliance", aliases: ["cooking_stove", "kitchen_range", "kitchen_stove", "range_(kitchen_appliance)", "stove"], lvis_id: 1021}
+  - {word: "strainer", tier: "normal", category: "object", aliases: ["strainer"], lvis_id: 1022}
+  - {word: "strap", tier: "normal", category: "object", aliases: ["strap"], lvis_id: 1023}
+  - {word: "straw_(for_drinking)", tier: "normal", category: "object", aliases: ["drinking_straw", "straw_(for_drinking)"], lvis_id: 1024}
+  - {word: "Strawberry", tier: "normal", category: "object", aliases: ["strawberry"], lvis_id: 1025, openimages_id: "/m/07fbm7"}
+  - {word: "Street light", tier: "normal", category: "outdoor", openimages_id: "/m/033rq4"}
+  - {word: "street_sign", tier: "normal", category: "outdoor", aliases: ["street_sign"], lvis_id: 1026}
+  - {word: "streetlight", tier: "normal", category: "object", aliases: ["street_lamp", "streetlight"], lvis_id: 1027}
+  - {word: "Stretcher", tier: "normal", category: "object", openimages_id: "/m/02lbcq"}
+  - {word: "string_cheese", tier: "normal", category: "food", aliases: ["string_cheese"], lvis_id: 1028}
+  - {word: "Studio couch", tier: "high", category: "furniture", openimages_id: "/m/026qbn5"}
+  - {word: "stylus", tier: "normal", category: "object", aliases: ["stylus"], lvis_id: 1029}
+  - {word: "Submarine", tier: "normal", category: "object", openimages_id: "/m/074d1"}
+  - {word: "Submarine sandwich", tier: "normal", category: "food", openimages_id: "/m/06pcq"}
+  - {word: "subwoofer", tier: "normal", category: "object", aliases: ["subwoofer"], lvis_id: 1030}
+  - {word: "sugar_bowl", tier: "normal", category: "kitchen", aliases: ["sugar_bowl"], lvis_id: 1031}
+  - {word: "sugarcane_(plant)", tier: "normal", category: "object", aliases: ["sugarcane_(plant)"], lvis_id: 1032}
+  - {word: "Suit", tier: "normal", category: "object", openimages_id: "/m/01xyhv"}
+  - {word: "suit_(clothing)", tier: "normal", category: "object", aliases: ["suit_(clothing)"], lvis_id: 1033}
+  - {word: "suitcase", tier: "normal", category: "clothing", aliases: ["baggage", "luggage", "suitcase"], coco_id: 28, lvis_id: 36, openimages_id: "/m/01s55n"}
+  - {word: "Sun hat", tier: "normal", category: "clothing", openimages_id: "/m/02wbtzl"}
+  - {word: "Sunflower", tier: "normal", category: "object", aliases: ["sunflower"], lvis_id: 1034, openimages_id: "/m/0ftb8"}
+  - {word: "Sunglasses", tier: "normal", category: "object", aliases: ["sunglasses"], lvis_id: 1035, openimages_id: "/m/017ftj"}
+  - {word: "sunhat", tier: "normal", category: "object", aliases: ["sunhat"], lvis_id: 1036}
+  - {word: "surfboard", tier: "normal", category: "sport", aliases: ["surfboard"], coco_id: 37, lvis_id: 1037, openimages_id: "/m/019w40"}
+  - {word: "Sushi", tier: "normal", category: "object", aliases: ["sushi"], lvis_id: 1038, openimages_id: "/m/07030"}
+  - {word: "suspenders", tier: "normal", category: "object", aliases: ["suspenders"], lvis_id: 145}
+  - {word: "Swan", tier: "normal", category: "object", openimages_id: "/m/0dftk"}
+  - {word: "sweat_pants", tier: "normal", category: "clothing", aliases: ["sweat_pants"], lvis_id: 1040}
+  - {word: "sweatband", tier: "normal", category: "object", aliases: ["sweatband"], lvis_id: 1041}
+  - {word: "sweater", tier: "normal", category: "clothing", aliases: ["sweater"], lvis_id: 1042}
+  - {word: "sweatshirt", tier: "normal", category: "object", aliases: ["sweatshirt"], lvis_id: 1043}
+  - {word: "sweet_potato", tier: "normal", category: "object", aliases: ["sweet_potato"], lvis_id: 1044}
+  - {word: "Swim cap", tier: "normal", category: "clothing", openimages_id: "/m/04tn4x"}
+  - {word: "Swimming pool", tier: "normal", category: "outdoor", openimages_id: "/m/0b_rs"}
+  - {word: "swimsuit", tier: "normal", category: "clothing", aliases: ["bathing_costume", "bathing_suit", "bathing_trunks", "swimming_costume", "swimming_trunks", "swimsuit", "swimwear"], lvis_id: 1045}
+  - {word: "Swimwear", tier: "normal", category: "object", openimages_id: "/m/01gkx_"}
+  - {word: "Sword", tier: "normal", category: "object", aliases: ["sword"], lvis_id: 1046, openimages_id: "/m/06y5r"}
+  - {word: "Syringe", tier: "normal", category: "medical", aliases: ["syringe"], lvis_id: 1047, openimages_id: "/m/012ysf"}
+  - {word: "Tabasco_sauce", tier: "normal", category: "object", aliases: ["Tabasco_sauce"], lvis_id: 1048}
+  - {word: "Table", tier: "high", category: "furniture", aliases: ["table"], lvis_id: 1050, openimages_id: "/m/04bcr3"}
+  - {word: "table_lamp", tier: "high", category: "furniture", aliases: ["table_lamp"], lvis_id: 1051}
+  - {word: "Table tennis racket", tier: "high", category: "furniture", openimages_id: "/m/05_5p_0"}
+  - {word: "table-tennis_table", tier: "high", category: "furniture", aliases: ["ping-pong_table", "table-tennis_table"], lvis_id: 1049}
+  - {word: "tablecloth", tier: "normal", category: "object", aliases: ["tablecloth"], lvis_id: 1052}
+  - {word: "Tablet computer", tier: "normal", category: "electronics", openimages_id: "/m/0bh9flk"}
+  - {word: "Tableware", tier: "normal", category: "object", openimages_id: "/m/04brg2"}
+  - {word: "tachometer", tier: "normal", category: "object", aliases: ["tachometer"], lvis_id: 1053}
+  - {word: "Taco", tier: "normal", category: "object", aliases: ["taco"], lvis_id: 1054, openimages_id: "/m/07crc"}
+  - {word: "tag", tier: "normal", category: "object", aliases: ["tag"], lvis_id: 1055}
+  - {word: "taillight", tier: "normal", category: "object", aliases: ["rear_light", "taillight"], lvis_id: 1056}
+  - {word: "tambourine", tier: "normal", category: "object", aliases: ["tambourine"], lvis_id: 1057}
+  - {word: "Tank", tier: "normal", category: "object", openimages_id: "/m/07cmd"}
+  - {word: "tank_(storage_vessel)", tier: "normal", category: "object", aliases: ["storage_tank", "tank_(storage_vessel)"], lvis_id: 1059}
+  - {word: "tank_top_(clothing)", tier: "normal", category: "object", aliases: ["tank_top_(clothing)"], lvis_id: 1060}
+  - {word: "Tap", tier: "normal", category: "object", openimages_id: "/m/02jz0l"}
+  - {word: "tape_(sticky_cloth_or_paper)", tier: "normal", category: "tool", aliases: ["tape_(sticky_cloth_or_paper)"], lvis_id: 1061}
+  - {word: "tape_measure", tier: "normal", category: "tool", aliases: ["measuring_tape", "tape_measure"], lvis_id: 1062}
+  - {word: "tapestry", tier: "low", category: "object", aliases: ["tapestry"], lvis_id: 1063}
+  - {word: "tarp", tier: "normal", category: "object", aliases: ["tarp"], lvis_id: 1064}
+  - {word: "Tart", tier: "normal", category: "object", openimages_id: "/m/02zvsm"}
+  - {word: "tartan", tier: "normal", category: "object", aliases: ["plaid", "tartan"], lvis_id: 1065}
+  - {word: "tassel", tier: "normal", category: "object", aliases: ["tassel"], lvis_id: 1066}
+  - {word: "Taxi", tier: "critical", category: "vehicle", openimages_id: "/m/0pg52"}
+  - {word: "Tea", tier: "normal", category: "drink", openimages_id: "/m/07clx"}
+  - {word: "tea_bag", tier: "normal", category: "drink", aliases: ["tea_bag"], lvis_id: 1067}
+  - {word: "teacup", tier: "normal", category: "object", aliases: ["teacup"], lvis_id: 1068}
+  - {word: "teakettle", tier: "normal", category: "object", aliases: ["teakettle"], lvis_id: 1069}
+  - {word: "Teapot", tier: "normal", category: "drink", aliases: ["teapot"], lvis_id: 1070, openimages_id: "/m/01fh4r"}
+  - {word: "teddy bear", tier: "high", category: "animal", aliases: ["teddy_bear"], coco_id: 77, lvis_id: 1071, openimages_id: "/m/0kmg4"}
+  - {word: "Telephone", tier: "normal", category: "object", aliases: ["phone", "telephone", "telephone_set"], lvis_id: 1072, openimages_id: "/m/07cx4"}
+  - {word: "telephone_booth", tier: "normal", category: "object", aliases: ["call_box", "phone_booth", "telephone_booth", "telephone_box", "telephone_kiosk"], lvis_id: 1073}
+  - {word: "telephone_pole", tier: "high", category: "building", aliases: ["telegraph_pole", "telegraph_post", "telephone_pole"], lvis_id: 1074}
+  - {word: "telephoto_lens", tier: "normal", category: "object", aliases: ["telephoto_lens", "zoom_lens"], lvis_id: 1075}
+  - {word: "Television", tier: "normal", category: "electronics", openimages_id: "/m/07c52"}
+  - {word: "television_camera", tier: "normal", category: "electronics", aliases: ["television_camera", "tv_camera"], lvis_id: 1076}
+  - {word: "television_set", tier: "normal", category: "electronics", aliases: ["television_set", "tv", "tv_set"], lvis_id: 1077}
+  - {word: "Tennis ball", tier: "normal", category: "sport", aliases: ["tennis_ball"], lvis_id: 1078, openimages_id: "/m/05ctyq"}
+  - {word: "tennis racket", tier: "normal", category: "sport", aliases: ["tennis_racket"], coco_id: 38, lvis_id: 1079, openimages_id: "/m/0h8my_4"}
+  - {word: "Tent", tier: "normal", category: "object", openimages_id: "/m/01j61q"}
+  - {word: "tequila", tier: "normal", category: "object", aliases: ["tequila"], lvis_id: 1080}
+  - {word: "thermometer", tier: "normal", category: "object", aliases: ["thermometer"], lvis_id: 1081}
+  - {word: "thermos_bottle", tier: "normal", category: "drink", aliases: ["thermos_bottle"], lvis_id: 1082}
+  - {word: "thermostat", tier: "normal", category: "object", aliases: ["thermostat"], lvis_id: 1083}
+  - {word: "thimble", tier: "normal", category: "object", aliases: ["thimble"], lvis_id: 1084}
+  - {word: "thread", tier: "normal", category: "object", aliases: ["thread", "yarn"], lvis_id: 1085}
+  - {word: "thumbtack", tier: "normal", category: "object", aliases: ["drawing_pin", "pushpin", "thumbtack"], lvis_id: 1086}
+  - {word: "Tiara", tier: "normal", category: "object", aliases: ["tiara"], lvis_id: 1087, openimages_id: "/m/01krhy"}
+  - {word: "Tick", tier: "normal", category: "object", openimages_id: "/m/0175cv"}
+  - {word: "tie", tier: "normal", category: "object", coco_id: 27, openimages_id: "/m/01rkbr"}
+  - {word: "Tiger", tier: "high", category: "animal", aliases: ["tiger"], lvis_id: 1088, openimages_id: "/m/07dm6"}
+  - {word: "tights_(clothing)", tier: "normal", category: "object", aliases: ["leotards", "tights_(clothing)"], lvis_id: 1089}
+  - {word: "timer", tier: "normal", category: "object", aliases: ["stopwatch", "timer"], lvis_id: 1090}
+  - {word: "Tin can", tier: "normal", category: "drink", openimages_id: "/m/02jnhm"}
+  - {word: "tinfoil", tier: "normal", category: "object", aliases: ["tinfoil"], lvis_id: 1091}
+  - {word: "tinsel", tier: "normal", category: "object", aliases: ["tinsel"], lvis_id: 1092}
+  - {word: "Tire", tier: "normal", category: "object", openimages_id: "/m/0h9mv"}
+  - {word: "tissue_paper", tier: "normal", category: "stationery", aliases: ["tissue_paper"], lvis_id: 1093}
+  - {word: "toast_(food)", tier: "normal", category: "object", aliases: ["toast_(food)"], lvis_id: 1094}
+  - {word: "toaster", tier: "high", category: "appliance", aliases: ["toaster"], coco_id: 70, lvis_id: 1095, openimages_id: "/m/01k6s3"}
+  - {word: "toaster_oven", tier: "high", category: "appliance", aliases: ["toaster_oven"], lvis_id: 1096}
+  - {word: "tobacco_pipe", tier: "normal", category: "object", aliases: ["tobacco_pipe"], lvis_id: 810}
+  - {word: "toilet", tier: "high", category: "appliance", aliases: ["toilet"], coco_id: 61, lvis_id: 1097, openimages_id: "/m/09g1w"}
+  - {word: "Toilet paper", tier: "high", category: "appliance", openimages_id: "/m/09gtd"}
+  - {word: "toilet_tissue", tier: "high", category: "appliance", aliases: ["bathroom_tissue", "toilet_paper", "toilet_tissue"], lvis_id: 1098}
+  - {word: "Tomato", tier: "normal", category: "object", aliases: ["tomato"], lvis_id: 1099, openimages_id: "/m/07j87"}
+  - {word: "tongs", tier: "normal", category: "object", aliases: ["tongs"], lvis_id: 1100}
+  - {word: "Tool", tier: "normal", category: "object", openimages_id: "/m/07k1x"}
+  - {word: "toolbox", tier: "normal", category: "object", aliases: ["toolbox"], lvis_id: 1101}
+  - {word: "toothbrush", tier: "low", category: "object", aliases: ["toothbrush"], coco_id: 79, lvis_id: 1102, openimages_id: "/m/012xff"}
+  - {word: "toothpaste", tier: "normal", category: "object", aliases: ["toothpaste"], lvis_id: 1103}
+  - {word: "toothpick", tier: "normal", category: "object", aliases: ["toothpick"], lvis_id: 1104}
+  - {word: "Torch", tier: "normal", category: "object", openimages_id: "/m/07dd4"}
+  - {word: "tortilla", tier: "normal", category: "object", aliases: ["tortilla"], lvis_id: 1106}
+  - {word: "Tortoise", tier: "normal", category: "object", openimages_id: "/m/011k07"}
+  - {word: "tote_bag", tier: "normal", category: "container", aliases: ["tote_bag"], lvis_id: 218}
+  - {word: "tow_truck", tier: "critical", category: "vehicle", aliases: ["tow_truck"], lvis_id: 1107}
+  - {word: "Towel", tier: "low", category: "object", aliases: ["towel"], lvis_id: 1108, openimages_id: "/m/0162_1"}
+  - {word: "towel_rack", tier: "low", category: "object", aliases: ["towel_bar", "towel_rack", "towel_rail"], lvis_id: 1109}
+  - {word: "Tower", tier: "normal", category: "object", openimages_id: "/m/01fdzj"}
+  - {word: "Toy", tier: "normal", category: "toy", aliases: ["toy"], lvis_id: 1110, openimages_id: "/m/0138tl"}
+  - {word: "tractor_(farm_equipment)", tier: "critical", category: "vehicle", aliases: ["tractor_(farm_equipment)"], lvis_id: 1111}
+  - {word: "traffic light", tier: "critical", category: "object", aliases: ["traffic_light"], coco_id: 9, lvis_id: 1112, openimages_id: "/m/015qff"}
+  - {word: "Traffic sign", tier: "normal", category: "outdoor", openimages_id: "/m/01mqdt"}
+  - {word: "trailer_truck", tier: "critical", category: "vehicle", aliases: ["articulated_lorry", "semi_truck", "tractor_trailer", "trailer_truck", "trucking_rig"], lvis_id: 1114}
+  - {word: "train", tier: "critical", category: "vehicle", coco_id: 6, openimages_id: "/m/07jdr"}
+  - {word: "train_(railroad_vehicle)", tier: "critical", category: "vehicle", aliases: ["railroad_train", "train_(railroad_vehicle)"], lvis_id: 1115}
+  - {word: "Training bench", tier: "high", category: "furniture", openimages_id: "/m/076lb9"}
+  - {word: "trampoline", tier: "normal", category: "object", aliases: ["trampoline"], lvis_id: 1116}
+  - {word: "trash_can", tier: "normal", category: "drink", aliases: ["dustbin", "garbage_can", "trash_barrel", "trash_bin", "trash_can", "wastebin"], lvis_id: 23}
+  - {word: "tray", tier: "normal", category: "kitchen", aliases: ["tray"], lvis_id: 1117}
+  - {word: "Treadmill", tier: "normal", category: "object", openimages_id: "/m/030610"}
+  - {word: "Tree", tier: "high", category: "outdoor", openimages_id: "/m/07j7r"}
+  - {word: "Tree house", tier: "high", category: "building", openimages_id: "/m/02wg_p"}
+  - {word: "trench_coat", tier: "normal", category: "clothing", aliases: ["trench_coat"], lvis_id: 1118}
+  - {word: "triangle_(musical_instrument)", tier: "normal", category: "object", aliases: ["triangle_(musical_instrument)"], lvis_id: 1119}
+  - {word: "tricycle", tier: "critical", category: "vehicle", aliases: ["tricycle"], lvis_id: 1120}
+  - {word: "Tripod", tier: "normal", category: "object", aliases: ["tripod"], lvis_id: 1121, openimages_id: "/m/073bxn"}
+  - {word: "Trombone", tier: "normal", category: "object", openimages_id: "/m/07c6l"}
+  - {word: "trophy_cup", tier: "normal", category: "drink", aliases: ["trophy_cup"], lvis_id: 345}
+  - {word: "Trousers", tier: "normal", category: "object", aliases: ["pants_(clothing)", "trousers"], lvis_id: 1122, openimages_id: "/m/07mhn"}
+  - {word: "truck", tier: "critical", category: "vehicle", aliases: ["truck"], coco_id: 7, lvis_id: 1123, openimages_id: "/m/07r04"}
+  - {word: "truffle_(chocolate)", tier: "normal", category: "object", aliases: ["chocolate_truffle", "truffle_(chocolate)"], lvis_id: 1124}
+  - {word: "Trumpet", tier: "normal", category: "music", openimages_id: "/m/07gql"}
+  - {word: "trunk", tier: "normal", category: "object", aliases: ["trunk"], lvis_id: 1125}
+  - {word: "turban", tier: "normal", category: "object", aliases: ["turban"], lvis_id: 1127}
+  - {word: "Turkey", tier: "high", category: "animal", openimages_id: "/m/0jly1"}
+  - {word: "turkey_(food)", tier: "high", category: "animal", aliases: ["turkey_(food)"], lvis_id: 1128}
+  - {word: "turnip", tier: "normal", category: "object", aliases: ["turnip"], lvis_id: 1129}
+  - {word: "Turtle", tier: "normal", category: "object", aliases: ["turtle"], lvis_id: 1130, openimages_id: "/m/09dzg"}
+  - {word: "turtleneck_(clothing)", tier: "normal", category: "object", aliases: ["polo-neck", "turtleneck_(clothing)"], lvis_id: 1131}
+  - {word: "tux", tier: "normal", category: "object", aliases: ["tux", "tuxedo"], lvis_id: 368}
+  - {word: "tv", tier: "normal", category: "electronics", coco_id: 62}
+  - {word: "typewriter", tier: "normal", category: "object", aliases: ["typewriter"], lvis_id: 1132}
+  - {word: "umbrella", tier: "normal", category: "clothing", aliases: ["umbrella"], coco_id: 25, lvis_id: 1133, openimages_id: "/m/0hnnb"}
+  - {word: "underdrawers", tier: "normal", category: "object", aliases: ["boxers", "boxershorts", "underdrawers"], lvis_id: 391}
+  - {word: "underwear", tier: "normal", category: "clothing", aliases: ["underclothes", "underclothing", "underpants", "underwear"], lvis_id: 1134}
+  - {word: "Unicycle", tier: "normal", category: "object", aliases: ["unicycle"], lvis_id: 1135, openimages_id: "/m/0f6nr"}
+  - {word: "urinal", tier: "normal", category: "object", aliases: ["urinal"], lvis_id: 1136}
+  - {word: "urn", tier: "normal", category: "object", aliases: ["urn"], lvis_id: 1137}
+  - {word: "vacuum_cleaner", tier: "normal", category: "appliance", aliases: ["vacuum_cleaner"], lvis_id: 1138}
+  - {word: "Van", tier: "critical", category: "vehicle", openimages_id: "/m/0h2r6"}
+  - {word: "vase", tier: "low", category: "object", aliases: ["vase"], coco_id: 75, lvis_id: 1139, openimages_id: "/m/02s195"}
+  - {word: "vat", tier: "normal", category: "object", aliases: ["vat"], lvis_id: 1126}
+  - {word: "Vegetable", tier: "normal", category: "object", openimages_id: "/m/0f4s2w"}
+  - {word: "Vehicle", tier: "normal", category: "object", openimages_id: "/m/07yv9"}
+  - {word: "Vehicle registration plate", tier: "normal", category: "kitchen", openimages_id: "/m/01jfm_"}
+  - {word: "veil", tier: "normal", category: "object", aliases: ["veil"], lvis_id: 546}
+  - {word: "vending_machine", tier: "normal", category: "object", aliases: ["vending_machine"], lvis_id: 1140}
+  - {word: "vent", tier: "normal", category: "object", aliases: ["air_vent", "blowhole", "vent"], lvis_id: 1141}
+  - {word: "vest", tier: "normal", category: "object", aliases: ["vest", "waistcoat"], lvis_id: 1142}
+  - {word: "videotape", tier: "normal", category: "object", aliases: ["videotape"], lvis_id: 1143}
+  - {word: "vinegar", tier: "normal", category: "object", aliases: ["vinegar"], lvis_id: 1144}
+  - {word: "Violin", tier: "normal", category: "music", aliases: ["fiddle", "violin"], lvis_id: 1145, openimages_id: "/m/07y_7"}
+  - {word: "visor", tier: "normal", category: "object", aliases: ["visor", "vizor"], lvis_id: 95}
+  - {word: "vodka", tier: "normal", category: "object", aliases: ["vodka"], lvis_id: 1146}
+  - {word: "Volleyball", tier: "normal", category: "object", aliases: ["volleyball"], lvis_id: 1147, openimages_id: "/m/02rgn06"}
+  - {word: "vulture", tier: "normal", category: "object", aliases: ["vulture"], lvis_id: 1148}
+  - {word: "Waffle", tier: "normal", category: "object", aliases: ["waffle"], lvis_id: 1149, openimages_id: "/m/01dwsz"}
+  - {word: "Waffle iron", tier: "normal", category: "object", aliases: ["waffle_iron"], lvis_id: 1150, openimages_id: "/m/04z4wx"}
+  - {word: "wagon", tier: "normal", category: "object", aliases: ["wagon"], lvis_id: 1151}
+  - {word: "wagon_wheel", tier: "normal", category: "object", aliases: ["wagon_wheel"], lvis_id: 1152}
+  - {word: "walking_cane", tier: "normal", category: "object", aliases: ["walking_cane"], lvis_id: 198}
+  - {word: "walking_stick", tier: "critical", category: "object", aliases: ["walking_stick"], lvis_id: 1153}
+  - {word: "Wall clock", tier: "high", category: "electronics", aliases: ["wall_clock"], lvis_id: 1154, openimages_id: "/m/0h8mzrc"}
+  - {word: "wall_socket", tier: "high", category: "building", aliases: ["electric_outlet", "electric_receptacle", "electrical_outlet", "outlet", "wall_plug", "wall_socket"], lvis_id: 1155}
+  - {word: "wallet", tier: "normal", category: "object", aliases: ["billfold", "wallet"], lvis_id: 1156}
+  - {word: "walrus", tier: "normal", category: "object", aliases: ["walrus"], lvis_id: 1157}
+  - {word: "Wardrobe", tier: "high", category: "furniture", aliases: ["wardrobe"], lvis_id: 1158, openimages_id: "/m/02vkqh8"}
+  - {word: "washbasin", tier: "normal", category: "object", aliases: ["basin_(for_washing)", "handbasin", "washbasin", "washbowl", "washstand"], lvis_id: 1159}
+  - {word: "Washing machine", tier: "normal", category: "object", openimages_id: "/m/0174k2"}
+  - {word: "Waste container", tier: "normal", category: "object", openimages_id: "/m/0bjyj5"}
+  - {word: "Watch", tier: "low", category: "clothing", aliases: ["watch", "wristwatch"], lvis_id: 1161, openimages_id: "/m/0gjkl"}
+  - {word: "water_bottle", tier: "normal", category: "food", aliases: ["water_bottle"], lvis_id: 1162}
+  - {word: "water_cooler", tier: "normal", category: "food", aliases: ["water_cooler"], lvis_id: 1163}
+  - {word: "water_faucet", tier: "normal", category: "food", aliases: ["tap_(water_faucet)", "water_faucet", "water_tap"], lvis_id: 1164}
+  - {word: "water_gun", tier: "normal", category: "food", aliases: ["squirt_gun", "water_gun"], lvis_id: 1167}
+  - {word: "water_heater", tier: "normal", category: "food", aliases: ["hot-water_heater", "water_heater"], lvis_id: 1165}
+  - {word: "water_jug", tier: "normal", category: "food", aliases: ["water_jug"], lvis_id: 1166}
+  - {word: "water_scooter", tier: "critical", category: "vehicle", aliases: ["jet_ski", "sea_scooter", "water_scooter"], lvis_id: 1168}
+  - {word: "water_ski", tier: "normal", category: "food", aliases: ["water_ski"], lvis_id: 1169}
+  - {word: "water_tower", tier: "normal", category: "food", aliases: ["water_tower"], lvis_id: 1170}
+  - {word: "Watercraft", tier: "normal", category: "object", openimages_id: "/m/01rzcn"}
+  - {word: "watering_can", tier: "normal", category: "drink", aliases: ["watering_can"], lvis_id: 1171}
+  - {word: "Watermelon", tier: "normal", category: "object", aliases: ["watermelon"], lvis_id: 1172, openimages_id: "/m/0kpqd"}
+  - {word: "Weapon", tier: "normal", category: "object", openimages_id: "/m/083kb"}
+  - {word: "weathervane", tier: "normal", category: "object", aliases: ["vane_(weathervane)", "weathervane", "wind_vane"], lvis_id: 1173}
+  - {word: "webcam", tier: "normal", category: "object", aliases: ["webcam"], lvis_id: 1174}
+  - {word: "wedding_cake", tier: "normal", category: "food", aliases: ["bridecake", "wedding_cake"], lvis_id: 1175}
+  - {word: "wedding_ring", tier: "normal", category: "object", aliases: ["wedding_band", "wedding_ring"], lvis_id: 1176}
+  - {word: "wet_suit", tier: "normal", category: "object", aliases: ["wet_suit"], lvis_id: 1177}
+  - {word: "Whale", tier: "normal", category: "object", openimages_id: "/m/084zz"}
+  - {word: "Wheel", tier: "normal", category: "object", aliases: ["wheel"], lvis_id: 1178, openimages_id: "/m/083wq"}
+  - {word: "Wheelchair", tier: "critical", category: "vehicle", aliases: ["wheelchair"], lvis_id: 1179, openimages_id: "/m/0qmmr"}
+  - {word: "whipped_cream", tier: "normal", category: "object", aliases: ["whipped_cream"], lvis_id: 1180}
+  - {word: "Whisk", tier: "normal", category: "object", openimages_id: "/m/02vwcm"}
+  - {word: "whistle", tier: "normal", category: "object", aliases: ["whistle"], lvis_id: 1181}
+  - {word: "Whiteboard", tier: "normal", category: "object", openimages_id: "/m/02d9qx"}
+  - {word: "wig", tier: "normal", category: "object", aliases: ["wig"], lvis_id: 1182}
+  - {word: "Willow", tier: "normal", category: "object", openimages_id: "/m/0mw_6"}
+  - {word: "wind_chime", tier: "normal", category: "object", aliases: ["wind_chime"], lvis_id: 1183}
+  - {word: "windmill", tier: "normal", category: "object", aliases: ["windmill"], lvis_id: 1184}
+  - {word: "Window", tier: "normal", category: "building", openimages_id: "/m/0d4v4"}
+  - {word: "Window blind", tier: "normal", category: "building", openimages_id: "/m/031b6r"}
+  - {word: "window_box_(for_plants)", tier: "normal", category: "building", aliases: ["window_box_(for_plants)"], lvis_id: 1185}
+  - {word: "windshield_wiper", tier: "normal", category: "object", aliases: ["windscreen_wiper", "windshield_wiper", "wiper_(for_windshield/screen)"], lvis_id: 1186}
+  - {word: "windsock", tier: "normal", category: "object", aliases: ["air-sleeve", "air_sock", "wind_cone", "wind_sleeve", "windsock"], lvis_id: 1187}
+  - {word: "Wine", tier: "normal", category: "drink", openimages_id: "/m/081qc"}
+  - {word: "wine_bottle", tier: "normal", category: "drink", aliases: ["wine_bottle"], lvis_id: 1188}
+  - {word: "wine_bucket", tier: "normal", category: "drink", aliases: ["wine_bucket", "wine_cooler"], lvis_id: 1189}
+  - {word: "wine glass", tier: "normal", category: "drink", coco_id: 40, openimages_id: "/m/09tvcd"}
+  - {word: "Wine rack", tier: "normal", category: "drink", openimages_id: "/m/0271qf7"}
+  - {word: "wineglass", tier: "normal", category: "object", aliases: ["wineglass"], lvis_id: 1190}
+  - {word: "Winter melon", tier: "normal", category: "object", openimages_id: "/m/02cvgx"}
+  - {word: "Wok", tier: "normal", category: "object", aliases: ["wok"], lvis_id: 1192, openimages_id: "/m/084rd"}
+  - {word: "wolf", tier: "high", category: "animal", aliases: ["wolf"], lvis_id: 1193}
+  - {word: "Woman", tier: "critical", category: "person", openimages_id: "/m/03bt1vf"}
+  - {word: "Wood-burning stove", tier: "high", category: "appliance", openimages_id: "/m/04169hn"}
+  - {word: "wooden_leg", tier: "normal", category: "body", aliases: ["pegleg", "wooden_leg"], lvis_id: 778}
+  - {word: "wooden_spoon", tier: "normal", category: "kitchen", aliases: ["wooden_spoon"], lvis_id: 1194}
+  - {word: "Woodpecker", tier: "normal", category: "object", openimages_id: "/m/01dy8n"}
+  - {word: "Worm", tier: "normal", category: "object", openimages_id: "/m/084hf"}
+  - {word: "wreath", tier: "low", category: "object", aliases: ["wreath"], lvis_id: 1195}
+  - {word: "Wrench", tier: "normal", category: "tool", aliases: ["spanner", "wrench"], lvis_id: 1196, openimages_id: "/m/01j5ks"}
+  - {word: "wristband", tier: "normal", category: "object", aliases: ["wristband"], lvis_id: 1197}
+  - {word: "wristlet", tier: "normal", category: "object", aliases: ["wrist_band", "wristlet"], lvis_id: 1198}
+  - {word: "yacht", tier: "normal", category: "object", aliases: ["yacht"], lvis_id: 1199}
+  - {word: "yogurt", tier: "normal", category: "object", aliases: ["yoghourt", "yoghurt", "yogurt"], lvis_id: 1200}
+  - {word: "yoke_(animal_equipment)", tier: "normal", category: "object", aliases: ["yoke_(animal_equipment)"], lvis_id: 1201}
+  - {word: "zebra", tier: "high", category: "animal", aliases: ["zebra"], coco_id: 22, lvis_id: 1202, openimages_id: "/m/0898b"}
+  - {word: "Zucchini", tier: "normal", category: "object", aliases: ["courgette", "zucchini"], lvis_id: 1203, openimages_id: "/m/027pcv"}

@@ -1,0 +1,71 @@
+# Model manifest — declares every model the device can use.
+#
+# Tracks provenance, license, size, and the runtime that consumes each
+# model so the project stays audit-friendly and reproducible.
+#
+# Weights are NOT stored in the repo (git-ignored under models/*.onnx).
+# This manifest is the record of what SHOULD be present at runtime and
+# where it comes from.
+models:
+  - id: yolov8s
+    name: YOLOv8 small (default)
+    task: object_detection
+    file: models/yolov8s.onnx
+    runtime: opencv_dnn          # cv2.dnn.readNetFromONNX
+    source: https://github.com/CVHub520/X-AnyLabeling/releases/download/v0.1.0/yolov8s.onnx
+    license: AGPL-3.0            # Ultralytics default; verify for distribution
+    input_size: 640              # fixed-shape export; 416/320 fail
+    classes: 80                  # COCO
+    sha256: e67a2801da67ce55d2c3ae4d80e310120f2e5cfc58ac9474933ff5a62ff475a0
+    downloaded: true
+    notes: Larger + more accurate than yolov8n; ~2x CPU latency
+          (137 ms vs ~60 ms/frame). Recommended for identifying more
+          everyday objects reliably.
+
+  - id: yolov8n
+    name: YOLOv8 nano
+    task: object_detection
+    file: models/yolov8n.onnx
+    runtime: opencv_dnn          # cv2.dnn.readNetFromONNX
+    source: https://github.com/ultralytics/assets/releases
+    license: AGPL-3.0            # Ultralytics default; verify for distribution
+    input_size: 640              # fixed-shape export; 416/320 fail
+    classes: 80                  # COCO
+    sha256: e0bd17e5cb5aeccbb0cf89c9bf8b8425c5bf36f835ccd323dc8beeb235c9ce23
+    downloaded: true
+
+  - id: rapidocr
+    name: RapidOCR (PP-OCR)
+    task: text_recognition
+    file: null                   # provided by the rapidocr-onnxruntime wheel
+    runtime: onnxruntime_cpu
+    source: https://github.com/RapidAI/RapidOCR
+    license: Apache-2.0
+    input_size: null
+    classes: null
+    sha256: null
+    downloaded: true             # bundled with the pip package
+
+  - id: depth_anything_v2 (optional)
+    name: Depth Anything V2
+    task: monocular_depth
+    file: models/depth_anything_v2.onnx   # optional; only if enabled
+    runtime: onnxruntime_cpu
+    source: https://github.com/DepthAnything/Depth-Anything-V2
+    license: Apache-2.0
+    input_size: 518
+    classes: null
+    sha256: null
+    downloaded: false
+
+  - id: faster_whisper (optional)
+    name: Faster-Whisper small
+    task: speech_recognition
+    file: null                   # downloaded by faster-whisper at first use
+    runtime: ctranslate2
+    source: https://github.com/SYSTRAN/faster-whisper
+    license: MIT
+    input_size: null
+    classes: null
+    sha256: null
+    downloaded: false

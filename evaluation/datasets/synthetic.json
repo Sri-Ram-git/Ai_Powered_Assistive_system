@@ -1,0 +1,138 @@
+{
+  "name": "synthetic-v0.1",
+  "description": "Small SYNTHETIC evaluation dataset used to exercise the evaluation pipeline. Ground truth is generated programmatically, NOT measured from real camera footage. Too small for statistically meaningful accuracy claims.",
+  "images": [
+    {
+      "id": "syn_001",
+      "source": "synthetic",
+      "ground_truth": [
+        {"label": "person", "box": [400, 200, 60, 220]},
+        {"label": "chair", "box": [100, 300, 80, 120]}
+      ],
+      "predictions": [
+        {"label": "person", "confidence": 0.87, "box": [402, 202, 58, 216]},
+        {"label": "chair", "confidence": 0.72, "box": [102, 302, 78, 118]},
+        {"label": "person", "confidence": 0.31, "box": [500, 400, 20, 40]}
+      ],
+      "reference_text": ["EXIT"],
+      "recognised_text": ["EXIT"]
+    },
+    {
+      "id": "syn_002",
+      "source": "synthetic",
+      "ground_truth": [
+        {"label": "car", "box": [200, 300, 300, 120]},
+        {"label": "stop sign", "box": [500, 100, 50, 60]}
+      ],
+      "predictions": [
+        {"label": "car", "confidence": 0.92, "box": [198, 298, 302, 122]},
+        {"label": "stop sign", "confidence": 0.55, "box": [500, 100, 50, 60]}
+      ],
+      "reference_text": ["STOP"],
+      "recognised_text": ["STOP"]
+    },
+    {
+      "id": "syn_003",
+      "source": "synthetic",
+      "ground_truth": [
+        {"label": "person", "box": [300, 250, 55, 200]},
+        {"label": "bicycle", "box": [150, 280, 120, 150]}
+      ],
+      "predictions": [
+        {"label": "person", "confidence": 0.9, "box": [300, 250, 55, 200]},
+        {"label": "bicycle", "confidence": 0.61, "box": [150, 280, 120, 150]}
+      ],
+      "reference_text": ["DO NOT WALK"],
+      "recognised_text": ["DO NOT WALK"]
+    },
+    {
+      "id": "syn_004",
+      "source": "synthetic",
+      "ground_truth": [
+        {"label": "traffic light", "box": [450, 150, 40, 90]}
+      ],
+      "predictions": [
+        {"label": "traffic light", "confidence": 0.76, "box": [450, 150, 40, 90]},
+        {"label": "traffic light", "confidence": 0.2, "box": [100, 100, 30, 70]}
+      ],
+      "reference_text": ["WALK"],
+      "recognised_text": ["WALK"]
+    },
+    {
+      "id": "syn_005",
+      "source": "synthetic",
+      "ground_truth": [
+        {"label": "chair", "box": [350, 300, 70, 110]},
+        {"label": "bench", "box": [100, 350, 150, 90]}
+      ],
+      "predictions": [
+        {"label": "chair", "confidence": 0.68, "box": [350, 300, 70, 110]},
+        {"label": "bench", "confidence": 0.52, "box": [100, 350, 150, 90]},
+        {"label": "laptop", "confidence": 0.4, "box": [600, 400, 50, 80]}
+      ],
+      "reference_text": [],
+      "recognised_text": []
+    },
+    {
+      "id": "syn_006",
+      "source": "synthetic",
+      "ground_truth": [
+        {"label": "person", "box": [250, 220, 50, 190]},
+        {"label": "truck", "box": [100, 280, 320, 160]}
+      ],
+      "predictions": [
+        {"label": "truck", "confidence": 0.9, "box": [102, 282, 318, 158]},
+        {"label": "person", "confidence": 0.41, "box": [255, 225, 40, 180]}
+      ],
+      "reference_text": [],
+      "recognised_text": []
+    }
+  ],
+  "assistive_cases": [
+    {
+      "scenario": "chair directly ahead at 0.8m",
+      "expected_keyword": "chair",
+      "produced_text": "Chair ahead, very close",
+      "produced_keywords": [],
+      "response_latency_ms": 350.0,
+      "missed_object": false,
+      "false_warning": false
+    },
+    {
+      "scenario": "person to the right at 2m",
+      "expected_keyword": "person",
+      "produced_text": "Person ahead, about 2 metres",
+      "produced_keywords": [],
+      "response_latency_ms": 400.0,
+      "missed_object": false,
+      "false_warning": false
+    },
+    {
+      "scenario": "stop sign ahead",
+      "expected_keyword": "stop sign",
+      "produced_text": "Obstacle ahead",
+      "produced_keywords": ["stop"],
+      "response_latency_ms": 320.0,
+      "missed_object": false,
+      "false_warning": false
+    },
+    {
+      "scenario": "text EXIT detected",
+      "expected_keyword": "text",
+      "produced_text": "Text says, EXIT",
+      "produced_keywords": [],
+      "response_latency_ms": 290.0,
+      "missed_object": false,
+      "false_warning": false
+    },
+    {
+      "scenario": "nothing in view",
+      "expected_keyword": "clear",
+      "produced_text": "",
+      "produced_keywords": ["clear", "all clear"],
+      "response_latency_ms": 200.0,
+      "missed_object": false,
+      "false_warning": false
+    }
+  ]
+}

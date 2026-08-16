@@ -1,0 +1,33 @@
+{
+  "environment": {
+    "opencv": "5.0.0"
+  },
+  "frame": [
+    1280,
+    720
+  ],
+  "detection": {
+    "yolo_latency_ms": 70.7
+  },
+  "ocr": {
+    "ocr_none_ms": 917.0,
+    "ocr_gray_ms": 1126.9,
+    "ocr_threshold_ms": 703.6,
+    "ocr_contrast_ms": 752.7,
+    "ocr_downscale_ms": 975.0,
+    "ocr_downscale2_ms": 1341.6
+  },
+  "depth": {
+    "depth_latency_ms": 3.2
+  },
+  "speech": {
+    "stt_parse_ms": 0.0
+  },
+  "tts": {
+    "tts_queue_ms": 0.0
+  },
+  "system": {
+    "cpu_percent": 0.0,
+    "ram_mb": 117.9
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "environment": {
+    "opencv": "5.0.0"
+  },
+  "mode": "sweep",
+  "system": {
+    "cpu_percent": 0.0,
+    "ram_mb": 94.4
+  },
+  "sweep": {
+    "0.2": {
+      "mean_detections": 0.0,
+      "max_detections": 0,
+      "mean_confidence": null
+    },
+    "0.25": {
+      "mean_detections": 0.0,
+      "max_detections": 0,
+      "mean_confidence": null
+    },
+    "0.3": {
+      "mean_detections": 0.0,
+      "max_detections": 0,
+      "mean_confidence": null
+    },
+    "0.35": {
+      "mean_detections": 0.0,
+      "max_detections": 0,
+      "mean_confidence": null
+    },
+    "0.4": {
+      "mean_detections": 0.0,
+      "max_detections": 0,
+      "mean_confidence": null
+    },
+    "0.45": {
+      "mean_detections": 0.0,
+      "max_detections": 0,
+      "mean_confidence": null
+    },
+    "0.5": {
+      "mean_detections": 0.0,
+      "max_detections": 0,
+      "mean_confidence": null
+    }
+  }
+}

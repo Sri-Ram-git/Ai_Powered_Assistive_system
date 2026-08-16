@@ -1,13 +1,31 @@
 detection:
-  model_path: "models/yolov8n.onnx"
+  # Larger, more accurate model (identifies more everyday objects
+  # reliably).  ~2x the CPU latency of yolov8n (137ms vs ~60ms/frame).
+  # Swap back to yolov8n.onnx for faster but less confident detection.
+  model_path: "models/yolov8s.onnx"
   input_size: 640
-  conf_threshold: 0.45
+  conf_threshold: 0.40
   iou_threshold: 0.45
   every_n_frames: 2
+  # Optional per-class confidence floors (raise the bar for classes the
+  # model over-triggers on).  Empty by default — real objects are never
+  # silently dropped.  Set from evidence (threshold sweep), not guesses.
+  conf_overrides: {}
+  # Heuristic that drops "laptop" boxes taller than wide.  Off by
+  # default: it can discard real (open) laptops.
+  filter_tall_laptops: false
 
 tracking:
   iou_threshold: 0.3
   max_missed: 8
+  # EMA smoothing on the box (0 = raw, 1 = no smoothing, 0.2-0.6 typical).
+  smoothing: 0.4
+  # EMA smoothing on confidence (0..1).
+  conf_smoothing: 0.5
+  # Penalise matches across different classes (never steal identities).
+  class_consistent: true
+  # Rolling window (frames) for temporal label voting.
+  label_vote_window: 5
   distance_change_metres: 1.0
   min_announce_interval: 3.0
 
@@ -21,22 +39,48 @@ navigation:
   #   person: 1.7
 
 ocr:
+  # OCR runs on its own dedicated worker thread (never on the vision
+  # thread), so text can be read aloud without ever blocking the camera.
+  # Enabled by default so the system keeps speaking; the async engine
+  # keeps it non-blocking either way.
+  enabled: true
   min_confidence: 0.3
   max_boxes: 50
   every_n_frames: 10
   # true  = announce text found, press R to hear it
   # false = read text aloud automatically as soon as it's detected
   ask_before_reading: false
+  # OCR input preprocessing strategy (none|gray|threshold|contrast|downscale|downscale2)
+  preprocess: "none"
+
+depth:
+  # Optional monocular depth stage (default off — keeps CPU budget).
+  # "synthetic" needs no model; "depth_anything_v2" needs model_path.
+  enabled: false
+  backend: "synthetic"
+  model_path: ""
 
 speech:
   rate: 165
   volume: 1.0
+  # Speech priority queue: minimum seconds between phrases and the
+  # dedup window before an identical phrase may repeat.
+  min_interval: 1.2
+  dedupe_window: 4.0
 
 decision:
   cooldown_seconds: 4.0
   min_priority: 5
   speak_ocr_text: true
   max_ocr_chars: 80
+
+planner:
+  # Response planner (priority/dedup/cooldown) over spoken responses.
+  cooldown_seconds: 2.5
+  # Skip responses with priority equal to or worse than this
+  # (5 = QUIET; urgent safety = 0 always wins and bypasses cooldown).
+  min_priority: 5
+  dedupe: true
 
 camera:
   id: 0
