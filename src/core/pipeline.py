@@ -100,6 +100,9 @@ class AsyncVisionPipeline:
         # Observability (Prometheus-style metrics).
         self._metrics = MetricsRegistry() if self._cfg.metrics else None
 
+        self._mode_manager = None
+        self._decision_engine = None
+
     # ------------------------------------------------------------------
     # Lifecycle
     # ------------------------------------------------------------------
@@ -200,15 +203,32 @@ class AsyncVisionPipeline:
 
     VALID_MODES = ("object", "reading", "navigation", "scene", "voice")
 
+    @property
+    def mode_behavior(self):
+        """The active ModeBehavior (or None before first set_mode)."""
+        from src.modes import ModeManager
+
+        if self._mode_manager is None:
+            self._mode_manager = ModeManager(self._cfg)
+        return self._mode_manager.get(self._cfg.mode)
+
     def set_mode(self, mode: str) -> None:
-        """Switch the product mode (object|reading|navigation|scene|voice)."""
-        mode = (mode or "").strip().lower()
-        if mode not in self.VALID_MODES:
-            raise ValueError(
-                f"unknown mode {mode!r}; expected one of {self.VALID_MODES}")
-        self._cfg.mode = mode
-        self._set_state(mode=mode)
-        _logger.info("Mode -> %s", mode)
+        """Switch the product mode (object|reading|navigation|scene|voice).
+
+        Applies the mode's behaviour knobs to the live config (OCR,
+        navigation, announce toggles).  The safety engine is never
+        disabled by a mode.
+        """
+        from src.modes import ModeManager
+
+        if self._mode_manager is None:
+            self._mode_manager = ModeManager(self._cfg)
+        behavior = self._mode_manager.apply(mode)
+        # OCR-text narration follows the mode's announce_text toggle.
+        if self._decision_engine is not None:
+            self._decision_engine.set_read_ocr_text(behavior.announce_text)
+        self._set_state(mode=behavior.name)
+        _logger.info("Mode -> %s (%s)", behavior.name, behavior.label)
 
     def handle_command(self, parsed) -> bool:
         """Execute a parsed voice command (or the raw text).
@@ -365,6 +385,7 @@ class AsyncVisionPipeline:
             read_ocr_text=cfg.speak_ocr_text,
             max_ocr_chars=cfg.max_ocr_chars,
         )
+        self._decision_engine = engine
 
         frame_index = 0
         while not self._stop.is_set():
@@ -423,7 +444,8 @@ class AsyncVisionPipeline:
             self._latest_risk = risk
 
             phrases: List[str] = []
-            if cfg.navigation_enabled:
+            behavior = self.mode_behavior
+            if cfg.navigation_enabled and behavior.announce_objects:
                 phrases = monitor.events(
                     tracks, frame.shape[1], frame.shape[0])
                 summary = FrameSummary(
@@ -436,14 +458,21 @@ class AsyncVisionPipeline:
                 if phrase:
                     phrases.append(phrase)
             else:
-                # Navigation off: no guidance, but the SafetyEngine is
-                # still assessed (it is independent of this toggle).
+                # Navigation off (or quiet mode): no guidance, but the
+                # SafetyEngine is still assessed (never mode-dependent).
                 summary = FrameSummary(
                     detections=list(tracks),
                     ocr_items=ocr_items,
                     frame_w=frame.shape[1],
                     frame_h=frame.shape[0],
                 )
+
+            # Scene mode: add a higher-level description on demand
+            # (deterministic; never blocks the loop).
+            if behavior.scene_describe and scene.objects:
+                from src.vision.vlm import DeterministicVLM
+
+                phrases.append(DeterministicVLM().describe(scene))
 
             # Response planner arbitrates everything (priority/dedup/
             # cooldown); urgent safety bypasses the cooldown.
