@@ -9,6 +9,8 @@ and the benchmark script evaluate:
 * ``gray``        — single-channel grayscale (less pixel work).
 * ``threshold``   — binary threshold (max contrast, no colour).
 * ``contrast``    — CLAHE contrast enhancement (helps low-light text).
+* ``adaptive``    — adaptive threshold (robust to uneven lighting).
+* ``sharpen``     — unsharp mask (crisper strokes for blurred text).
 * ``downscale``   — halve the frame before OCR.
 * ``downscale2``  — quarter the frame before OCR.
 
@@ -25,6 +27,8 @@ SUPPORTED_STRATEGIES: List[str] = [
     "gray",
     "threshold",
     "contrast",
+    "adaptive",
+    "sharpen",
     "downscale",
     "downscale2",
 ]
@@ -78,6 +82,14 @@ def preprocess(
         clahe = cv2.createCLAHE(clipLimit=contrast_limit,
                                 tileGridSize=(8, 8))
         return clahe.apply(gray)
+    if strategy == "adaptive":
+        gray = _to_gray(frame)
+        return cv2.adaptiveThreshold(
+            gray, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+            cv2.THRESH_BINARY, 31, 12)
+    if strategy == "sharpen":
+        blur = cv2.GaussianBlur(frame, (0, 0), 2.0)
+        return cv2.addWeighted(frame, 1.6, blur, -0.6, 0)
     if strategy == "downscale":
         return _resize(frame, 0.5)
     if strategy == "downscale2":

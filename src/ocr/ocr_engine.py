@@ -37,12 +37,20 @@ class OcrEngine:
         self,
         min_confidence: float = 0.4,
         max_boxes: int = 50,
+        det_limit_side_len: int = 736,
+        det_limit_type: str = "max",
     ) -> None:
         """Configure the OCR engine.
 
         Args:
             min_confidence: Drop text lines below this confidence.
             max_boxes: Hard cap on the number of returned lines.
+            det_limit_side_len: Max side length for the detection network.
+            det_limit_type: 'max' = only shrink images whose longest side
+                exceeds ``det_limit_side_len``; 'min' (RapidOCR default)
+                would *upscale* small ROIs to the limit — pathological
+                for object-aware OCR (a 96x24 bottle label becomes a
+                ~3270x736 image and takes >10 s).
 
         Raises:
             OcrError: If the OCR engine cannot be initialised.
@@ -52,10 +60,17 @@ class OcrEngine:
         try:
             from rapidocr_onnxruntime import RapidOCR
 
-            self._engine = RapidOCR()
+            self._engine = RapidOCR(
+                det_model_path=None,
+                det_limit_side_len=int(det_limit_side_len),
+                det_limit_type=str(det_limit_type),
+            )
         except Exception as exc:  # pragma: no cover - env dependent
             raise OcrError(f"Failed to initialise RapidOCR: {exc}") from exc
-        _logger.info("OCR engine ready (min_conf=%.2f)", self._min_conf)
+        _logger.info(
+            "OCR engine ready (min_conf=%.2f, det_limit=%d/%s)",
+            self._min_conf, det_limit_side_len, det_limit_type,
+        )
 
     # ------------------------------------------------------------------
     # Public API

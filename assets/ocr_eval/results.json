@@ -1,0 +1,240 @@
+{
+  "summary": {
+    "samples": 12,
+    "exact": 9,
+    "partial": 3,
+    "missed": 0,
+    "mean_char_acc": 0.926,
+    "mean_latency_ms": 305.8
+  },
+  "rows": [
+    {
+      "name": "bottle_label_large",
+      "truth": "COCA COLA",
+      "kind": "label",
+      "contrast": "high",
+      "box": [
+        254,
+        170,
+        320,
+        72
+      ],
+      "roi_rejected": false,
+      "presence": true,
+      "result": "COCACOLA",
+      "accuracy": 0.8888888888888888,
+      "latency_ms": 261.25179999507964,
+      "variant": "contrast",
+      "status": "partial"
+    },
+    {
+      "name": "bottle_label_small",
+      "truth": "COCA COLA",
+      "kind": "label",
+      "contrast": "high",
+      "box": [
+        454,
+        190,
+        96,
+        24
+      ],
+      "roi_rejected": false,
+      "presence": true,
+      "result": "COCA COLA",
+      "accuracy": 1.0,
+      "latency_ms": 369.33579999458743,
+      "variant": "adaptive",
+      "status": "ok"
+    },
+    {
+      "name": "book_cover",
+      "truth": "THE ART OF WAR",
+      "kind": "label",
+      "contrast": "high",
+      "box": [
+        241,
+        345,
+        300,
+        80
+      ],
+      "roi_rejected": false,
+      "presence": true,
+      "result": "THE ART OF WA",
+      "accuracy": 0.9285714285714286,
+      "latency_ms": 482.4114000002737,
+      "variant": "none",
+      "status": "ok"
+    },
+    {
+      "name": "laptop_screen",
+      "truth": "WELCOME TO THE DEMO",
+      "kind": "screen",
+      "contrast": "high",
+      "box": [
+        165,
+        302,
+        420,
+        96
+      ],
+      "roi_rejected": false,
+      "presence": true,
+      "result": "WELCOMETOT",
+      "accuracy": 0.5263157894736843,
+      "latency_ms": 389.161500002956,
+      "variant": "contrast",
+      "status": "partial"
+    },
+    {
+      "name": "sign_exit",
+      "truth": "EXIT",
+      "kind": "sign",
+      "contrast": "high",
+      "box": [
+        191,
+        325,
+        200,
+        72
+      ],
+      "roi_rejected": false,
+      "presence": true,
+      "result": "EXIT",
+      "accuracy": 1.0,
+      "latency_ms": 188.1264999974519,
+      "variant": "none",
+      "status": "ok"
+    },
+    {
+      "name": "sign_do_not_enter",
+      "truth": "DO NOT ENTER",
+      "kind": "sign",
+      "contrast": "high",
+      "box": [
+        217,
+        317,
+        320,
+        72
+      ],
+      "roi_rejected": false,
+      "presence": true,
+      "result": "DO NOT ENTER",
+      "accuracy": 1.0,
+      "latency_ms": 523.3000999942305,
+      "variant": "none",
+      "status": "ok"
+    },
+    {
+      "name": "cup_coffee",
+      "truth": "FRESH BREW",
+      "kind": "label",
+      "contrast": "high",
+      "box": [
+        335,
+        376,
+        180,
+        48
+      ],
+      "roi_rejected": false,
+      "presence": true,
+      "result": "FRESHBREW",
+      "accuracy": 0.9,
+      "latency_ms": 325.7454999984475,
+      "variant": "contrast",
+      "status": "ok"
+    },
+    {
+      "name": "lowlight_label",
+      "truth": "SALT AND PEPPER",
+      "kind": "label",
+      "contrast": "low",
+      "box": [
+        82,
+        325,
+        280,
+        56
+      ],
+      "roi_rejected": false,
+      "presence": true,
+      "result": "SALT AND PEPP",
+      "accuracy": 0.8666666666666667,
+      "latency_ms": 205.79039999574888,
+      "variant": "none",
+      "status": "partial"
+    },
+    {
+      "name": "lowlight_screen",
+      "truth": "PRESS START",
+      "kind": "screen",
+      "contrast": "low",
+      "box": [
+        337,
+        278,
+        240,
+        56
+      ],
+      "roi_rejected": false,
+      "presence": true,
+      "result": "PRESS START",
+      "accuracy": 1.0,
+      "latency_ms": 361.5194000012707,
+      "variant": "none",
+      "status": "ok"
+    },
+    {
+      "name": "tiny_laptop",
+      "truth": "HELLO",
+      "kind": "screen",
+      "contrast": "high",
+      "box": [
+        106,
+        89,
+        64,
+        18
+      ],
+      "roi_rejected": false,
+      "presence": true,
+      "result": "HELLO",
+      "accuracy": 1.0,
+      "latency_ms": 140.7376999995904,
+      "variant": "none",
+      "status": "ok"
+    },
+    {
+      "name": "tiny_sign",
+      "truth": "STOP",
+      "kind": "sign",
+      "contrast": "high",
+      "box": [
+        255,
+        367,
+        48,
+        24
+      ],
+      "roi_rejected": false,
+      "presence": true,
+      "result": "STOP",
+      "accuracy": 1.0,
+      "latency_ms": 129.93119999737246,
+      "variant": "contrast",
+      "status": "ok"
+    },
+    {
+      "name": "remote_control",
+      "truth": "MENU",
+      "kind": "label",
+      "contrast": "high",
+      "box": [
+        94,
+        339,
+        200,
+        40
+      ],
+      "roi_rejected": false,
+      "presence": true,
+      "result": "MENU",
+      "accuracy": 1.0,
+      "latency_ms": 292.883800000709,
+      "variant": "none",
+      "status": "ok"
+    }
+  ]
+}

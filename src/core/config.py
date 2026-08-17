@@ -26,6 +26,23 @@ class PipelineConfig:
     ocr_min_conf: float = 0.3
     ocr_preprocess: str = "none"
     ocr_max_boxes: int = 50
+    # Object-aware OCR (inspect text-bearing object ROIs instead of
+    # scanning the whole frame).  Only active when ocr_enabled is true.
+    object_ocr_enabled: bool = True
+    ocr_policy_path: str = "configs/ocr_policy.yaml"
+    ocr_roi_padding: float = 0.1
+    ocr_roi_min_w: int = 24
+    ocr_roi_min_h: int = 12
+    ocr_max_upscale: float = 3.0
+    ocr_text_presence: bool = True
+    ocr_variants: int = 3
+    ocr_cooldown_s: float = 3.0
+    ocr_stale_after_s: float = 5.0
+    ocr_move_px: int = 40
+    ocr_auto_read: bool = False
+    ocr_history_max: int = 20
+    ocr_min_chars: int = 2
+    ocr_timeout_ms: int = 2000
     iou_threshold: float = 0.3
     max_missed: int = 8
     distance_delta: float = 1.0
@@ -88,6 +105,27 @@ class PipelineConfig:
         cfg.ocr_min_conf = float(ocr.get("min_confidence", cfg.ocr_min_conf))
         cfg.ocr_preprocess = str(ocr.get("preprocess", cfg.ocr_preprocess))
         cfg.ocr_max_boxes = int(ocr.get("max_boxes", cfg.ocr_max_boxes))
+        cfg.object_ocr_enabled = bool(
+            ocr.get("object_ocr_enabled", cfg.object_ocr_enabled))
+        cfg.ocr_policy_path = str(ocr.get("policy_path",
+                                          cfg.ocr_policy_path))
+        cfg.ocr_roi_padding = float(ocr.get("roi_padding",
+                                            cfg.ocr_roi_padding))
+        cfg.ocr_roi_min_w = int(ocr.get("roi_min_w", cfg.ocr_roi_min_w))
+        cfg.ocr_roi_min_h = int(ocr.get("roi_min_h", cfg.ocr_roi_min_h))
+        cfg.ocr_max_upscale = float(ocr.get("max_upscale",
+                                            cfg.ocr_max_upscale))
+        cfg.ocr_text_presence = bool(ocr.get("text_presence",
+                                             cfg.ocr_text_presence))
+        cfg.ocr_variants = max(1, int(ocr.get("variants", cfg.ocr_variants)))
+        cfg.ocr_cooldown_s = float(ocr.get("cooldown_s", cfg.ocr_cooldown_s))
+        cfg.ocr_stale_after_s = float(
+            ocr.get("stale_after_s", cfg.ocr_stale_after_s))
+        cfg.ocr_move_px = int(ocr.get("move_px", cfg.ocr_move_px))
+        cfg.ocr_auto_read = bool(ocr.get("auto_read", cfg.ocr_auto_read))
+        cfg.ocr_history_max = int(ocr.get("history_max", cfg.ocr_history_max))
+        cfg.ocr_min_chars = int(ocr.get("min_chars", cfg.ocr_min_chars))
+        cfg.ocr_timeout_ms = int(ocr.get("timeout_ms", cfg.ocr_timeout_ms))
         cfg.iou_threshold = float(trk.get("iou_threshold", cfg.iou_threshold))
         cfg.max_missed = int(trk.get("max_missed", cfg.max_missed))
         cfg.tracking_smoothing = float(

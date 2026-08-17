@@ -23,10 +23,16 @@ Usage:
 Keys:
     m          mute / unmute speech
     d          toggle debug overlay (fps, latency, raw vs smoothed boxes)
-    r          read the most recently detected text (needs ocr.enabled)
+    r          read the most recently recognised text aloud (READ)
+    c          copy the latest recognised text to the clipboard
+    n          request OCR now on the best text-bearing object
+    x          clear the recognised-text history
     s          save annotated screenshot
     space      reset tracking + decision + speech memory
     q          quit
+
+Mouse:
+    click the TEXT panel buttons on the right (READ / NOW / COPY / CLEAR)
 """
 import argparse
 import sys
@@ -51,6 +57,7 @@ from src.camera import (  # noqa: E402
     scale_to_fit,
     take_screenshot,
 )
+from src.assist.text_panel import TextPanel  # noqa: E402
 from src.core.config import PipelineConfig  # noqa: E402
 from src.core.pipeline import AsyncVisionPipeline  # noqa: E402
 from src.utils.logger import setup_logger  # noqa: E402
@@ -175,6 +182,25 @@ def _speech_tier_for(text: str, vocab: Optional[ObjectVocabulary] = None) -> Spe
     return SpeechTier.NORMAL
 
 
+def _copy_to_clipboard(text: str) -> bool:
+    """Copy text to the Windows clipboard (via the `clip` helper)."""
+    if not text:
+        return False
+    try:
+        import subprocess
+
+        subprocess.run(["clip"], input=text, text=True, check=True)
+        return True
+    except Exception:
+        _logger.warning("Clipboard copy failed", exc_info=True)
+        return False
+
+
+def _current_text(pipe) -> str:
+    latest = pipe.latest_track_ocr()
+    return (latest or {}).get("text", "")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Assistive Vision App")
     parser.add_argument("--camera", type=int, default=None)
@@ -240,10 +266,46 @@ def main() -> None:
     window = "Assistive Vision"
     open_fullscreen_window(window)
     hud = HUD()
-    hud.show_toast("m mute | d debug | r read | s save | space reset | q quit")
+    panel = TextPanel()
+    hud.show_toast(
+        "m mute | d debug | r read | c copy | n read now | "
+        "x clear text | s save | space reset | q quit")
 
     debug = False
     cam_info = _CameraInfo(cfg.camera_id, cfg.camera_resolution)
+
+    def _dispatch(action: str) -> None:
+        if action == "read":
+            if not cfg.ocr_enabled:
+                hud.show_toast("OCR disabled (set ocr.enabled: true)")
+            elif pipe.read_latest_text():
+                hud.show_toast("Reading text...")
+            else:
+                hud.show_toast("No text detected yet")
+        elif action == "now":
+            if cfg.ocr_enabled and pipe.request_manual_ocr():
+                hud.show_toast("Reading now...")
+            else:
+                hud.show_toast("OCR disabled or no frame yet")
+        elif action == "copy":
+            text = _current_text(pipe)
+            if _copy_to_clipboard(text):
+                hud.show_toast(f"Copied: {text[:40]}")
+            else:
+                hud.show_toast("Nothing to copy")
+        elif action == "clear":
+            pipe.clear_track_ocr()
+            hud.show_toast("Text history cleared")
+
+    def _on_mouse(event, x, y, flags, param) -> None:
+        if event == cv2.EVENT_MOUSEMOVE:
+            panel.on_motion(x, y)
+        elif event == cv2.EVENT_LBUTTONDOWN:
+            action = panel.hit_test(x, y)
+            if action:
+                _dispatch(action)
+
+    cv2.setMouseCallback(window, _on_mouse)
 
     try:
         while True:
@@ -259,6 +321,14 @@ def main() -> None:
                                   frame.shape[0], cfg.vfov_deg,
                                   debug=debug)
             display = scale_to_fit(display, screen_w, screen_h)
+            display = panel.render(
+                display,
+                latest=pipe.latest_track_ocr(),
+                history=pipe.track_ocr_history(),
+                stats=pipe.ocr_stats(),
+                busy=pipe.ocr_busy,
+                debug=debug,
+            )
             if debug:
                 display = _debug_overlay(display, state, results)
 
@@ -283,14 +353,13 @@ def main() -> None:
                 hud.show_toast("Debug overlay on" if debug
                                else "Debug overlay off")
             elif key == ord("r"):
-                if not cfg.ocr_enabled:
-                    hud.show_toast(
-                        "OCR disabled (set ocr.enabled: true, then restart)")
-                elif ocr_text:
-                    tts.speak(f"Text says, {ocr_text[:80]}")
-                    hud.show_toast(f"Text: {ocr_text[:60]}")
-                else:
-                    hud.show_toast("No text detected yet")
+                _dispatch("read")
+            elif key == ord("c"):
+                _dispatch("copy")
+            elif key == ord("n"):
+                _dispatch("now")
+            elif key == ord("x"):
+                _dispatch("clear")
             elif key == ord("s"):
                 path = take_screenshot(display, "assets/screenshots/assist")
                 hud.show_toast(f"Screenshot: {Path(path).name}")

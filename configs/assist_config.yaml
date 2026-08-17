@@ -53,6 +53,36 @@ ocr:
   # OCR input preprocessing strategy (none|gray|threshold|contrast|downscale|downscale2)
   preprocess: "none"
 
+  # ---- Object-aware OCR ----
+  # Instead of scanning the whole frame, eligible tracked objects
+  # (configs/ocr_policy.yaml) have their ROI inspected for text.
+  object_ocr_enabled: true
+  policy_path: "configs/ocr_policy.yaml"
+  # Fraction of the box width/height added on each side before OCR.
+  roi_padding: 0.1
+  # Minimum accepted ROI size (px); smaller boxes are skipped.
+  roi_min_w: 24
+  roi_min_h: 12
+  # Cap on ROI upscaling (x1, x2 or x3) so small labels get read.
+  max_upscale: 3.0
+  # Cheap text-presence gate before the (slow) OCR call.
+  text_presence: true
+  # Preprocessing variants tried per ROI (1..4).
+  variants: 3
+  # Per-track re-OCR rules.
+  cooldown_s: 3.0
+  stale_after_s: 5.0
+  move_px: 40
+  # Read recognised text aloud automatically (false = press R to read).
+  auto_read: false
+  # Max history entries kept for the side text panel.
+  history_max: 20
+  # Minimum characters for a result to be considered real text.
+  min_chars: 2
+  # Mark a request as "timeout" (logged) when a single OCR call exceeds
+  # this.  RapidOCR is not interruptible mid-call.
+  timeout_ms: 2000
+
 depth:
   # Optional monocular depth stage (default off — keeps CPU budget).
   # "synthetic" needs no model; "depth_anything_v2" needs model_path.

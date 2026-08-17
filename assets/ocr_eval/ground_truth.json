@@ -1,0 +1,146 @@
+[
+  {
+    "name": "bottle_label_large",
+    "text": "COCA COLA",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      254,
+      170,
+      320,
+      72
+    ]
+  },
+  {
+    "name": "bottle_label_small",
+    "text": "COCA COLA",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      454,
+      190,
+      96,
+      24
+    ]
+  },
+  {
+    "name": "book_cover",
+    "text": "THE ART OF WAR",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      241,
+      345,
+      300,
+      80
+    ]
+  },
+  {
+    "name": "laptop_screen",
+    "text": "WELCOME TO THE DEMO",
+    "kind": "screen",
+    "contrast": "high",
+    "box": [
+      165,
+      302,
+      420,
+      96
+    ]
+  },
+  {
+    "name": "sign_exit",
+    "text": "EXIT",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      191,
+      325,
+      200,
+      72
+    ]
+  },
+  {
+    "name": "sign_do_not_enter",
+    "text": "DO NOT ENTER",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      217,
+      317,
+      320,
+      72
+    ]
+  },
+  {
+    "name": "cup_coffee",
+    "text": "FRESH BREW",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      335,
+      376,
+      180,
+      48
+    ]
+  },
+  {
+    "name": "lowlight_label",
+    "text": "SALT AND PEPPER",
+    "kind": "label",
+    "contrast": "low",
+    "box": [
+      82,
+      325,
+      280,
+      56
+    ]
+  },
+  {
+    "name": "lowlight_screen",
+    "text": "PRESS START",
+    "kind": "screen",
+    "contrast": "low",
+    "box": [
+      337,
+      278,
+      240,
+      56
+    ]
+  },
+  {
+    "name": "tiny_laptop",
+    "text": "HELLO",
+    "kind": "screen",
+    "contrast": "high",
+    "box": [
+      106,
+      89,
+      64,
+      18
+    ]
+  },
+  {
+    "name": "tiny_sign",
+    "text": "STOP",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      255,
+      367,
+      48,
+      24
+    ]
+  },
+  {
+    "name": "remote_control",
+    "text": "MENU",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      94,
+      339,
+      200,
+      40
+    ]
+  }
+]
