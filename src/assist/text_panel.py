@@ -31,6 +31,7 @@ _BORDER_RGB = (70, 70, 76)
 _TEXT_RGB = (255, 255, 255)
 _DIM_RGB = (190, 190, 198)
 _ACCENT_RGB = (150, 210, 255)
+_WARN_RGB = (255, 190, 110)
 
 _BUTTON_DEFS = (
     ("read", "READ"),
@@ -86,6 +87,7 @@ class TextPanel:
         history: Optional[List[Dict]] = None,
         stats: Optional[Dict] = None,
         busy: bool = False,
+        status: str = "",
         debug: bool = False,
     ) -> np.ndarray:
         """Draw the panel onto the right edge of ``frame``.
@@ -96,6 +98,8 @@ class TextPanel:
             history: ``pipe.track_ocr_history()`` list of dicts.
             stats: ``pipe.ocr_stats()`` worker counters (debug only).
             busy: Whether the OCR worker is currently processing.
+            status: ``pipe.ocr_status()`` — latest result status, used to
+                show "Text unclear" instead of a confident wrong read.
             debug: Show worker counters under the status footer.
 
         Returns:
@@ -156,12 +160,20 @@ class TextPanel:
             canvas.label(cursor, top, meta, 10, "regular", _DIM_RGB)
             top += 18
         else:
-            canvas.label(cursor, top, "No text recognised yet -", 12,
-                         "regular", _DIM_RGB)
-            canvas.label(cursor, top + 16,
-                         "look at a book or bottle with a label.", 12,
-                         "regular", _DIM_RGB)
-            top += 34
+            if status == "unclear":
+                canvas.label(cursor, top, "Text unclear", 14, "semibold",
+                             _WARN_RGB)
+                canvas.label(cursor, top + 18,
+                             "try again, hold steadier, or move closer.",
+                             11, "regular", _DIM_RGB)
+                top += 34
+            else:
+                canvas.label(cursor, top, "No text recognised yet -", 12,
+                             "regular", _DIM_RGB)
+                canvas.label(cursor, top + 16,
+                             "look at a book or bottle with a label.", 12,
+                             "regular", _DIM_RGB)
+                top += 34
         top += 8
 
         # History.

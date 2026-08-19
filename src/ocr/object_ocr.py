@@ -35,6 +35,7 @@ _WS = re.compile(r"\s+")
 _ALNUM = re.compile(r"[^A-Za-z0-9\s.,;:'\"!?()\-/&%$#@*+=<>\[\]{}]")
 _REPEATED = re.compile(r"^(.)\1{3,}$", re.IGNORECASE)
 _LONG_RUN = re.compile(r"[^\w\s]{6,}")
+_VOWELS = "aeiouyAEIOUY"
 
 
 # ----------------------------------------------------------------------
@@ -94,6 +95,41 @@ def normalize_text(text: Optional[str]) -> str:
     return _WS.sub(" ", text).strip()
 
 
+def _token_plausible(token: str) -> bool:
+    """Whether a single OCR token looks like a real word.
+
+    Catches the "random junk" the OCR net emits on noisy/low-res ROIs:
+    consonant-only soup (``KZ8XQP3``), vowel-less clusters (``TTWW4P``),
+    and digit-heavy fragments.  Numbers alone are kept (prices, codes);
+    a digit buried in the middle of a short word is treated as noise
+    (``C0LA``), while trailing codes (``2024``, ``X1``) still pass.
+    """
+    if not token:
+        return False
+    if token.isdigit():
+        return True  # numbers are meaningful (prices, codes)
+    letters = [c for c in token if c.isalpha()]
+    if not letters:
+        return False
+    lower = "".join(letters).lower()
+    if not any(c in _VOWELS for c in lower):
+        return False
+    max_run = run = 0
+    for c in lower:
+        if c in _VOWELS:
+            run = 0
+        else:
+            run += 1
+            max_run = max(max_run, run)
+    if max_run > 5:  # "strengths" = 4; anything longer is soup
+        return False
+    if len(letters) / len(token) < 0.5:
+        return False
+    if len(token) >= 4 and any(ch.isdigit() for ch in token[1:-1]):
+        return False
+    return True
+
+
 def is_garbage(text: str, min_chars: int = 2) -> bool:
     """Whether an OCR string is unusable (empty/symbols/noise)."""
     clean = normalize_text(text)
@@ -107,6 +143,9 @@ def is_garbage(text: str, min_chars: int = 2) -> bool:
     good = sum(1 for ch in alnum if ch.isalnum())
     if alnum and good / len(alnum) < 0.6:
         return True
+    tokens = [t for t in clean.split() if any(c.isalnum() for c in t)]
+    if tokens and not all(_token_plausible(t) for t in tokens):
+        return True
     return False
 
 
@@ -116,6 +155,32 @@ def validate_text(text: str, min_chars: int = 2) -> Optional[str]:
     if is_garbage(clean, min_chars=min_chars):
         return None
     return clean
+
+
+# ----------------------------------------------------------------------
+# Text quality tiers
+# ----------------------------------------------------------------------
+
+QUALITY_HIGH_CONF = 0.75
+QUALITY_MIN_CONF = 0.45
+
+
+def text_quality(text: str, confidence: float) -> str:
+    """Classify a validated text as 'high' | 'medium' | 'low'.
+
+    ``low`` text must never be shown or spoken: the worker reports it as
+    ``status="unclear"`` so the UI can say "Text unclear" instead of
+    confidently reading wrong characters.  ``medium`` is plausible but
+    not certain (kept for display, never auto-spoken).
+    """
+    clean = normalize_text(text)
+    if len(clean) < 2:
+        return "low"
+    if confidence >= QUALITY_HIGH_CONF:
+        return "high"
+    if confidence >= QUALITY_MIN_CONF:
+        return "medium"
+    return "low"
 
 
 # ----------------------------------------------------------------------
@@ -160,8 +225,22 @@ def run_variants(
     variants: Sequence[str],
     stop_confidence: float = 0.92,
     min_confidence: float = 0.0,
+    rot_fallback: bool = True,
+    fallback_variants: Optional[Sequence[str]] = None,
 ) -> Tuple[str, List[OcrResult], float]:
     """Run OCR over candidate preprocessings; return the best.
+
+    The requested ``variants`` run first (fast path, low latency).  When
+    none yield usable text, a ``fallback_variants`` chain is tried —
+    these run only on failure, so the common path is unaffected:
+
+    * ``rotate90`` / ``rotate270`` — book covers, spines, and screens
+      often hold vertical or "inverted" text the detector only reads
+      after rotation;
+    * ``otsu`` / ``denoise`` / ``gray_norm`` — thin-stroke or low-contrast
+      text (serifs like Times New Roman, noisy video) that survive better
+      under auto-thresholding / mild denoising / brightness normalisation
+      than under CLAHE or adaptive thresholding.
 
     Args:
         engine: Object with ``read_text(image) -> List[OcrResult]``.
@@ -170,13 +249,19 @@ def run_variants(
         stop_confidence: Skip remaining variants when a result already
             reaches this confidence.
         min_confidence: Drop candidate lines below this confidence.
+        rot_fallback: Try the fallback chain when nothing usable found.
+        fallback_variants: Names tried on total failure; defaults to
+            the rotation + clean-text helpers above.
 
     Returns:
         (best_variant, best_results, total_latency_ms).
     """
     started = time.monotonic()
     candidates: List[Tuple[str, List[OcrResult], float]] = []
-    for name in variants or ["none"]:
+    names = list(variants or ["none"])
+    if rot_fallback and not names:
+        names = ["none"]
+    for name in names:
         try:
             processed = preprocess(image, name)
             results = engine.read_text(processed)
@@ -191,6 +276,22 @@ def run_variants(
             if text and avg >= stop_confidence:
                 break
     variant, items = best_variant(candidates)
+    if rot_fallback and not items:
+        fallback = list(fallback_variants or
+                        ("rotate90", "rotate270", "otsu", "denoise",
+                         "gray_norm"))
+        for name in fallback:
+            try:
+                processed = preprocess(image, name)
+                results = engine.read_text(processed)
+            except Exception:
+                results = []
+            results = [r for r in results if r.confidence >= min_confidence]
+            latency = (time.monotonic() - started) * 1000.0
+            candidates.append((name, results, latency))
+            if results:
+                break
+        variant, items = best_variant(candidates)
     total_latency = (time.monotonic() - started) * 1000.0
     return variant, items, total_latency
 

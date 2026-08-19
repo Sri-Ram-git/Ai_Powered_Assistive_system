@@ -14,6 +14,14 @@ detection:
   # Heuristic that drops "laptop" boxes taller than wide.  Off by
   # default: it can discard real (open) laptops.
   filter_tall_laptops: false
+  # Per-class shape/size rejection (evidence-based).  A book facing the
+  # camera is big and squarish (aspect < ~1.8) while a real "remote" is
+  # small and wide (aspect > ~2), so book misdetections are dropped
+  # without touching real remotes.  Tune with your own camera.
+  reject_box_shape:
+    remote:
+      min_aspect: 1.8       # too square/tall for a remote -> not one
+      max_area_ratio: 0.25  # covers >25% of the frame -> not a remote
 
 tracking:
   iou_threshold: 0.3
@@ -82,6 +90,9 @@ ocr:
   # Mark a request as "timeout" (logged) when a single OCR call exceeds
   # this.  RapidOCR is not interruptible mid-call.
   timeout_ms: 2000
+  # Keep the last N raw OCR records (text boxes, confidences, ROI image)
+  # for debugging.  Dump with pipe.dump_ocr_debug(dir); 0 disables.
+  debug_records: 8
 
 depth:
   # Optional monocular depth stage (default off — keeps CPU budget).
@@ -115,6 +126,17 @@ planner:
 camera:
   id: 0
   resolution: [1280, 720]
+  # The vision pipeline (YOLO/OCR) ALWAYS receives geometrically correct
+  # frames.  `mirror` and `rotate` are applied once at capture:
+  #   mirror: true would feed OCR mirrored text — keep false.
+  #   rotate: physical sensor orientation (0/90/180/270) for a camera
+  #           mounted sideways in portrait; 0 unless yours is rotated.
+  mirror: false
+  rotate: 0
+  # Front-camera selfie-style preview: mirror only the displayed video
+  # (the OCR card / HUD / text overlays are drawn on top and stay
+  # readable).  Set false for a true-orientation preview.
+  preview_mirror: true
 
 app:
   display_scale: 1.0

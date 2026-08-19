@@ -114,7 +114,86 @@ label 0.931, screen 0.842.  Winning preprocessing variant: `none` 7,
 (4/12 samples were rescued by `contrast`; earlier runs also saw `adaptive`
 win on low-light material).
 
-## 7. Known limitations
+## 7. Hardening (real-world feedback)
+
+Feedback from live use: a book was misdetected as "remote" and its cover
+text was not recognised.  Two code-side fixes (no retraining needed):
+
+* **Inverted / vertical cover text** — `run_variants` now has a rotation
+  fallback: when none of the requested variants yield usable text, the ROI
+  is additionally tried rotated 90°/270° (handles upside-down, spine, and
+  vertical covers).  The worker also retries once at double resolution when
+  the presence gate passed but OCR found nothing (small / low-res cover
+  text).  Both run only on failure, so the common-path latency is unchanged
+  (verified: 203 ms without fallback vs 209 ms with, when text is found).
+* **book → remote misdetection** — new config-driven `reject_box_shape`
+  rules (`src/detection/detector.py`): per-class aspect / area-ratio limits.
+  A book facing the camera is big and squarish (aspect < ~1.8) while a real
+  "remote" is small and wide (aspect > ~2), so book misdetections are
+  dropped without touching real remotes.  Enabled in `configs/assist_config.yaml`
+  (`remote: {min_aspect: 1.8, max_area_ratio: 0.25}`); off by default for
+  other labels to preserve the "never silently discard" principle.
+* `scripts/benchmark/object_ocr_eval.py` seeds are now stable
+  (`zlib.crc32`, previously `hash()` which is randomised per process), so
+  eval results are reproducible run-to-run.
+
+**Meaningful-word extraction (live OCR)** — random noise reads are now
+dropped before they can reach the side panel or TTS:
+
+* `is_garbage` in `src/ocr/object_ocr.py` gained word-likeness checks:
+  every token must contain a vowel, have consonant runs <= 5, be
+  mostly letters, and not carry a digit buried mid-word (``C0LA`` is
+  noise; ``2024`` / ``EXIT 3`` still pass).
+* The worker (`src/ocr/object_worker.py`) now validates its own result
+  via `validate_text` before returning it, so garbage never reaches the
+  manual-read path, auto-read, the store, or the panel (previously only
+  store updates were validated — manual full-frame reads could emit junk).
+  Garbage results are reported as `status="empty"`.
+
+### 7.1 Reading order (fixes "COLA COCA" / "EXIT EMERGENCY" jumbles)
+
+`OcrEngine.read_text` previously sorted results only by box top (`box[1]`),
+which scrambles multi-line or side-by-side text.  It now runs
+`_order_and_dedupe` (`src/ocr/ocr_engine.py`):
+
+* **line grouping** — results whose vertical centres are within a height
+  tolerance are treated as one line;
+* **left-to-right ordering** within each line (reading order);
+* **exact-duplicate collapse** keeping the highest-confidence box
+  (RapidOCR often emits the same word twice on overlapping boxes).
+
+Verified by 6 unit tests in `tests/test_ocr.py`.
+
+### 7.2 "Text unclear" — prefer NO result over WRONG result
+
+`text_quality()` in `src/ocr/object_ocr.py` tiers validated text as
+`high` (conf ≥ 0.75) / `medium` (conf ≥ 0.45) / `low`.  Low-quality reads
+never reach the panel or TTS: the worker returns `status="unclear"` with
+empty `text` (raw text kept for debugging), the pipeline exposes
+`ocr_status()`, and `text_panel` shows a "Text unclear — try again, hold
+steadier, or move closer" hint instead of a confident wrong read.
+`stats["unclear"]` counts the events.
+
+### 7.3 Raw OCR debug recorder
+
+`ObjectOcrWorker` keeps a ring buffer (`ocr.debug_records`, default 8) of
+the last N raw results — text boxes, per-line confidences, the chosen
+variant, scale, latency, final vs raw text — plus the ROI image.
+`pipe.dump_ocr_debug(dir)` writes JSON + PNG records so any misread can be
+attributed to detection / recognition / ordering / preprocessing / scale.
+Disabled with `debug_records: 0`.
+
+### 7.4 Honest evaluation (see `docs/ocr/OCR_EVALUATION.md`)
+
+`scripts/benchmark/object_ocr_eval.py` now generates **100+ seeded
+samples** (16 extra content categories × 6 degradations: rotation,
+perspective, blur, lighting, fonts, small sizes, multi-line ordering
+samples) and reports **CER / WER / exact-match / detection-success**
+(via `src/evaluation/ocr_metrics`, whose `word_error_rate` was fixed to
+Levenshtein over word tokens) plus reading-order violations and P95
+latency.  Results land in `assets/ocr_eval/results.json`.
+
+## 8. Known limitations
 
 * Synthetic dataset only — real camera footage would validate end-to-end
   recognition more strongly.  Generated images are cheap to regenerate and
@@ -127,10 +206,19 @@ win on low-light material).
 * Accuracy on multi-line / low-resolution real text will be lower than the
   synthetic 0.926; treat numbers as comparative, not absolute.
 
-## 8. Repro
+## 9. Repro
 
 ```
 python scripts/benchmark/ocr_compare.py --runs 3
 python scripts/benchmark/object_ocr_eval.py
 python -m pytest tests/test_object_ocr.py tests/test_object_ocr_pipeline.py
 ```
+## 10. Camera geometry fix (accuracy-fix round)
+
+The server pipeline now captures RAW frames (`camera.mirror=false`) and
+feeds the vision/OCR path geometrically correct frames; the front-camera
+selfie mirror is applied to the DISPLAY copy only (`camera.preview_mirror`)
+with track boxes flipped to match.  Physical sensor mounting is handled once
+at capture via `camera.rotate` (0/90/180/270).  See
+`docs/ocr/OCR_ACCURACY_FIX_REPORT.md` for the full analysis, the
+BEFORE/AFTER table, and the debug-overlay reference.

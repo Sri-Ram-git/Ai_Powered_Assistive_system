@@ -3,8 +3,57 @@ import time
 
 import numpy as np
 
+from src.core.config import PipelineConfig
 from src.core.frame_manager import FrameManager
 from src.core.results import LatestResults
+
+
+class TestPipelineConfig:
+    def test_from_yaml_parses_reject_box_shape(self, tmp_path):
+        yaml_path = tmp_path / "cfg.yaml"
+        yaml_path.write_text(
+            "detection:\n"
+            "  reject_box_shape:\n"
+            "    remote:\n"
+            "      min_aspect: 1.8\n"
+            "      max_area_ratio: 0.25\n",
+            encoding="utf-8",
+        )
+        cfg = PipelineConfig.from_yaml(str(yaml_path))
+        assert cfg.reject_box_shape["remote"]["min_aspect"] == 1.8
+        assert cfg.reject_box_shape["remote"]["max_area_ratio"] == 0.25
+
+    def test_from_yaml_missing_file_defaults_empty(self):
+        cfg = PipelineConfig.from_yaml("no_such_file_anywhere.yaml")
+        assert cfg.reject_box_shape == {}
+
+    def test_default_camera_is_raw_and_unmirrored(self):
+        # Vision frames must be geometrically correct: no capture-side
+        # mirroring; preview selfie-mirroring is a display-only flag.
+        cfg = PipelineConfig()
+        assert cfg.camera_mirror is False
+        assert cfg.camera_rotate == 0
+        assert cfg.preview_mirror is True
+
+    def test_from_yaml_parses_camera_geometry(self, tmp_path):
+        yaml_path = tmp_path / "cfg.yaml"
+        yaml_path.write_text(
+            "camera:\n"
+            "  mirror: true\n"
+            "  rotate: 270\n"
+            "  preview_mirror: false\n",
+            encoding="utf-8",
+        )
+        cfg = PipelineConfig.from_yaml(str(yaml_path))
+        assert cfg.camera_mirror is True
+        assert cfg.camera_rotate == 270
+        assert cfg.preview_mirror is False
+
+    def test_from_yaml_normalises_rotate(self, tmp_path):
+        yaml_path = tmp_path / "cfg.yaml"
+        yaml_path.write_text("camera:\n  rotate: 450\n", encoding="utf-8")
+        cfg = PipelineConfig.from_yaml(str(yaml_path))
+        assert cfg.camera_rotate == 90
 
 
 class TestFrameManager:

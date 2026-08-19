@@ -21,6 +21,7 @@ from src.ocr.object_ocr import (
     normalize_text,
     rank_targets,
     run_variants,
+    text_quality,
     validate_text,
 )
 from src.ocr.object_worker import ObjectOcrWorker
@@ -167,10 +168,34 @@ class TestValidation:
         assert not is_garbage("HELLO")
         assert not is_garbage("COCA COLA")
 
+    def test_random_noise_rejected(self):
+        """Live OCR junk (consonant soup, digit noise) must never reach
+        the panel or TTS."""
+        assert is_garbage("KZ8XQP3")      # no vowels
+        assert is_garbage("TTWW4P")       # no vowels
+        assert is_garbage("QWXPZKL")      # consonant cluster
+        assert is_garbage("3Z9Q7K")       # digit-heavy
+        assert is_garbage("C0LA 2024")    # digit buried mid-word
+
+    def test_meaningful_tokens_kept(self):
+        assert not is_garbage("EXIT")
+        assert not is_garbage("MENU")
+        assert not is_garbage("THE ART OF WAR")
+        assert not is_garbage("DO NOT ENTER")
+        assert not is_garbage("2024")     # numbers are meaningful
+        assert not is_garbage("EXIT 3")
+
     def test_validate(self):
         assert validate_text("  hello  ") == "hello"
         assert validate_text("@@@") is None
         assert validate_text("a", min_chars=2) is None
+
+    def test_text_quality_tiers(self):
+        assert text_quality("COCA COLA", 0.9) == "high"
+        assert text_quality("COCA COLA", 0.6) == "medium"
+        assert text_quality("COCA COLA", 0.3) == "low"
+        assert text_quality("", 0.9) == "low"
+        assert text_quality("A", 0.99) == "low"
 
 
 # ----------------------------------------------------------------------
@@ -232,6 +257,97 @@ class TestVariants:
         run_variants(engine, img, ["none", "contrast", "adaptive"])
         assert engine.calls == 1  # short-circuited after first
 
+    def test_run_variants_rotation_fallback_when_empty(self):
+        """Vertical / inverted cover text: rotation is tried only when
+        the base variants find nothing."""
+        class _Engine:
+            def __init__(self):
+                self.calls = []
+                self._rotated = False
+
+            def read_text(self, image):
+                # Detect whether we received a rotated (transposed) image.
+                self._rotated = (image.shape[1] != image.shape[0]
+                                 and image.shape[1] > image.shape[0])
+                self.calls.append(self._rotated)
+                if self._rotated:
+                    return [_res("VERTICAL TITLE", 0.9)]
+                return []
+        engine = _Engine()
+        img = np.full((200, 100, 3), 200, dtype=np.uint8)  # tall ROI
+        variant, items, _ = run_variants(engine, img, ["none"])
+        assert variant in ("rotate90", "rotate270")
+        assert items[0].text == "VERTICAL TITLE"
+        assert engine.calls[-1] is True
+
+    def test_run_variants_no_rotation_when_base_succeeds(self):
+        class _Engine:
+            def __init__(self):
+                self.calls = 0
+
+            def read_text(self, image):
+                self.calls += 1
+                return [_res("NORMAL TEXT", 0.9)]
+
+        engine = _Engine()
+        img = np.full((100, 300, 3), 200, dtype=np.uint8)
+        variant, items, _ = run_variants(engine, img, ["none"])
+        assert variant == "none"
+        assert engine.calls == 1  # rotation never attempted
+
+    def test_run_variants_fallback_chain_includes_otsu(self):
+        """Thin-stroke / serif text (Times New Roman-style) that the base
+        variants miss is recovered by the Otsu fallback — only on failure."""
+        class _Engine:
+            def __init__(self):
+                self.calls = []
+
+            def read_text(self, image):
+                # Otsu output is a 2-channel binary image.
+                binary = image.ndim == 2
+                self.calls.append(binary)
+                if binary:
+                    return [_res("SERIF TEXT", 0.9)]
+                return []
+
+        engine = _Engine()
+        img = np.full((100, 300, 3), 200, dtype=np.uint8)
+        variant, items, _ = run_variants(engine, img, ["none"])
+        assert variant == "otsu"
+        assert items[0].text == "SERIF TEXT"
+        assert engine.calls[-1] is True
+
+    def test_run_variants_fallback_only_on_failure(self):
+        class _Engine:
+            def __init__(self):
+                self.calls = 0
+
+            def read_text(self, image):
+                self.calls += 1
+                return [_res("CLEAN TEXT", 0.9)]
+
+        engine = _Engine()
+        img = np.full((100, 300, 3), 200, dtype=np.uint8)
+        variant, items, _ = run_variants(engine, img, ["none"])
+        assert variant == "none"
+        assert engine.calls == 1  # fallback chain never touched
+
+    def test_run_variants_rotation_fallback_disabled(self):
+        class _Engine:
+            def __init__(self):
+                self.calls = 0
+
+            def read_text(self, image):
+                self.calls += 1
+                return []
+
+        engine = _Engine()
+        img = np.full((200, 100, 3), 200, dtype=np.uint8)
+        variant, items, _ = run_variants(
+            engine, img, ["none"], rot_fallback=False)
+        assert items == []
+        assert engine.calls == 1  # exactly the requested variant
+
 
 # ----------------------------------------------------------------------
 # Track OCR store (voting + expiry + history)
@@ -257,11 +373,11 @@ class TestTrackOcrStore:
         store = TrackOcrStore()
         store.update(_obj_result(1, "COCA COLA"))
         # A single different read must NOT replace the stable text.
-        store.update(_obj_result(1, "ABC123"))
+        store.update(_obj_result(1, "FANTA COLA"))
         assert store.for_track(1).text == "COCA COLA"
         # A second identical read adopts it.
-        store.update(_obj_result(1, "ABC123"))
-        assert store.for_track(1).text == "ABC123"
+        store.update(_obj_result(1, "FANTA COLA"))
+        assert store.for_track(1).text == "FANTA COLA"
 
     def test_garbage_reads_never_adopt(self):
         store = TrackOcrStore()
@@ -447,6 +563,129 @@ class TestObjectOcrWorker:
         worker.start()
         try:
             worker.submit(_text_like_image(), track_id=1, label="bottle")
+            worker.join(5.0)
+            assert worker.latest().status == "empty"
+        finally:
+            worker.stop()
+
+    def test_garbage_result_never_emitted(self):
+        """Random OCR noise is dropped at the worker, not shown/spoken."""
+        engine = _FakeEngine(lines=[_res("KZ8XQP3", 0.8)])
+        worker = ObjectOcrWorker(engine, text_presence=False)
+        worker.start()
+        try:
+            worker.submit(_text_like_image(), track_id=1, label="bottle")
+            worker.join(5.0)
+            result = worker.latest()
+            assert result.status == "empty"
+            assert result.has_text is False
+        finally:
+            worker.stop()
+
+    def test_mixed_junk_poisons_phrase(self):
+        engine = _FakeEngine(lines=[_res("KZ8XQP3 HELLO WORLD", 0.8)])
+        worker = ObjectOcrWorker(engine, text_presence=False)
+        worker.start()
+        try:
+            worker.submit(_text_like_image(), track_id=1, label="bottle")
+            worker.join(5.0)
+            assert worker.latest().status == "empty"  # junk token poisons it
+        finally:
+            worker.stop()
+
+    def test_low_confidence_text_reported_unclear(self):
+        """Plausible-but-unreliable reads become 'Text unclear', never
+        shown or spoken."""
+        engine = _FakeEngine(lines=[_res("COCA COLA", 0.3)])
+        worker = ObjectOcrWorker(engine, text_presence=False)
+        worker.start()
+        try:
+            worker.submit(_text_like_image(), track_id=1, label="bottle")
+            worker.join(5.0)
+            result = worker.latest()
+            assert result.status == "unclear"
+            assert result.has_text is False
+            assert worker.stats()["unclear"] == 1
+        finally:
+            worker.stop()
+
+    def test_debug_records_capture_raw(self):
+        engine = _FakeEngine(lines=[_res("HELLO WORLD", 0.95)])
+        worker = ObjectOcrWorker(engine, text_presence=False, debug_records=3)
+        worker.start()
+        try:
+            worker.submit(_text_like_image(), track_id=7, label="book")
+            worker.join(5.0)
+            recs = worker.debug_records()
+            assert len(recs) == 1
+            rec = recs[0]
+            assert rec["track_id"] == 7
+            assert rec["final_text"] == "HELLO WORLD"
+            assert rec["boxes"][0]["text"] == "HELLO WORLD"
+            assert rec["variant"] == "none"
+            assert "roi_image" in rec
+        finally:
+            worker.stop()
+
+    def test_debug_disabled_by_default(self):
+        worker = ObjectOcrWorker(_FakeEngine(), text_presence=False)
+        assert worker.debug_records() == []
+
+    def test_debug_dump_writes_files(self, tmp_path):
+        engine = _FakeEngine(lines=[_res("HELLO WORLD", 0.95)])
+        worker = ObjectOcrWorker(engine, text_presence=False, debug_records=2)
+        worker.start()
+        try:
+            worker.submit(_text_like_image(), track_id=3, label="book")
+            worker.join(5.0)
+            out = tmp_path / "dump"
+            n = worker.dump_debug(str(out))
+            assert n == 1
+            names = sorted(p.name for p in out.iterdir())
+            assert any(name.endswith(".json") for name in names)
+            assert any(name.endswith(".png") for name in names)
+        finally:
+            worker.stop()
+
+    def test_upscale_retry_when_first_pass_empty(self):
+        """Small/low-res cover text: OCR retried at double resolution."""
+        class _Engine:
+            def __init__(self):
+                self.areas = []
+
+            def read_text(self, image):
+                # Rotation preserves area (never triggers this), the 2x
+                # upscale roughly quadruples it -> only then is text read.
+                self.areas.append(image.shape[0] * image.shape[1])
+                if image.shape[0] * image.shape[1] > 50000:
+                    return [_res("COVER TITLE", 0.8)]
+                return []
+
+        engine = _Engine()
+        worker = ObjectOcrWorker(engine, text_presence=False)
+        worker.start()
+        try:
+            worker.submit(_text_like_image(), track_id=1, label="book")
+            worker.join(5.0)
+            result = worker.latest()
+            assert result.status == "ok"
+            assert result.text == "COVER TITLE"
+            assert result.scale == 2.0
+        finally:
+            worker.stop()
+
+    def test_no_upscale_retry_when_already_upscaled(self):
+        """ROIs already upscaled (scale >= 2) are not retried."""
+        class _Engine:
+            def read_text(self, image):
+                return []
+
+        engine = _Engine()
+        worker = ObjectOcrWorker(engine, text_presence=False)
+        worker.start()
+        try:
+            worker.submit(_text_like_image(), track_id=1, label="book",
+                          scale=2.0)
             worker.join(5.0)
             assert worker.latest().status == "empty"
         finally:

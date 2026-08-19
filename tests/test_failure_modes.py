@@ -103,8 +103,8 @@ def test_pipeline_camera_start_failure_sets_error():
     # Use the factory path so the pipeline opens (and fails to start)
     # the camera itself.
     p = AsyncVisionPipeline(
-        config=cfg, camera_factory=lambda camera_id=0, resolution=(640, 480):
-        ThrowingCamera(resolution=resolution))
+        config=cfg, camera_factory=lambda camera_id=0, resolution=(640, 480),
+        **kwargs: ThrowingCamera(resolution=resolution))
     p.start(timeout=5.0)
     snap = p.state_snapshot()
     assert snap["running"] is False

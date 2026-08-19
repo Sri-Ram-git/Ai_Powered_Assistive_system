@@ -11,8 +11,13 @@ and the benchmark script evaluate:
 * ``contrast``    — CLAHE contrast enhancement (helps low-light text).
 * ``adaptive``    — adaptive threshold (robust to uneven lighting).
 * ``sharpen``     — unsharp mask (crisper strokes for blurred text).
+* ``otsu``        — Otsu auto threshold (best binary cut for clean text).
+* ``denoise``     — mild 3x3 Gaussian blur (quiets sensor noise).
+* ``gray_norm``   — histogram-equalised grayscale (brightness normalised).
 * ``downscale``   — halve the frame before OCR.
 * ``downscale2``  — quarter the frame before OCR.
+* ``rotate90``    — 90° clockwise (vertical / spine text).
+* ``rotate270``   — 90° counter-clockwise (inverted covers).
 
 All strategies are pure functions returning a NEW array, so they are
 safe to benchmark and safe to call on shared camera frames.
@@ -29,8 +34,13 @@ SUPPORTED_STRATEGIES: List[str] = [
     "contrast",
     "adaptive",
     "sharpen",
+    "otsu",
+    "denoise",
+    "gray_norm",
     "downscale",
     "downscale2",
+    "rotate90",
+    "rotate270",
 ]
 
 _DEFAULT_CONTRAST_LIMIT = 2.0
@@ -90,10 +100,24 @@ def preprocess(
     if strategy == "sharpen":
         blur = cv2.GaussianBlur(frame, (0, 0), 2.0)
         return cv2.addWeighted(frame, 1.6, blur, -0.6, 0)
+    if strategy == "otsu":
+        gray = _to_gray(frame)
+        _, binary = cv2.threshold(gray, 0, 255,
+                                  cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        return binary
+    if strategy == "denoise":
+        return cv2.GaussianBlur(frame, (3, 3), 0)
+    if strategy == "gray_norm":
+        gray = _to_gray(frame)
+        return cv2.equalizeHist(gray)
     if strategy == "downscale":
         return _resize(frame, 0.5)
     if strategy == "downscale2":
         return _resize(frame, 0.25)
+    if strategy == "rotate90":
+        return np.ascontiguousarray(np.rot90(frame, k=3))
+    if strategy == "rotate270":
+        return np.ascontiguousarray(np.rot90(frame, k=1))
     raise ValueError(f"Unhandled strategy: {strategy}")  # pragma: no cover
 
 

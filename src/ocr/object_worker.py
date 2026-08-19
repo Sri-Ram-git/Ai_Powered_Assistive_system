@@ -16,11 +16,15 @@ Design (matches the "latest-request / replace-oldest" requirement):
       logged — OCR can never appear to hang forever;
     * failures surface as status="error", never as exceptions in callers.
 """
+import json
 import threading
 import time
+from collections import deque
 from dataclasses import dataclass, field
-from typing import Callable, Dict, Optional, Sequence, Tuple
+from pathlib import Path
+from typing import Callable, Deque, Dict, List, Optional, Sequence, Tuple
 
+import cv2
 import numpy as np
 
 from src.ocr.object_ocr import (
@@ -28,6 +32,8 @@ from src.ocr.object_ocr import (
     ObjectOcrResult,
     combine_results,
     run_variants,
+    text_quality,
+    validate_text,
 )
 from src.ocr.text_presence import has_text
 from src.utils.logger import setup_logger
@@ -62,6 +68,8 @@ class ObjectOcrWorker:
         text_presence: bool = True,
         presence_threshold: float = 0.35,
         timeout_ms: int = 2000,
+        min_chars: int = 2,
+        debug_records: int = 0,
         poll_interval: float = 0.02,
         on_result: Optional[Callable[[ObjectOcrResult], None]] = None,
     ) -> None:
@@ -77,6 +85,12 @@ class ObjectOcrWorker:
             timeout_ms: Mark a request as ``timeout`` when a single OCR
                 call exceeds this (RapidOCR is not interruptible mid-call,
                 so the marker is applied once the call returns).
+            min_chars: Minimum characters for a result to be considered
+                real text; garbage is dropped here so the store, the side
+                panel, and TTS never see random OCR noise.
+            debug_records: Keep a ring buffer of the last N *raw* OCR
+                results (text boxes, confidences, ROI image) for Phase-2
+                style inspection.  0 disables recording.
             poll_interval: Sleep between queue polls (seconds).
             on_result: Optional callback invoked with each finished
                 ObjectOcrResult (called on the worker thread).
@@ -88,7 +102,10 @@ class ObjectOcrWorker:
         self._text_presence = bool(text_presence)
         self._presence_threshold = float(presence_threshold)
         self._timeout_ms = int(timeout_ms)
+        self._min_chars = int(min_chars)
         self._poll_interval = float(poll_interval)
+        self._debug: Optional[Deque[Dict]] = (
+            deque(maxlen=int(debug_records)) if debug_records > 0 else None)
         self._on_result = on_result
 
         self._pending: Optional[ObjectOcrRequest] = None
@@ -101,7 +118,7 @@ class ObjectOcrWorker:
         self._request_seq = 0
         self._stats = {
             "runs": 0, "no_text": 0, "timeouts": 0, "errors": 0,
-            "replaced": 0, "empty": 0, "last_latency_ms": 0.0,
+            "replaced": 0, "empty": 0, "unclear": 0, "last_latency_ms": 0.0,
             "total_latency_ms": 0.0,
         }
 
@@ -166,6 +183,35 @@ class ObjectOcrWorker:
         out = dict(self._stats)
         out["pending"] = self._pending is not None
         return out
+
+    def debug_records(self) -> List[Dict]:
+        """Raw OCR debug records (newest-first), if recording enabled."""
+        if self._debug is None:
+            return []
+        return list(reversed(self._debug))
+
+    def dump_debug(self, out_dir: str) -> int:
+        """Write raw OCR records (JSON + ROI images) to ``out_dir``.
+
+        One ``record_<n>.json`` per OCR operation plus ``roi_<n>.png``
+        images, so a misread can be attributed to detection, recognition,
+        ordering, preprocessing, or resolution.  Returns the number of
+        records written (0 when recording is disabled).
+        """
+        records = self.debug_records()
+        if not records:
+            return 0
+        out = Path(out_dir)
+        out.mkdir(parents=True, exist_ok=True)
+        for i, rec in enumerate(records):
+            roi = rec.pop("roi_image", None)
+            name = f"record_{rec.get('ts', 0):.0f}_{i}"
+            if roi is not None:
+                cv2.imwrite(str(out / f"{name}.png"), roi)
+            rec["roi_image"] = f"{name}.png"
+            (out / f"{name}.json").write_text(
+                json.dumps(rec, indent=2, default=str), encoding="utf-8")
+        return len(records)
 
     def clear(self) -> None:
         """Drop any pending request and the latest result."""
@@ -252,46 +298,117 @@ class ObjectOcrWorker:
                 min_confidence=self._min_conf,
             )
             text, confidence = combine_results(items)
+            scale = req.scale
+            if not text and req.scale < 2.0:
+                # Small / low-resolution text (book covers, labels):
+                # the cheap gate already confirmed text-like content, so
+                # retry once at double resolution before giving up.
+                upscaled = cv2.resize(
+                    req.roi, None, fx=2.0, fy=2.0,
+                    interpolation=cv2.INTER_LINEAR,
+                )
+                v2, i2, _ = run_variants(
+                    self._engine, upscaled, self._variants,
+                    stop_confidence=self._stop_conf,
+                    min_confidence=self._min_conf,
+                )
+                t2, c2 = combine_results(i2)
+                if t2:
+                    variant, items, text, confidence, scale = (
+                        v2, i2, t2, c2, req.scale * 2.0)
         except Exception as exc:  # pragma: no cover - env dependent
             _logger.warning("Object OCR failed: %s", exc)
             self._stats["errors"] += 1
             return self._finish(req, started, status="error")
 
         elapsed_ms = (time.monotonic() - started) * 1000.0
-        if not text:
+        clean = validate_text(text, min_chars=self._min_chars)
+
+        result: Optional[ObjectOcrResult] = None
+        if not clean:
             self._stats["empty"] += 1
-            return ObjectOcrResult(
+            result = ObjectOcrResult(
                 track_id=req.track_id, label=req.label, text="",
-                confidence=0.0, roi_box=req.roi_box, variant=variant,
-                scale=req.scale, timestamp=time.time(),
+                confidence=confidence, roi_box=req.roi_box, variant=variant,
+                scale=scale, timestamp=time.time(),
                 latency_ms=elapsed_ms, status="empty",
                 trigger=req.trigger, source=req.source,
             )
+        else:
+            quality = text_quality(clean, confidence)
+            if quality == "low":
+                # Prefer NO result over a wrong one: show "Text unclear".
+                self._stats["unclear"] += 1
+                result = ObjectOcrResult(
+                    track_id=req.track_id, label=req.label, text="",
+                    confidence=confidence, raw_text=text,
+                    roi_box=req.roi_box, variant=variant,
+                    scale=scale, timestamp=time.time(),
+                    latency_ms=elapsed_ms, status="unclear",
+                    trigger=req.trigger, source=req.source,
+                )
+            else:
+                if self._timeout_ms and elapsed_ms > self._timeout_ms:
+                    self._stats["timeouts"] += 1
+                    _logger.warning(
+                        "OCR_TIMEOUT track=%s label=%s elapsed=%.0fms "
+                        "(cap=%dms)",
+                        req.track_id, req.label, elapsed_ms,
+                        self._timeout_ms,
+                    )
+                status = "timeout" if (
+                    self._timeout_ms and elapsed_ms > self._timeout_ms
+                ) else "ok"
+                result = ObjectOcrResult(
+                    track_id=req.track_id,
+                    label=req.label,
+                    text=clean,
+                    confidence=confidence,
+                    raw_text=text,
+                    roi_box=req.roi_box,
+                    variant=variant,
+                    scale=scale,
+                    timestamp=time.time(),
+                    latency_ms=elapsed_ms,
+                    status=status,
+                    trigger=req.trigger,
+                    source=req.source,
+                )
 
-        if self._timeout_ms and elapsed_ms > self._timeout_ms:
-            self._stats["timeouts"] += 1
-            _logger.warning(
-                "OCR_TIMEOUT track=%s label=%s elapsed=%.0fms (cap=%dms)",
-                req.track_id, req.label, elapsed_ms, self._timeout_ms,
-            )
+        self._record_debug(req, items, text, confidence, result, elapsed_ms)
+        return result
 
-        status = "timeout" if (
-            self._timeout_ms and elapsed_ms > self._timeout_ms) else "ok"
-        return ObjectOcrResult(
-            track_id=req.track_id,
-            label=req.label,
-            text=text,
-            confidence=confidence,
-            raw_text=text,
-            roi_box=req.roi_box,
-            variant=variant,
-            scale=req.scale,
-            timestamp=time.time(),
-            latency_ms=elapsed_ms,
-            status=status,
-            trigger=req.trigger,
-            source=req.source,
-        )
+    def _record_debug(self, req, items, raw_text, confidence, result,
+                      elapsed_ms) -> None:
+        if self._debug is None:
+            return
+        roi = req.roi
+        if roi is not None and roi.size > 0:
+            h, w = roi.shape[:2]
+            if w > 256:
+                roi = cv2.resize(roi, (256, max(1, int(h * 256 / w))))
+        self._debug.append({
+            "ts": time.time(),
+            "request_id": req.request_id,
+            "track_id": req.track_id,
+            "label": req.label,
+            "source": req.source,
+            "trigger": req.trigger,
+            "roi_box": req.roi_box,
+            "scale": req.scale,
+            "variant": result.variant,
+            "status": result.status,
+            "latency_ms": round(elapsed_ms, 1),
+            "confidence": round(confidence, 3),
+            "final_text": result.text,
+            "raw_text": raw_text,
+            "boxes": [{
+                "text": r.text,
+                "confidence": round(r.confidence, 3),
+                "box": list(r.box),
+            } for r in (items or [])],
+            "roi_image": roi,
+        })
 
     def _finish(self, req: ObjectOcrRequest, started: float,
                 status: str) -> ObjectOcrResult:

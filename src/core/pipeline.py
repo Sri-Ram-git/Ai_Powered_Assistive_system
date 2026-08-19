@@ -141,6 +141,8 @@ class AsyncVisionPipeline:
             self._camera = self._camera_factory(
                 camera_id=self._cfg.camera_id,
                 resolution=self._cfg.camera_resolution,
+                mirror=self._cfg.camera_mirror,
+                rotate=self._cfg.camera_rotate,
             )
             try:
                 self._camera.start()
@@ -148,8 +150,12 @@ class AsyncVisionPipeline:
                 self._set_state(running=False, error=str(exc))
                 _logger.error("Camera failed: %s", exc)
                 return
-        self._set_state(running=True, error=None,
-                        resolution=list(self._camera.resolution))
+        self._set_state(
+            running=True, error=None,
+            resolution=list(self._camera.resolution),
+            mirror=self._cfg.camera_mirror,
+            rotate=self._cfg.camera_rotate,
+        )
         _logger.info("Pipeline running at %dx%d",
                      *self._camera.resolution)
 
@@ -655,6 +661,8 @@ class AsyncVisionPipeline:
             min_confidence=self._cfg.ocr_min_conf,
             text_presence=self._cfg.ocr_text_presence,
             timeout_ms=self._cfg.ocr_timeout_ms,
+            min_chars=self._cfg.ocr_min_chars,
+            debug_records=self._cfg.ocr_debug_records,
             on_result=self._on_object_ocr,
         )
 
@@ -853,6 +861,28 @@ class AsyncVisionPipeline:
         """Whether the object OCR worker is currently processing."""
         return bool(getattr(self._ocr_worker, "is_busy", False))
 
+    def ocr_status(self) -> str:
+        """Status of the most recently finished OCR result (UI hint)."""
+        worker = getattr(self, "_ocr_worker", None)
+        if worker is None:
+            return ""
+        latest = worker.latest()
+        return latest.status if latest is not None else ""
+
+    def camera_geometry(self) -> Dict:
+        """Mirror / rotation applied to the vision frames (debug overlay)."""
+        return {
+            "mirror": self._cfg.camera_mirror,
+            "rotate": self._cfg.camera_rotate,
+        }
+
+    def dump_ocr_debug(self, out_dir: str) -> int:
+        """Write raw OCR records (boxes/confidences/ROI images) to a dir."""
+        worker = getattr(self, "_ocr_worker", None)
+        if worker is None:
+            return 0
+        return worker.dump_debug(out_dir)
+
     def clear_track_ocr(self) -> None:
         """Clear the recognised-text history (side panel CLEAR)."""
         with self._ocr_store_lock:
@@ -873,6 +903,7 @@ class AsyncVisionPipeline:
             iou_threshold=cfg.nms_iou_threshold,
             conf_overrides=cfg.conf_overrides,
             filter_tall_laptops=cfg.filter_tall_laptops,
+            reject_box_shape=cfg.reject_box_shape,
         )
 
     def _update_state(self, tracks, ocr_items, phrases, frame) -> None:

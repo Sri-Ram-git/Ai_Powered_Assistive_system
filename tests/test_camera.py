@@ -7,6 +7,7 @@ run on any machine.
 import time
 from pathlib import Path
 
+import cv2
 import numpy as np
 import pytest
 
@@ -24,6 +25,7 @@ from src.utils.exceptions import (
     InvalidResolutionError,
     RecordingError,
 )
+
 
 
 class FakeCamera:
@@ -63,6 +65,107 @@ class TestCameraValidation:
         assert cam.mirror is True
         cam.set_mirror(False)
         assert cam.mirror is False
+
+    def test_mirror_defaults_off(self):
+        # Front-camera frames are captured RAW so OCR/YOLO see true text
+        # orientation; mirroring is a display concern (preview_mirror).
+        cam = Camera(camera_id=999)
+        assert cam.mirror is False
+
+    def test_rotate_property(self):
+        assert Camera(camera_id=999, rotate=90).rotate == 90
+        assert Camera(camera_id=999, rotate=450).rotate == 90
+        assert Camera(camera_id=999).rotate == 0
+
+
+class TestCameraGeometry:
+    """Raw-vs-mirrored / rotated frames (hardware-free via stub capture).
+
+    This is the core front-camera regression: OCR must receive text in
+    its true reading orientation ("HELLO WORLD", never "DLROW OLLEH").
+    """
+
+    @staticmethod
+    def _stub_capture(frame):
+        class _StubCap:
+            def isOpened(self):
+                return True
+
+            def set(self, *a):
+                return True
+
+            def get(self, prop):
+                h, w = frame.shape[:2]
+                if prop == cv2.CAP_PROP_FRAME_WIDTH:
+                    return w
+                if prop == cv2.CAP_PROP_FRAME_HEIGHT:
+                    return h
+                return 30.0
+
+            def read(self):
+                return True, frame.copy()
+
+            def release(self):
+                pass
+
+        return _StubCap()
+
+    def _make_camera(self, frame, monkeypatch, mirror=False, rotate=0):
+        import cv2 as _cv2
+        monkeypatch.setattr(_cv2, "VideoCapture",
+                            lambda *a, **k: self._stub_capture(frame))
+        return Camera(camera_id=0, mirror=mirror, rotate=rotate)
+
+    def test_raw_frame_is_not_mirrored(self, monkeypatch):
+        frame = np.zeros((100, 200, 3), dtype=np.uint8)
+        frame[:, :50] = (0, 0, 255)  # red region on the left
+        cam = self._make_camera(frame, mirror=False, monkeypatch=monkeypatch)
+        cam.start()
+        try:
+            out = cam.read()
+            assert np.array_equal(out, frame)  # no flip
+        finally:
+            cam.stop()
+
+    def test_mirrored_frame_is_flipped_once(self, monkeypatch):
+        frame = np.zeros((100, 200, 3), dtype=np.uint8)
+        frame[:, :50] = (0, 0, 255)
+        cam = self._make_camera(frame, mirror=True, monkeypatch=monkeypatch)
+        cam.start()
+        try:
+            out = cam.read()
+            # The red region moves to the right edge after a horizontal flip.
+            assert int((out[:, -50:] == (0, 0, 255)).all(axis=-1).sum()) > 0
+            assert int((out[:, :50] == (0, 0, 255)).all(axis=-1).sum()) == 0
+        finally:
+            cam.stop()
+
+    def test_rotate_90_swaps_and_rotates(self, monkeypatch):
+        frame = np.zeros((50, 100, 3), dtype=np.uint8)
+        frame[10, 10] = (0, 255, 0)  # single green pixel
+        cam = self._make_camera(frame, rotate=90, monkeypatch=monkeypatch)
+        cam.start()
+        try:
+            out = cam.read()
+            assert out.shape == (100, 50, 3)
+            # After 90° clockwise, pixel (10,10) moves to (10, 50-10-1).
+            assert int((out == (0, 255, 0)).all(axis=-1).sum()) == 1
+            assert (out[10, 39] == (0, 255, 0)).all()
+        finally:
+            cam.stop()
+
+    def test_rotate_180_is_upside_down(self, monkeypatch):
+        frame = np.zeros((50, 100, 3), dtype=np.uint8)
+        frame[5, 5] = (0, 255, 0)
+        cam = self._make_camera(frame, rotate=180, monkeypatch=monkeypatch)
+        cam.start()
+        try:
+            out = cam.read()
+            assert out.shape == frame.shape
+            assert np.array_equal(out[50 - 5 - 1, 100 - 5 - 1],
+                                  (0, 255, 0))
+        finally:
+            cam.stop()
 
 
 class TestCameraManager:

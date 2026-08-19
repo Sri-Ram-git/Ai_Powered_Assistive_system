@@ -16,11 +16,22 @@ class PipelineConfig:
 
     camera_id: int = 0
     camera_resolution: Tuple[int, int] = (1280, 720)
+    # Camera geometry, corrected exactly once at capture.  mirror=True
+    # horizontally flips the RAW frame — leave OFF so OCR/YOLO see true
+    # text orientation (front-camera preview mirroring is a *display*
+    # concern: `preview_mirror`).  rotate fixes a physically sideways
+    # sensor (0/90/180/270 degrees).
+    camera_mirror: bool = False
+    camera_rotate: int = 0
+    # Display-only selfie-style mirroring of the video feed (the OCR
+    # panel and HUD are drawn on top and never flipped).
+    preview_mirror: bool = True
     model_path: str = "models/yolov8n.onnx"
     conf_threshold: float = 0.4
     nms_iou_threshold: float = 0.45
     conf_overrides: Dict[str, float] = field(default_factory=dict)
     filter_tall_laptops: bool = False
+    reject_box_shape: Dict[str, Dict[str, float]] = field(default_factory=dict)
     detect_every: int = 2
     ocr_every: int = 10
     ocr_min_conf: float = 0.3
@@ -43,6 +54,7 @@ class PipelineConfig:
     ocr_history_max: int = 20
     ocr_min_chars: int = 2
     ocr_timeout_ms: int = 2000
+    ocr_debug_records: int = 8
     iou_threshold: float = 0.3
     max_missed: int = 8
     distance_delta: float = 1.0
@@ -91,6 +103,10 @@ class PipelineConfig:
         cfg.camera_id = cam.get("id", cfg.camera_id)
         cfg.camera_resolution = tuple(cam.get("resolution",
                                               cfg.camera_resolution))
+        cfg.camera_mirror = bool(cam.get("mirror", cfg.camera_mirror))
+        cfg.camera_rotate = int(cam.get("rotate", cfg.camera_rotate)) % 360
+        cfg.preview_mirror = bool(
+            cam.get("preview_mirror", cfg.preview_mirror))
         cfg.model_path = det.get("model_path", cfg.model_path)
         cfg.conf_threshold = float(
             det.get("conf_threshold", cfg.conf_threshold))
@@ -99,6 +115,7 @@ class PipelineConfig:
         cfg.conf_overrides = dict(det.get("conf_overrides", {}) or {})
         cfg.filter_tall_laptops = bool(
             det.get("filter_tall_laptops", cfg.filter_tall_laptops))
+        cfg.reject_box_shape = dict(det.get("reject_box_shape", {}) or {})
         cfg.detect_every = max(1, int(det.get("every_n_frames", cfg.detect_every)))
         cfg.ocr_every = max(1, int(ocr.get("every_n_frames", cfg.ocr_every)))
         cfg.ocr_enabled = bool(ocr.get("enabled", cfg.ocr_enabled))
@@ -126,6 +143,8 @@ class PipelineConfig:
         cfg.ocr_history_max = int(ocr.get("history_max", cfg.ocr_history_max))
         cfg.ocr_min_chars = int(ocr.get("min_chars", cfg.ocr_min_chars))
         cfg.ocr_timeout_ms = int(ocr.get("timeout_ms", cfg.ocr_timeout_ms))
+        cfg.ocr_debug_records = max(
+            0, int(ocr.get("debug_records", cfg.ocr_debug_records)))
         cfg.iou_threshold = float(trk.get("iou_threshold", cfg.iou_threshold))
         cfg.max_missed = int(trk.get("max_missed", cfg.max_missed))
         cfg.tracking_smoothing = float(

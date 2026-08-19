@@ -84,27 +84,37 @@ class _Mute:
 
 
 def draw_tracks(frame, tracks, frame_h, vfov_deg: float = 55.0,
-                debug: bool = False):
+                debug: bool = False, mirror_x: bool = False):
     """Draw tracked boxes with stable IDs + distance (smooth == solid).
+
+    ``mirror_x`` mirrors the box coordinates so overlays align with a
+    selfie-style (flipped) preview of the *same* raw vision frame — the
+    tracking itself runs on the unmirrored frame, so OCR text stays in
+    true reading orientation.
 
     In debug mode the raw (un-smoothed) box from the last detection is
     drawn in cyan so box smoothing is visible.
     """
     display = frame.copy()
+    w = display.shape[1]
     for track in tracks:
-        x, y, w, h = track.box
+        x, y, bw, bh = track.box
+        if mirror_x:
+            x = w - (x + bw)
         color = _track_color(track.track_id)
-        cv2.rectangle(display, (x, y), (x + w, y + h), color, 2)
+        cv2.rectangle(display, (x, y), (x + bw, y + bh), color, 2)
 
         if debug:
             rx, ry, rw, rh = track.raw_box
+            if mirror_x:
+                rx = w - (rx + rw)
             cv2.rectangle(display, (rx, ry), (rx + rw, ry + rh),
                           (255, 255, 0), 1)
 
         dist = track_distance(track, frame_h, vfov_deg)
         conf = f"{track.confidence:.2f}" if debug else ""
         text = f"#{track.track_id} {track.label} {dist}{conf}"
-        label_y = y - 8 if y - 8 > 10 else y + h + 18
+        label_y = y - 8 if y - 8 > 10 else y + bh + 18
         cv2.putText(display, text, (x, label_y),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.55, color, 2)
     return display
@@ -144,13 +154,29 @@ def _track_color(track_id: int):
     return palette[track_id % len(palette)]
 
 
-def _debug_overlay(display, state, results, extra: str = ""):
-    """Draw a small diagnostics panel (Phase 23)."""
+def _debug_overlay(display, state, results, extra: str = "",
+                   ocr=None, geom=None):
+    """Draw a small diagnostics panel (Phase 23 + OCR accuracy work).
+
+    ``ocr`` is the pipeline's ``latest_track_ocr()`` dict (or None);
+    ``geom`` is ``pipe.camera_geometry()`` (mirror / rotation).
+    """
     lines = [
         f"cam {state.get('fps', 0.0):.1f} fps",
         f"yolo {results['latencies'].get('yolo_ms', 0.0):.1f} ms",
         f"tracks {len(results['tracks'])} | pending speech {extra}",
     ]
+    if geom is not None:
+        lines.append(
+            f"mirror {geom.get('mirror', False)} "
+            f"| rotate {geom.get('rotate', 0)}deg")
+    if ocr:
+        lines.append(
+            f"ocr {ocr.get('variant', '')} "
+            f"{ocr.get('latency_ms', 0.0):.0f}ms "
+            f"conf {ocr.get('confidence', 0.0) * 100:.0f}%")
+        lines.append(
+            f"stable {ocr.get('stable', False)} track#{ocr.get('track_id')}")
     y = 8
     for line in lines:
         cv2.putText(display, line, (8, y),
@@ -317,9 +343,14 @@ def main() -> None:
             results = pipe.latest_results.snapshot()
             state = pipe.state_snapshot()
 
-            display = draw_tracks(frame, results["tracks"],
+            # Front-camera selfie preview may be mirrored for the USER,
+            # but OCR/YOLO/tracking always run on the pipeline's raw,
+            # geometrically-correct vision frame.  Only the display copy
+            # is flipped here, and track boxes are mirrored to match.
+            preview = cv2.flip(frame, 1) if cfg.preview_mirror else frame
+            display = draw_tracks(preview, results["tracks"],
                                   frame.shape[0], cfg.vfov_deg,
-                                  debug=debug)
+                                  debug=debug, mirror_x=cfg.preview_mirror)
             display = scale_to_fit(display, screen_w, screen_h)
             display = panel.render(
                 display,
@@ -327,10 +358,15 @@ def main() -> None:
                 history=pipe.track_ocr_history(),
                 stats=pipe.ocr_stats(),
                 busy=pipe.ocr_busy,
+                status=pipe.ocr_status(),
                 debug=debug,
             )
             if debug:
-                display = _debug_overlay(display, state, results)
+                display = _debug_overlay(
+                    display, state, results,
+                    ocr=pipe.latest_track_ocr(),
+                    geom=pipe.camera_geometry(),
+                )
 
             ocr_text = state.get("ocr_text") or ""
             status = "MUTED" if mute else (

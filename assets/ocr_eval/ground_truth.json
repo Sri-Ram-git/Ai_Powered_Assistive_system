@@ -5,11 +5,13 @@
     "kind": "label",
     "contrast": "high",
     "box": [
-      254,
-      170,
+      198,
+      194,
       320,
       72
-    ]
+    ],
+    "font": null,
+    "mirrored": false
   },
   {
     "name": "bottle_label_small",
@@ -17,11 +19,13 @@
     "kind": "label",
     "contrast": "high",
     "box": [
-      454,
-      190,
-      96,
-      24
-    ]
+      293,
+      39,
+      98,
+      34
+    ],
+    "font": null,
+    "mirrored": false
   },
   {
     "name": "book_cover",
@@ -29,11 +33,13 @@
     "kind": "label",
     "contrast": "high",
     "box": [
-      241,
-      345,
-      300,
-      80
-    ]
+      201,
+      213,
+      310,
+      140
+    ],
+    "font": null,
+    "mirrored": false
   },
   {
     "name": "laptop_screen",
@@ -41,11 +47,13 @@
     "kind": "screen",
     "contrast": "high",
     "box": [
-      165,
-      302,
-      420,
+      122,
+      121,
+      455,
       96
-    ]
+    ],
+    "font": null,
+    "mirrored": false
   },
   {
     "name": "sign_exit",
@@ -53,11 +61,13 @@
     "kind": "sign",
     "contrast": "high",
     "box": [
-      191,
-      325,
+      362,
+      271,
       200,
       72
-    ]
+    ],
+    "font": null,
+    "mirrored": false
   },
   {
     "name": "sign_do_not_enter",
@@ -65,11 +75,13 @@
     "kind": "sign",
     "contrast": "high",
     "box": [
-      217,
-      317,
-      320,
-      72
-    ]
+      196,
+      275,
+      328,
+      130
+    ],
+    "font": null,
+    "mirrored": false
   },
   {
     "name": "cup_coffee",
@@ -77,11 +89,13 @@
     "kind": "label",
     "contrast": "high",
     "box": [
-      335,
-      376,
-      180,
-      48
-    ]
+      298,
+      128,
+      184,
+      67
+    ],
+    "font": null,
+    "mirrored": false
   },
   {
     "name": "lowlight_label",
@@ -89,11 +103,13 @@
     "kind": "label",
     "contrast": "low",
     "box": [
+      220,
       82,
-      325,
-      280,
+      292,
       56
-    ]
+    ],
+    "font": null,
+    "mirrored": false
   },
   {
     "name": "lowlight_screen",
@@ -101,11 +117,13 @@
     "kind": "screen",
     "contrast": "low",
     "box": [
-      337,
-      278,
-      240,
+      339,
+      198,
+      263,
       56
-    ]
+    ],
+    "font": null,
+    "mirrored": false
   },
   {
     "name": "tiny_laptop",
@@ -113,11 +131,13 @@
     "kind": "screen",
     "contrast": "high",
     "box": [
-      106,
-      89,
-      64,
-      18
-    ]
+      409,
+      359,
+      65,
+      22
+    ],
+    "font": null,
+    "mirrored": false
   },
   {
     "name": "tiny_sign",
@@ -125,11 +145,13 @@
     "kind": "sign",
     "contrast": "high",
     "box": [
-      255,
-      367,
-      48,
+      487,
+      100,
+      53,
       24
-    ]
+    ],
+    "font": null,
+    "mirrored": false
   },
   {
     "name": "remote_control",
@@ -137,10 +159,2588 @@
     "kind": "label",
     "contrast": "high",
     "box": [
-      94,
+      255,
+      372,
+      201,
+      44
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "vitamin_c_0",
+    "text": "VITAMIN C 500MG",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      428,
+      189,
+      172,
+      32
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "vitamin_c_1",
+    "text": "VITAMIN C 500MG",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      75,
+      366,
+      202,
+      83
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "vitamin_c_2",
+    "text": "VITAMIN C 500MG",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      97,
+      185,
+      239,
+      85
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "vitamin_c_3",
+    "text": "VITAMIN C 500MG",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      108,
+      309,
+      299,
+      71
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "vitamin_c_4",
+    "text": "VITAMIN C 500MG",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      208,
+      374,
+      311,
+      73
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "vitamin_c_5",
+    "text": "VITAMIN C 500MG",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      71,
+      87,
+      374,
+      57
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "paracetamol_0",
+    "text": "PARACETAMOL 250 MG",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      167,
       339,
+      163,
+      62
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "paracetamol_1",
+    "text": "PARACETAMOL 250 MG",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      197,
+      324,
+      210,
+      45
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "paracetamol_2",
+    "text": "PARACETAMOL 250 MG",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      207,
+      323,
+      248,
+      58
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "paracetamol_3",
+    "text": "PARACETAMOL 250 MG",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      111,
+      113,
+      307,
+      71
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "paracetamol_4",
+    "text": "PARACETAMOL 250 MG",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      53,
+      179,
+      311,
+      74
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "paracetamol_5",
+    "text": "PARACETAMOL 250 MG",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      205,
+      367,
+      347,
+      71
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "room_204_0",
+    "text": "ROOM 204",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      209,
+      348,
+      161,
+      35
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "room_204_1",
+    "text": "ROOM 204",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      349,
+      140,
       200,
+      61
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "room_204_2",
+    "text": "ROOM 204",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      243,
+      170,
+      258,
+      58
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "room_204_3",
+    "text": "ROOM 204",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      201,
+      286,
+      273,
+      80
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "room_204_4",
+    "text": "ROOM 204",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      43,
+      101,
+      311,
+      77
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "room_204_5",
+    "text": "ROOM 204",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      247,
+      188,
+      348,
+      76
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "exit_3_0",
+    "text": "EXIT 3",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      182,
+      321,
+      161,
+      36
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "exit_3_1",
+    "text": "EXIT 3",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      147,
+      306,
+      201,
+      68
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "exit_3_2",
+    "text": "EXIT 3",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      297,
+      59,
+      240,
+      90
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "exit_3_3",
+    "text": "EXIT 3",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      116,
+      311,
+      287,
+      71
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "exit_3_4",
+    "text": "EXIT 3",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      101,
+      183,
+      311,
+      101
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "exit_3_5",
+    "text": "EXIT 3",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      71,
+      260,
+      373,
+      57
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "no_smoking_0",
+    "text": "NO SMOKING",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      148,
+      231,
+      174,
+      32
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "no_smoking_1",
+    "text": "NO SMOKING",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      378,
+      129,
+      210,
+      45
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "no_smoking_2",
+    "text": "NO SMOKING",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      134,
+      248,
+      239,
+      83
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "no_smoking_3",
+    "text": "NO SMOKING",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      179,
+      47,
+      298,
+      71
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "no_smoking_4",
+    "text": "NO SMOKING",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      190,
+      262,
+      311,
+      98
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "no_smoking_5",
+    "text": "NO SMOKING",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      132,
+      147,
+      362,
+      57
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "emergency_0",
+    "text": "EMERGENCY",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      179,
+      238,
+      168,
+      32
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "emergency_1",
+    "text": "EMERGENCY",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      141,
+      353,
+      202,
+      80
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "emergency_2",
+    "text": "EMERGENCY",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      201,
+      245,
+      253,
+      58
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "emergency_3",
+    "text": "EMERGENCY",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      36,
+      244,
+      280,
+      121
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "emergency_4",
+    "text": "EMERGENCY",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      179,
+      42,
+      311,
+      93
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "emergency_5",
+    "text": "EMERGENCY",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      114,
+      224,
+      386,
+      57
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "isbn_0",
+    "text": "ISBN 978-0-13-468599-1",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      156,
+      327,
+      168,
+      32
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "isbn_1",
+    "text": "ISBN 978-0-13-468599-1",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      40,
+      237,
+      218,
+      45
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "isbn_2",
+    "text": "ISBN 978-0-13-468599-1",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      226,
+      257,
+      235,
+      64
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "isbn_3",
+    "text": "ISBN 978-0-13-468599-1",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      35,
+      136,
+      294,
+      71
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "isbn_4",
+    "text": "ISBN 978-0-13-468599-1",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      170,
+      120,
+      328,
+      44
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "isbn_5",
+    "text": "ISBN 978-0-13-468599-1",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      45,
+      56,
+      389,
+      57
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "band_aid_0",
+    "text": "BAND-AID",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      63,
+      234,
+      163,
+      52
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "band_aid_1",
+    "text": "BAND-AID",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      332,
+      46,
+      214,
+      45
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "band_aid_2",
+    "text": "BAND-AID",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      250,
+      233,
+      252,
+      58
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "band_aid_3",
+    "text": "BAND-AID",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      158,
+      190,
+      299,
+      71
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "band_aid_4",
+    "text": "BAND-AID",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      220,
+      147,
+      311,
+      100
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "band_aid_5",
+    "text": "BAND-AID",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      66,
+      70,
+      348,
+      85
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "paint_0",
+    "text": "MATT EMULSION 5L",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      419,
+      129,
+      161,
       40
-    ]
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "paint_1",
+    "text": "MATT EMULSION 5L",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      383,
+      370,
+      202,
+      84
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "paint_2",
+    "text": "MATT EMULSION 5L",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      58,
+      155,
+      263,
+      58
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "paint_3",
+    "text": "MATT EMULSION 5L",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      207,
+      67,
+      302,
+      71
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "paint_4",
+    "text": "MATT EMULSION 5L",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      220,
+      82,
+      327,
+      44
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "paint_5",
+    "text": "MATT EMULSION 5L",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      178,
+      270,
+      349,
+      99
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "screen_error_0",
+    "text": "CONNECTION LOST",
+    "kind": "screen",
+    "contrast": "high",
+    "box": [
+      195,
+      304,
+      162,
+      43
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "screen_error_1",
+    "text": "CONNECTION LOST",
+    "kind": "screen",
+    "contrast": "high",
+    "box": [
+      378,
+      129,
+      210,
+      45
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "screen_error_2",
+    "text": "CONNECTION LOST",
+    "kind": "screen",
+    "contrast": "high",
+    "box": [
+      105,
+      70,
+      246,
+      58
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "screen_error_3",
+    "text": "CONNECTION LOST",
+    "kind": "screen",
+    "contrast": "high",
+    "box": [
+      121,
+      86,
+      307,
+      71
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "screen_error_4",
+    "text": "CONNECTION LOST",
+    "kind": "screen",
+    "contrast": "high",
+    "box": [
+      82,
+      151,
+      309,
+      52
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "screen_error_5",
+    "text": "CONNECTION LOST",
+    "kind": "screen",
+    "contrast": "high",
+    "box": [
+      34,
+      290,
+      388,
+      57
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "screen_charge_0",
+    "text": "CHARGING 82%",
+    "kind": "screen",
+    "contrast": "high",
+    "box": [
+      370,
+      334,
+      172,
+      32
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "screen_charge_1",
+    "text": "CHARGING 82%",
+    "kind": "screen",
+    "contrast": "high",
+    "box": [
+      387,
+      332,
+      202,
+      75
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "screen_charge_2",
+    "text": "CHARGING 82%",
+    "kind": "screen",
+    "contrast": "high",
+    "box": [
+      271,
+      177,
+      261,
+      58
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "screen_charge_3",
+    "text": "CHARGING 82%",
+    "kind": "screen",
+    "contrast": "high",
+    "box": [
+      102,
+      186,
+      275,
+      86
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "screen_charge_4",
+    "text": "CHARGING 82%",
+    "kind": "screen",
+    "contrast": "high",
+    "box": [
+      177,
+      386,
+      342,
+      44
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "screen_charge_5",
+    "text": "CHARGING 82%",
+    "kind": "screen",
+    "contrast": "high",
+    "box": [
+      42,
+      105,
+      350,
+      117
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "shampoo_0",
+    "text": "ANTI-DANDRUFF",
+    "kind": "label",
+    "contrast": "low",
+    "box": [
+      382,
+      375,
+      167,
+      32
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "shampoo_1",
+    "text": "ANTI-DANDRUFF",
+    "kind": "label",
+    "contrast": "low",
+    "box": [
+      155,
+      300,
+      210,
+      45
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "shampoo_2",
+    "text": "ANTI-DANDRUFF",
+    "kind": "label",
+    "contrast": "low",
+    "box": [
+      303,
+      154,
+      264,
+      58
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "shampoo_3",
+    "text": "ANTI-DANDRUFF",
+    "kind": "label",
+    "contrast": "low",
+    "box": [
+      193,
+      355,
+      296,
+      71
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "shampoo_4",
+    "text": "ANTI-DANDRUFF",
+    "kind": "label",
+    "contrast": "low",
+    "box": [
+      44,
+      281,
+      310,
+      63
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "shampoo_5",
+    "text": "ANTI-DANDRUFF",
+    "kind": "label",
+    "contrast": "low",
+    "box": [
+      124,
+      105,
+      389,
+      57
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "juice_0",
+    "text": "ORANGE JUICE 1L",
+    "kind": "label",
+    "contrast": "low",
+    "box": [
+      396,
+      336,
+      163,
+      60
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "juice_1",
+    "text": "ORANGE JUICE 1L",
+    "kind": "label",
+    "contrast": "low",
+    "box": [
+      299,
+      212,
+      197,
+      45
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "juice_2",
+    "text": "ORANGE JUICE 1L",
+    "kind": "label",
+    "contrast": "low",
+    "box": [
+      309,
+      278,
+      255,
+      58
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "juice_3",
+    "text": "ORANGE JUICE 1L",
+    "kind": "label",
+    "contrast": "low",
+    "box": [
+      297,
+      291,
+      271,
+      71
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "juice_4",
+    "text": "ORANGE JUICE 1L",
+    "kind": "label",
+    "contrast": "low",
+    "box": [
+      231,
+      58,
+      338,
+      44
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "juice_5",
+    "text": "ORANGE JUICE 1L",
+    "kind": "label",
+    "contrast": "low",
+    "box": [
+      236,
+      348,
+      350,
+      117
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "book_title_0",
+    "text": "THE GREAT GATSBY",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      230,
+      122,
+      162,
+      47
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "book_title_1",
+    "text": "THE GREAT GATSBY",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      183,
+      311,
+      201,
+      69
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "book_title_2",
+    "text": "THE GREAT GATSBY",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      208,
+      379,
+      245,
+      58
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "book_title_3",
+    "text": "THE GREAT GATSBY",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      243,
+      68,
+      290,
+      71
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "book_title_4",
+    "text": "THE GREAT GATSBY",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      63,
+      351,
+      328,
+      44
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "book_title_5",
+    "text": "THE GREAT GATSBY",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      239,
+      271,
+      347,
+      68
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "order_do_not_walk_0",
+    "text": "DO NOT\nWALK",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      240,
+      262,
+      349,
+      72
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "order_do_not_walk_1",
+    "text": "DO NOT\nWALK",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      105,
+      284,
+      341,
+      72
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "order_do_not_walk_2",
+    "text": "DO NOT\nWALK",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      120,
+      163,
+      353,
+      72
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "order_do_not_walk_3",
+    "text": "DO NOT\nWALK",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      257,
+      70,
+      357,
+      72
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "order_do_not_walk_4",
+    "text": "DO NOT\nWALK",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      130,
+      176,
+      352,
+      72
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "order_do_not_walk_5",
+    "text": "DO NOT\nWALK",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      248,
+      240,
+      338,
+      72
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "order_phone_0",
+    "text": "CALL\nNOW",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      71,
+      234,
+      328,
+      135
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "order_phone_1",
+    "text": "CALL\nNOW",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      129,
+      112,
+      355,
+      72
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "order_phone_2",
+    "text": "CALL\nNOW",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      103,
+      49,
+      321,
+      79
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "order_phone_3",
+    "text": "CALL\nNOW",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      232,
+      189,
+      325,
+      98
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "order_phone_4",
+    "text": "CALL\nNOW",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      235,
+      310,
+      345,
+      72
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "order_phone_5",
+    "text": "CALL\nNOW",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      44,
+      80,
+      336,
+      72
+    ],
+    "font": null,
+    "mirrored": false
+  },
+  {
+    "name": "font_time_12_45_times",
+    "text": "12:45 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      114,
+      200,
+      93,
+      40
+    ],
+    "font": "times",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_12_45_times_bold",
+    "text": "12:45 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      64,
+      368,
+      167,
+      39
+    ],
+    "font": "times_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_12_45_times_italic",
+    "text": "12:45 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      245,
+      299,
+      242,
+      56
+    ],
+    "font": "times_italic",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_12_45_arial",
+    "text": "12:45 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      451,
+      379,
+      98,
+      40
+    ],
+    "font": "arial",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_12_45_arial_bold",
+    "text": "12:45 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      140,
+      350,
+      166,
+      53
+    ],
+    "font": "arial_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_12_45_calibri",
+    "text": "12:45 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      258,
+      267,
+      212,
+      61
+    ],
+    "font": "calibri",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_12_45_consolas",
+    "text": "12:45 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      39,
+      361,
+      97,
+      24
+    ],
+    "font": "consolas",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_10_30_times",
+    "text": "10:30 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      328,
+      405,
+      90,
+      24
+    ],
+    "font": "times",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_10_30_times_bold",
+    "text": "10:30 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      333,
+      339,
+      171,
+      39
+    ],
+    "font": "times_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_10_30_times_italic",
+    "text": "10:30 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      129,
+      46,
+      224,
+      64
+    ],
+    "font": "times_italic",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_10_30_arial",
+    "text": "10:30 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      421,
+      45,
+      105,
+      26
+    ],
+    "font": "arial",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_10_30_arial_bold",
+    "text": "10:30 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      333,
+      203,
+      182,
+      41
+    ],
+    "font": "arial_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_10_30_calibri",
+    "text": "10:30 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      321,
+      309,
+      228,
+      54
+    ],
+    "font": "calibri",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_10_30_consolas",
+    "text": "10:30 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      203,
+      216,
+      96,
+      24
+    ],
+    "font": "consolas",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_12_am_times",
+    "text": "12:00 AM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      249,
+      238,
+      95,
+      34
+    ],
+    "font": "times",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_12_am_times_bold",
+    "text": "12:00 AM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      407,
+      186,
+      162,
+      45
+    ],
+    "font": "times_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_12_am_times_italic",
+    "text": "12:00 AM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      245,
+      366,
+      225,
+      71
+    ],
+    "font": "times_italic",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_12_am_arial",
+    "text": "12:00 AM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      225,
+      335,
+      96,
+      32
+    ],
+    "font": "arial",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_12_am_arial_bold",
+    "text": "12:00 AM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      410,
+      60,
+      185,
+      41
+    ],
+    "font": "arial_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_12_am_calibri",
+    "text": "12:00 AM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      162,
+      291,
+      223,
+      54
+    ],
+    "font": "calibri",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_12_am_consolas",
+    "text": "12:00 AM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      248,
+      280,
+      100,
+      24
+    ],
+    "font": "consolas",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_23_59_times",
+    "text": "23:59",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      397,
+      366,
+      61,
+      35
+    ],
+    "font": "times",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_23_59_times_bold",
+    "text": "23:59",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      204,
+      334,
+      99,
+      52
+    ],
+    "font": "times_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_23_59_times_italic",
+    "text": "23:59",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      124,
+      55,
+      148,
+      56
+    ],
+    "font": "times_italic",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_23_59_arial",
+    "text": "23:59",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      505,
+      387,
+      63,
+      30
+    ],
+    "font": "arial",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_23_59_arial_bold",
+    "text": "23:59",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      38,
+      66,
+      108,
+      56
+    ],
+    "font": "arial_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_23_59_calibri",
+    "text": "23:59",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      389,
+      126,
+      150,
+      54
+    ],
+    "font": "calibri",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_23_59_consolas",
+    "text": "23:59",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      350,
+      51,
+      70,
+      24
+    ],
+    "font": "consolas",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_08_15_times",
+    "text": "08:15",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      281,
+      222,
+      62,
+      24
+    ],
+    "font": "times",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_08_15_times_bold",
+    "text": "08:15",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      234,
+      53,
+      101,
+      56
+    ],
+    "font": "times_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_08_15_times_italic",
+    "text": "08:15",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      228,
+      194,
+      147,
+      56
+    ],
+    "font": "times_italic",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_08_15_arial",
+    "text": "08:15",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      341,
+      182,
+      62,
+      29
+    ],
+    "font": "arial",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_08_15_arial_bold",
+    "text": "08:15",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      492,
+      152,
+      106,
+      48
+    ],
+    "font": "arial_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_08_15_calibri",
+    "text": "08:15",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      341,
+      353,
+      141,
+      54
+    ],
+    "font": "calibri",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_08_15_consolas",
+    "text": "08:15",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      238,
+      214,
+      63,
+      27
+    ],
+    "font": "consolas",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_12_pm_times",
+    "text": "12:00 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      274,
+      156,
+      101,
+      24
+    ],
+    "font": "times",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_12_pm_times_bold",
+    "text": "12:00 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      121,
+      56,
+      164,
+      39
+    ],
+    "font": "times_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_12_pm_times_italic",
+    "text": "12:00 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      81,
+      282,
+      246,
+      56
+    ],
+    "font": "times_italic",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_12_pm_arial",
+    "text": "12:00 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      194,
+      93,
+      108,
+      26
+    ],
+    "font": "arial",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_12_pm_arial_bold",
+    "text": "12:00 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      70,
+      164,
+      167,
+      59
+    ],
+    "font": "arial_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_12_pm_calibri",
+    "text": "12:00 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      112,
+      289,
+      210,
+      54
+    ],
+    "font": "calibri",
+    "mirrored": false
+  },
+  {
+    "name": "font_time_12_pm_consolas",
+    "text": "12:00 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      459,
+      251,
+      95,
+      40
+    ],
+    "font": "consolas",
+    "mirrored": false
+  },
+  {
+    "name": "font_emergency_exit_times",
+    "text": "EMERGENCY EXIT",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      135,
+      121,
+      193,
+      24
+    ],
+    "font": "times",
+    "mirrored": false
+  },
+  {
+    "name": "font_emergency_exit_times_bold",
+    "text": "EMERGENCY EXIT",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      241,
+      207,
+      355,
+      39
+    ],
+    "font": "times_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_emergency_exit_times_italic",
+    "text": "EMERGENCY EXIT",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      144,
+      275,
+      430,
+      127
+    ],
+    "font": "times_italic",
+    "mirrored": false
+  },
+  {
+    "name": "font_emergency_exit_arial",
+    "text": "EMERGENCY EXIT",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      279,
+      341,
+      187,
+      45
+    ],
+    "font": "arial",
+    "mirrored": false
+  },
+  {
+    "name": "font_emergency_exit_arial_bold",
+    "text": "EMERGENCY EXIT",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      232,
+      205,
+      345,
+      41
+    ],
+    "font": "arial_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_emergency_exit_calibri",
+    "text": "EMERGENCY EXIT",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      107,
+      265,
+      397,
+      54
+    ],
+    "font": "calibri",
+    "mirrored": false
+  },
+  {
+    "name": "font_emergency_exit_consolas",
+    "text": "EMERGENCY EXIT",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      186,
+      242,
+      152,
+      24
+    ],
+    "font": "consolas",
+    "mirrored": false
+  },
+  {
+    "name": "font_coca_cola_times",
+    "text": "COCA COLA",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      342,
+      321,
+      126,
+      44
+    ],
+    "font": "times",
+    "mirrored": false
+  },
+  {
+    "name": "font_coca_cola_times_bold",
+    "text": "COCA COLA",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      152,
+      380,
+      255,
+      40
+    ],
+    "font": "times_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_coca_cola_times_italic",
+    "text": "COCA COLA",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      226,
+      51,
+      326,
+      57
+    ],
+    "font": "times_italic",
+    "mirrored": false
+  },
+  {
+    "name": "font_coca_cola_arial",
+    "text": "COCA COLA",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      330,
+      101,
+      137,
+      26
+    ],
+    "font": "arial",
+    "mirrored": false
+  },
+  {
+    "name": "font_coca_cola_arial_bold",
+    "text": "COCA COLA",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      44,
+      57,
+      226,
+      62
+    ],
+    "font": "arial_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_coca_cola_calibri",
+    "text": "COCA COLA",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      224,
+      282,
+      253,
+      54
+    ],
+    "font": "calibri",
+    "mirrored": false
+  },
+  {
+    "name": "font_coca_cola_consolas",
+    "text": "COCA COLA",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      273,
+      312,
+      106,
+      41
+    ],
+    "font": "consolas",
+    "mirrored": false
+  },
+  {
+    "name": "font_room_204_times",
+    "text": "ROOM 204",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      445,
+      143,
+      106,
+      27
+    ],
+    "font": "times",
+    "mirrored": false
+  },
+  {
+    "name": "font_room_204_times_bold",
+    "text": "ROOM 204",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      72,
+      86,
+      189,
+      65
+    ],
+    "font": "times_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_room_204_times_italic",
+    "text": "ROOM 204",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      177,
+      307,
+      255,
+      107
+    ],
+    "font": "times_italic",
+    "mirrored": false
+  },
+  {
+    "name": "font_room_204_arial",
+    "text": "ROOM 204",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      230,
+      179,
+      111,
+      29
+    ],
+    "font": "arial",
+    "mirrored": false
+  },
+  {
+    "name": "font_room_204_arial_bold",
+    "text": "ROOM 204",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      134,
+      183,
+      207,
+      41
+    ],
+    "font": "arial_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_room_204_calibri",
+    "text": "ROOM 204",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      37,
+      202,
+      252,
+      54
+    ],
+    "font": "calibri",
+    "mirrored": false
+  },
+  {
+    "name": "font_room_204_consolas",
+    "text": "ROOM 204",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      332,
+      324,
+      104,
+      24
+    ],
+    "font": "consolas",
+    "mirrored": false
+  },
+  {
+    "name": "font_medicine_times",
+    "text": "MEDICINE 500MG",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      316,
+      139,
+      180,
+      24
+    ],
+    "font": "times",
+    "mirrored": false
+  },
+  {
+    "name": "font_medicine_times_bold",
+    "text": "MEDICINE 500MG",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      264,
+      189,
+      315,
+      48
+    ],
+    "font": "times_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_medicine_times_italic",
+    "text": "MEDICINE 500MG",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      95,
+      377,
+      415,
+      67
+    ],
+    "font": "times_italic",
+    "mirrored": false
+  },
+  {
+    "name": "font_medicine_arial",
+    "text": "MEDICINE 500MG",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      141,
+      345,
+      193,
+      26
+    ],
+    "font": "arial",
+    "mirrored": false
+  },
+  {
+    "name": "font_medicine_arial_bold",
+    "text": "MEDICINE 500MG",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      127,
+      217,
+      306,
+      93
+    ],
+    "font": "arial_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_medicine_calibri",
+    "text": "MEDICINE 500MG",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      130,
+      246,
+      380,
+      92
+    ],
+    "font": "calibri",
+    "mirrored": false
+  },
+  {
+    "name": "font_medicine_consolas",
+    "text": "MEDICINE 500MG",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      336,
+      196,
+      154,
+      44
+    ],
+    "font": "consolas",
+    "mirrored": false
+  },
+  {
+    "name": "font_art_of_war_times",
+    "text": "THE ART OF WAR",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      180,
+      203,
+      175,
+      55
+    ],
+    "font": "times",
+    "mirrored": false
+  },
+  {
+    "name": "font_art_of_war_times_bold",
+    "text": "THE ART OF WAR",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      218,
+      228,
+      348,
+      40
+    ],
+    "font": "times_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_art_of_war_times_italic",
+    "text": "THE ART OF WAR",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      161,
+      223,
+      450,
+      57
+    ],
+    "font": "times_italic",
+    "mirrored": false
+  },
+  {
+    "name": "font_art_of_war_arial",
+    "text": "THE ART OF WAR",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      150,
+      410,
+      186,
+      26
+    ],
+    "font": "arial",
+    "mirrored": false
+  },
+  {
+    "name": "font_art_of_war_arial_bold",
+    "text": "THE ART OF WAR",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      24,
+      48,
+      350,
+      41
+    ],
+    "font": "arial_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_art_of_war_calibri",
+    "text": "THE ART OF WAR",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      177,
+      364,
+      361,
+      54
+    ],
+    "font": "calibri",
+    "mirrored": false
+  },
+  {
+    "name": "font_art_of_war_consolas",
+    "text": "THE ART OF WAR",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      429,
+      385,
+      171,
+      24
+    ],
+    "font": "consolas",
+    "mirrored": false
+  },
+  {
+    "name": "font_no_smoking_times",
+    "text": "NO SMOKING",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      318,
+      360,
+      143,
+      24
+    ],
+    "font": "times",
+    "mirrored": false
+  },
+  {
+    "name": "font_no_smoking_times_bold",
+    "text": "NO SMOKING",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      288,
+      247,
+      245,
+      49
+    ],
+    "font": "times_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_no_smoking_times_italic",
+    "text": "NO SMOKING",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      250,
+      313,
+      320,
+      64
+    ],
+    "font": "times_italic",
+    "mirrored": false
+  },
+  {
+    "name": "font_no_smoking_arial",
+    "text": "NO SMOKING",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      132,
+      189,
+      153,
+      26
+    ],
+    "font": "arial",
+    "mirrored": false
+  },
+  {
+    "name": "font_no_smoking_arial_bold",
+    "text": "NO SMOKING",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      276,
+      276,
+      252,
+      41
+    ],
+    "font": "arial_bold",
+    "mirrored": false
+  },
+  {
+    "name": "font_no_smoking_calibri",
+    "text": "NO SMOKING",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      249,
+      83,
+      305,
+      54
+    ],
+    "font": "calibri",
+    "mirrored": false
+  },
+  {
+    "name": "font_no_smoking_consolas",
+    "text": "NO SMOKING",
+    "kind": "sign",
+    "contrast": "high",
+    "box": [
+      436,
+      382,
+      114,
+      36
+    ],
+    "font": "consolas",
+    "mirrored": false
+  },
+  {
+    "name": "mirrored_time_12_45",
+    "text": "12:45 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      59,
+      245,
+      186,
+      46
+    ],
+    "font": "arial",
+    "mirrored": true
+  },
+  {
+    "name": "mirrored_time_10_30",
+    "text": "10:30 PM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      139,
+      262,
+      211,
+      46
+    ],
+    "font": "arial",
+    "mirrored": true
+  },
+  {
+    "name": "mirrored_time_12_am",
+    "text": "12:00 AM",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      134,
+      116,
+      198,
+      46
+    ],
+    "font": "arial",
+    "mirrored": true
+  },
+  {
+    "name": "mirrored_time_23_59",
+    "text": "23:59",
+    "kind": "label",
+    "contrast": "high",
+    "box": [
+      103,
+      325,
+      123,
+      63
+    ],
+    "font": "arial",
+    "mirrored": true
   }
 ]

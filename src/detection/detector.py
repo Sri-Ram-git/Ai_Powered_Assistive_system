@@ -104,6 +104,7 @@ class YoloDetector:
         iou_threshold: float = 0.45,
         conf_overrides: Optional[Dict[str, float]] = None,
         filter_tall_laptops: bool = False,
+        reject_box_shape: Optional[Dict[str, Dict[str, float]]] = None,
     ) -> None:
         """Configure the detector.
 
@@ -118,6 +119,13 @@ class YoloDetector:
             filter_tall_laptops: Apply the tall-laptop heuristic that
                 drops boxes much taller than wide.  Off by default
                 because it can discard real (open) laptops.
+            reject_box_shape: Optional per-class shape/size rejection
+                rules: ``{label: {min_aspect, max_aspect,
+                min_area_ratio, max_area_ratio}}``.  A box is dropped
+                when it violates a rule — used to stop classes that look
+                alike (e.g. a book misdetected as a "remote") from
+                hijacking the label.  Off by default so real objects are
+                never silently discarded.
 
         Raises:
             DetectionError: If the model cannot be loaded.
@@ -136,6 +144,7 @@ class YoloDetector:
         self._names = list(COCO_NAMES)
         self._conf_overrides = dict(conf_overrides or {})
         self._filter_tall_laptops = bool(filter_tall_laptops)
+        self._reject_box_shape = dict(reject_box_shape or {})
         self._loaded = True
         _logger.info(
             "Loaded YOLO model %s (input=%d, conf=%.2f, iou=%.2f)",
@@ -285,6 +294,10 @@ class YoloDetector:
                     label, box):
                 continue
 
+            if _rejects_box_shape(
+                    label, box, orig_w * orig_h, self._reject_box_shape):
+                continue
+
             results.append(DetectionResult(
                 label=label,
                 confidence=float(class_scores[i]),
@@ -312,6 +325,49 @@ def _looks_like_false_laptop(label: str,
         return True
     # Taller than wide by a clear margin -> not a laptop.
     return h > w * 1.15
+
+
+def _rejects_box_shape(
+    label: str,
+    box: Tuple[int, int, int, int],
+    frame_area: int,
+    rules: Optional[Dict[str, Dict[str, float]]] = None,
+) -> bool:
+    """Whether a box violates the per-class shape/size rules for its label.
+
+    Rules (each optional; a box is dropped when it violates any given
+    rule):
+        min_aspect      reject when w/h < this (too square/tall)
+        max_aspect      reject when w/h > this (too elongated)
+        min_area_ratio  reject when area/frame_area < this (too small)
+        max_area_ratio  reject when area/frame_area > this (too large)
+
+    Used to separate classes the model confuses because they share a
+    rectangle silhouette — e.g. a book facing the camera is big and
+    squarish (aspect < ~1.8) while a real "remote" is small and wide
+    (aspect > ~2), so book misdetections can be dropped without touching
+    real remotes.  Config-driven and off by default.
+    """
+    if not rules or label not in rules:
+        return False
+    rule = rules[label]
+    x, y, w, h = box
+    if w <= 0 or h <= 0:
+        return True
+    aspect = float(w) / float(h)
+    area = float(w) * float(h)
+    area_ratio = area / float(frame_area) if frame_area > 0 else 0.0
+    if rule.get("min_aspect") is not None and aspect < float(rule["min_aspect"]):
+        return True
+    if rule.get("max_aspect") is not None and aspect > float(rule["max_aspect"]):
+        return True
+    if rule.get("min_area_ratio") is not None and \
+            area_ratio < float(rule["min_area_ratio"]):
+        return True
+    if rule.get("max_area_ratio") is not None and \
+            area_ratio > float(rule["max_area_ratio"]):
+        return True
+    return False
 
 
 def label_detections(

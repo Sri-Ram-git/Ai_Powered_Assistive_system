@@ -198,3 +198,73 @@ class TestPipelineObjectOcr:
         cfg.ocr_enabled = False
         p = AsyncVisionPipeline(config=cfg)
         assert p._ocr_worker is None
+
+
+class TestCameraGeometryWiring:
+    """The vision pipeline must request RAW frames from the camera factory
+    (mirror=False) so OCR receives true text orientation, and pass the
+    configured sensor rotation through exactly once."""
+
+    def test_camera_factory_receives_unmirrored_config(self):
+        cfg = PipelineConfig()
+        cfg.ocr_enabled = False
+        cfg.navigation_enabled = False
+        cfg.encode_jpeg = False
+        seen = {}
+
+        class _StubCam:
+            def __init__(self, **kwargs):
+                seen.update(kwargs)
+                self.resolution = (640, 480)
+
+            def start(self):
+                pass
+
+            def read(self):
+                return np.zeros((480, 640, 3), dtype=np.uint8)
+
+            def stop(self):
+                pass
+
+        p = AsyncVisionPipeline(
+            config=cfg,
+            camera_factory=lambda **kw: _StubCam(**kw),
+        )
+        try:
+            p.start(timeout=3.0)
+            assert seen["mirror"] is False
+            assert seen["rotate"] == 0
+        finally:
+            p.stop()
+
+    def test_camera_factory_receives_configured_rotation(self):
+        cfg = PipelineConfig()
+        cfg.camera_rotate = 270
+        cfg.ocr_enabled = False
+        cfg.navigation_enabled = False
+        cfg.encode_jpeg = False
+        seen = {}
+
+        class _StubCam:
+            def __init__(self, **kwargs):
+                seen.update(kwargs)
+                self.resolution = (480, 640)
+
+            def start(self):
+                pass
+
+            def read(self):
+                return np.zeros((640, 480, 3), dtype=np.uint8)
+
+            def stop(self):
+                pass
+
+        p = AsyncVisionPipeline(
+            config=cfg,
+            camera_factory=lambda **kw: _StubCam(**kw),
+        )
+        try:
+            p.start(timeout=3.0)
+            assert seen["rotate"] == 270
+        finally:
+            p.stop()
