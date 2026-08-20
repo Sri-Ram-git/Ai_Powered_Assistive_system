@@ -40,6 +40,34 @@ class TestPreprocess:
         assert out.shape[1] == text_frame.shape[1] // 2
         assert out.shape[0] == text_frame.shape[0] // 2
 
+    def test_rotate90_swaps_dims(self, text_frame):
+        out = preprocess(text_frame, "rotate90")
+        assert out.shape == (text_frame.shape[1], text_frame.shape[0], 3)
+
+    def test_rotate270_swaps_dims(self, text_frame):
+        out = preprocess(text_frame, "rotate270")
+        assert out.shape == (text_frame.shape[1], text_frame.shape[0], 3)
+
+    def test_otsu_is_binary(self, text_frame):
+        out = preprocess(text_frame, "otsu")
+        assert out.ndim == 2
+        assert set(np.unique(out)).issubset({0, 255})
+
+    def test_denoise_keeps_dims(self, text_frame):
+        out = preprocess(text_frame, "denoise")
+        assert out.shape == text_frame.shape
+
+    def test_gray_norm_is_grayscale(self, text_frame):
+        out = preprocess(text_frame, "gray_norm")
+        assert out.ndim == 2
+        # Histogram equalisation must actually spread the grey levels.
+        assert int(out.min()) < int(out.max())
+
+    def test_rotate90_then_rotate270_roundtrips(self, text_frame):
+        r90 = preprocess(text_frame, "rotate90")
+        back = preprocess(r90, "rotate270")
+        assert np.array_equal(back, text_frame)
+
     def test_all_strategies_accept_bgr(self, text_frame):
         for strategy in SUPPORTED_STRATEGIES:
             out = preprocess(text_frame, strategy)

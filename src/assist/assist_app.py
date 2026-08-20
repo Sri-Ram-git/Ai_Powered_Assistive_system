@@ -23,10 +23,16 @@ Usage:
 Keys:
     m          mute / unmute speech
     d          toggle debug overlay (fps, latency, raw vs smoothed boxes)
-    r          read the most recently detected text (needs ocr.enabled)
+    r          read the most recently recognised text aloud (READ)
+    c          copy the latest recognised text to the clipboard
+    n          request OCR now on the best text-bearing object
+    x          clear the recognised-text history
     s          save annotated screenshot
     space      reset tracking + decision + speech memory
     q          quit
+
+Mouse:
+    click the TEXT panel buttons on the right (READ / NOW / COPY / CLEAR)
 """
 import argparse
 import sys
@@ -51,6 +57,7 @@ from src.camera import (  # noqa: E402
     scale_to_fit,
     take_screenshot,
 )
+from src.assist.text_panel import TextPanel  # noqa: E402
 from src.core.config import PipelineConfig  # noqa: E402
 from src.core.pipeline import AsyncVisionPipeline  # noqa: E402
 from src.utils.logger import setup_logger  # noqa: E402
@@ -77,27 +84,37 @@ class _Mute:
 
 
 def draw_tracks(frame, tracks, frame_h, vfov_deg: float = 55.0,
-                debug: bool = False):
+                debug: bool = False, mirror_x: bool = False):
     """Draw tracked boxes with stable IDs + distance (smooth == solid).
+
+    ``mirror_x`` mirrors the box coordinates so overlays align with a
+    selfie-style (flipped) preview of the *same* raw vision frame — the
+    tracking itself runs on the unmirrored frame, so OCR text stays in
+    true reading orientation.
 
     In debug mode the raw (un-smoothed) box from the last detection is
     drawn in cyan so box smoothing is visible.
     """
     display = frame.copy()
+    w = display.shape[1]
     for track in tracks:
-        x, y, w, h = track.box
+        x, y, bw, bh = track.box
+        if mirror_x:
+            x = w - (x + bw)
         color = _track_color(track.track_id)
-        cv2.rectangle(display, (x, y), (x + w, y + h), color, 2)
+        cv2.rectangle(display, (x, y), (x + bw, y + bh), color, 2)
 
         if debug:
             rx, ry, rw, rh = track.raw_box
+            if mirror_x:
+                rx = w - (rx + rw)
             cv2.rectangle(display, (rx, ry), (rx + rw, ry + rh),
                           (255, 255, 0), 1)
 
         dist = track_distance(track, frame_h, vfov_deg)
         conf = f"{track.confidence:.2f}" if debug else ""
         text = f"#{track.track_id} {track.label} {dist}{conf}"
-        label_y = y - 8 if y - 8 > 10 else y + h + 18
+        label_y = y - 8 if y - 8 > 10 else y + bh + 18
         cv2.putText(display, text, (x, label_y),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.55, color, 2)
     return display
@@ -137,13 +154,29 @@ def _track_color(track_id: int):
     return palette[track_id % len(palette)]
 
 
-def _debug_overlay(display, state, results, extra: str = ""):
-    """Draw a small diagnostics panel (Phase 23)."""
+def _debug_overlay(display, state, results, extra: str = "",
+                   ocr=None, geom=None):
+    """Draw a small diagnostics panel (Phase 23 + OCR accuracy work).
+
+    ``ocr`` is the pipeline's ``latest_track_ocr()`` dict (or None);
+    ``geom`` is ``pipe.camera_geometry()`` (mirror / rotation).
+    """
     lines = [
         f"cam {state.get('fps', 0.0):.1f} fps",
         f"yolo {results['latencies'].get('yolo_ms', 0.0):.1f} ms",
         f"tracks {len(results['tracks'])} | pending speech {extra}",
     ]
+    if geom is not None:
+        lines.append(
+            f"mirror {geom.get('mirror', False)} "
+            f"| rotate {geom.get('rotate', 0)}deg")
+    if ocr:
+        lines.append(
+            f"ocr {ocr.get('variant', '')} "
+            f"{ocr.get('latency_ms', 0.0):.0f}ms "
+            f"conf {ocr.get('confidence', 0.0) * 100:.0f}%")
+        lines.append(
+            f"stable {ocr.get('stable', False)} track#{ocr.get('track_id')}")
     y = 8
     for line in lines:
         cv2.putText(display, line, (8, y),
@@ -173,6 +206,25 @@ def _speech_tier_for(text: str, vocab: Optional[ObjectVocabulary] = None) -> Spe
     if "turn" in lowered or "now" in lowered:
         return SpeechTier.HIGH
     return SpeechTier.NORMAL
+
+
+def _copy_to_clipboard(text: str) -> bool:
+    """Copy text to the Windows clipboard (via the `clip` helper)."""
+    if not text:
+        return False
+    try:
+        import subprocess
+
+        subprocess.run(["clip"], input=text, text=True, check=True)
+        return True
+    except Exception:
+        _logger.warning("Clipboard copy failed", exc_info=True)
+        return False
+
+
+def _current_text(pipe) -> str:
+    latest = pipe.latest_track_ocr()
+    return (latest or {}).get("text", "")
 
 
 def main() -> None:
@@ -240,10 +292,46 @@ def main() -> None:
     window = "Assistive Vision"
     open_fullscreen_window(window)
     hud = HUD()
-    hud.show_toast("m mute | d debug | r read | s save | space reset | q quit")
+    panel = TextPanel()
+    hud.show_toast(
+        "m mute | d debug | r read | c copy | n read now | "
+        "x clear text | s save | space reset | q quit")
 
     debug = False
     cam_info = _CameraInfo(cfg.camera_id, cfg.camera_resolution)
+
+    def _dispatch(action: str) -> None:
+        if action == "read":
+            if not cfg.ocr_enabled:
+                hud.show_toast("OCR disabled (set ocr.enabled: true)")
+            elif pipe.read_latest_text():
+                hud.show_toast("Reading text...")
+            else:
+                hud.show_toast("No text detected yet")
+        elif action == "now":
+            if cfg.ocr_enabled and pipe.request_manual_ocr():
+                hud.show_toast("Reading now...")
+            else:
+                hud.show_toast("OCR disabled or no frame yet")
+        elif action == "copy":
+            text = _current_text(pipe)
+            if _copy_to_clipboard(text):
+                hud.show_toast(f"Copied: {text[:40]}")
+            else:
+                hud.show_toast("Nothing to copy")
+        elif action == "clear":
+            pipe.clear_track_ocr()
+            hud.show_toast("Text history cleared")
+
+    def _on_mouse(event, x, y, flags, param) -> None:
+        if event == cv2.EVENT_MOUSEMOVE:
+            panel.on_motion(x, y)
+        elif event == cv2.EVENT_LBUTTONDOWN:
+            action = panel.hit_test(x, y)
+            if action:
+                _dispatch(action)
+
+    cv2.setMouseCallback(window, _on_mouse)
 
     try:
         while True:
@@ -255,12 +343,30 @@ def main() -> None:
             results = pipe.latest_results.snapshot()
             state = pipe.state_snapshot()
 
-            display = draw_tracks(frame, results["tracks"],
+            # Front-camera selfie preview may be mirrored for the USER,
+            # but OCR/YOLO/tracking always run on the pipeline's raw,
+            # geometrically-correct vision frame.  Only the display copy
+            # is flipped here, and track boxes are mirrored to match.
+            preview = cv2.flip(frame, 1) if cfg.preview_mirror else frame
+            display = draw_tracks(preview, results["tracks"],
                                   frame.shape[0], cfg.vfov_deg,
-                                  debug=debug)
+                                  debug=debug, mirror_x=cfg.preview_mirror)
             display = scale_to_fit(display, screen_w, screen_h)
+            display = panel.render(
+                display,
+                latest=pipe.latest_track_ocr(),
+                history=pipe.track_ocr_history(),
+                stats=pipe.ocr_stats(),
+                busy=pipe.ocr_busy,
+                status=pipe.ocr_status(),
+                debug=debug,
+            )
             if debug:
-                display = _debug_overlay(display, state, results)
+                display = _debug_overlay(
+                    display, state, results,
+                    ocr=pipe.latest_track_ocr(),
+                    geom=pipe.camera_geometry(),
+                )
 
             ocr_text = state.get("ocr_text") or ""
             status = "MUTED" if mute else (
@@ -283,14 +389,13 @@ def main() -> None:
                 hud.show_toast("Debug overlay on" if debug
                                else "Debug overlay off")
             elif key == ord("r"):
-                if not cfg.ocr_enabled:
-                    hud.show_toast(
-                        "OCR disabled (set ocr.enabled: true, then restart)")
-                elif ocr_text:
-                    tts.speak(f"Text says, {ocr_text[:80]}")
-                    hud.show_toast(f"Text: {ocr_text[:60]}")
-                else:
-                    hud.show_toast("No text detected yet")
+                _dispatch("read")
+            elif key == ord("c"):
+                _dispatch("copy")
+            elif key == ord("n"):
+                _dispatch("now")
+            elif key == ord("x"):
+                _dispatch("clear")
             elif key == ord("s"):
                 path = take_screenshot(display, "assets/screenshots/assist")
                 hud.show_toast(f"Screenshot: {Path(path).name}")

@@ -1,31 +1,35 @@
 # Core dependencies
-opencv-python>=4.9.0
-numpy>=1.24.0
+# Versions are pinned to the exact set validated by the CI test suite so
+# every matrix entry (Python 3.11/3.12/3.13) resolves the same environment.
+# Note: numpy 2.5+ requires Python >=3.12, so 2.4.5 (>=3.11) keeps 3.11 green.
+opencv-python==5.0.0.93
+numpy==2.4.5
 
 # Professional HUD text rendering (TTF fonts, antialiasing)
-Pillow>=10.0.0
+Pillow==12.2.0
 
 # Plotting / visualisation (used in later modules)
-matplotlib>=3.7.0
+matplotlib==3.11.1
 
 # Testing
-pytest>=8.0.0
-pytest-cov>=4.1.0
+pytest==9.1.1
+pytest-cov==7.1.0
 
 # Utilities
-PyYAML>=6.0
-psutil>=5.9.0
+PyYAML==6.0.3
+psutil==7.2.2
 
 # Week 2-3 AI modules
 # ONNX runtime (CPU) for YOLO + RapidOCR inference
-onnxruntime>=1.18.0
+onnxruntime==1.28.0
 
 # Text recognition (CPU-only, no Paddle/PyTorch)
-rapidocr-onnxruntime>=1.2.0
+# 1.4.x dropped Python 3.13 support, so 1.2.3 keeps the full matrix green.
+rapidocr-onnxruntime==1.2.3
 
 # Text-to-speech (uses the OS speech engine: SAPI5 on Windows)
-pyttsx3>=2.90
+pyttsx3==2.99
 
 # Web dashboard (live camera + state via browser)
-Flask>=3.0.0
-flask-cors>=4.0.0
+Flask==3.1.3
+flask-cors==6.0.5

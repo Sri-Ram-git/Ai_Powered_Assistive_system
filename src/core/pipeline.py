@@ -29,7 +29,16 @@ from src.core.results import LatestResults
 from src.decision import DecisionEngine, FrameSummary
 from src.detection import YoloDetector
 from src.metrics import MetricsRegistry
-from src.ocr import OcrEngine, OcrResult
+from src.ocr import OcrEngine
+from src.ocr.object_ocr import (
+    ObjectOcrResult,
+    OcrTrigger,
+    TrackOcrStore,
+    rank_targets,
+)
+from src.ocr.object_worker import ObjectOcrWorker
+from src.ocr.policy import OcrPolicy
+from src.ocr.roi import extract_roi
 from src.ocr.worker import OcrWorker
 from src.tracking import IoUTracker, TrackingMonitor
 from src.utils.logger import setup_logger
@@ -82,7 +91,16 @@ class AsyncVisionPipeline:
         self._thread: Optional[threading.Thread] = None
         self._grab_thread: Optional[threading.Thread] = None
         self._detect_thread: Optional[threading.Thread] = None
-        self._ocr_worker: Optional[OcrWorker] = None
+        self._ocr_worker = None
+
+        # Object-aware OCR state (created with the worker in
+        # ``_build_ocr_worker`` so the constructor never touches files).
+        self._ocr_policy: Optional[OcrPolicy] = None
+        self._track_ocr = TrackOcrStore()
+        self._ocr_store_lock = threading.Lock()
+        self._latest_manual: Optional[ObjectOcrResult] = None
+        self._last_auto_read: tuple = ("", 0.0)
+        self._ocr_trigger = OcrTrigger()
 
         # Created lazily so the constructor never touches hardware/models.
         self._detector = None
@@ -123,6 +141,8 @@ class AsyncVisionPipeline:
             self._camera = self._camera_factory(
                 camera_id=self._cfg.camera_id,
                 resolution=self._cfg.camera_resolution,
+                mirror=self._cfg.camera_mirror,
+                rotate=self._cfg.camera_rotate,
             )
             try:
                 self._camera.start()
@@ -130,8 +150,12 @@ class AsyncVisionPipeline:
                 self._set_state(running=False, error=str(exc))
                 _logger.error("Camera failed: %s", exc)
                 return
-        self._set_state(running=True, error=None,
-                        resolution=list(self._camera.resolution))
+        self._set_state(
+            running=True, error=None,
+            resolution=list(self._camera.resolution),
+            mirror=self._cfg.camera_mirror,
+            rotate=self._cfg.camera_rotate,
+        )
         _logger.info("Pipeline running at %dx%d",
                      *self._camera.resolution)
 
@@ -258,6 +282,10 @@ class AsyncVisionPipeline:
             self._decision_engine.reset()
         if self._planner is not None:
             self._planner.reset()
+        with self._ocr_store_lock:
+            self._track_ocr.clear()
+        self._ocr_trigger.reset()
+        self._latest_manual = None
         _logger.info("Pipeline temporal state reset")
 
     def handle_command(self, parsed) -> bool:
@@ -283,10 +311,7 @@ class AsyncVisionPipeline:
 
         # Map recognized commands onto pipeline behaviour.
         if name == Command.READ_TEXT.value:
-            text = self._state.get("ocr_text", "")
-            if text and self._speech_callback:
-                self._speech_callback(f"Text reads: {text}")
-            return True
+            return self.read_latest_text()
         if name == Command.WHAT_DO_YOU_SEE.value:
             dets = self._state.get("detections", [])
             if dets:
@@ -409,7 +434,18 @@ class AsyncVisionPipeline:
 
     def _detect_loop(self) -> None:
         cfg = self._cfg
-        detector = self._load_detector(cfg)
+        # A missing/unloadable model must not kill the pipeline: the grab,
+        # depth and OCR stages stay alive and the loop keeps publishing
+        # state (with empty detections) so the app reports the fault via
+        # state rather than silently stopping detection.
+        try:
+            detector = self._load_detector(cfg)
+        except Exception as exc:
+            _logger.error(
+                "Detection unavailable (no model?) — running without "
+                "detections: %s", exc)
+            self._set_state(detection_error=str(exc))
+            detector = None
         tracker = IoUTracker(
             iou_threshold=cfg.iou_threshold,
             max_missed=cfg.max_missed,
@@ -443,7 +479,7 @@ class AsyncVisionPipeline:
             frame_index += 1
             started = time.time()
             detections: List = []
-            if frame_index % cfg.detect_every == 0:
+            if detector is not None and frame_index % cfg.detect_every == 0:
                 try:
                     detections = detector.detect(frame)
                     tracks = tracker.update(detections)
@@ -462,10 +498,14 @@ class AsyncVisionPipeline:
                 except Exception as exc:
                     _logger.warning("Depth failed: %s", exc)
 
-            ocr_items = (
-                self._ocr_worker.latest_result()
-                if self._ocr_worker is not None and cfg.ocr_enabled else []
-            )
+            if self._ocr_worker is not None and cfg.ocr_enabled:
+                if cfg.object_ocr_enabled:
+                    ocr_items = self._track_ocr_items()
+                    self._schedule_object_ocr(frame, tracks, frame_index)
+                else:
+                    ocr_items = self._ocr_worker.latest_result()
+            else:
+                ocr_items = []
 
             # Deterministic scene context (world model for downstream).
             from src.vision.scene_context import build_scene_context
@@ -585,11 +625,6 @@ class AsyncVisionPipeline:
             )
             self._update_state(tracks, ocr_items, phrases, frame)
 
-            # Publish a fresh frame to the OCR worker every N frames.
-            if (cfg.ocr_enabled and
-                    frame_index % cfg.ocr_every == 0):
-                self._ocr_worker.submit(frame)
-
             self._stop.wait(0.02)
 
         _logger.info("Detection loop stopped")
@@ -598,14 +633,264 @@ class AsyncVisionPipeline:
     # Helpers
     # ------------------------------------------------------------------
 
-    def _build_ocr_worker(self) -> OcrWorker:
+    def _build_ocr_worker(self):
         ocr = OcrEngine(min_confidence=self._cfg.ocr_min_conf,
                         max_boxes=self._cfg.ocr_max_boxes)
-        return OcrWorker(
-            ocr,
-            preprocess_strategy=self._cfg.ocr_preprocess,
-            timeout_ms=self._cfg.inference_timeout_ms,
+        # Legacy mode: scan the whole frame every N frames (kept for
+        # users who disable object-aware OCR).  The default is
+        # object-aware: eligible object ROIs only, on their own schedule.
+        if not self._cfg.object_ocr_enabled:
+            return OcrWorker(
+                ocr,
+                preprocess_strategy=self._cfg.ocr_preprocess,
+                timeout_ms=self._cfg.inference_timeout_ms,
+            )
+
+        self._ocr_policy = OcrPolicy.from_yaml(self._cfg.ocr_policy_path)
+        from src.ocr.object_ocr import DEFAULT_VARIANTS
+
+        variants = DEFAULT_VARIANTS[:max(1, min(4, self._cfg.ocr_variants))]
+        self._ocr_trigger = OcrTrigger(
+            cooldown_s=self._cfg.ocr_cooldown_s,
+            stale_after_s=self._cfg.ocr_stale_after_s,
+            move_px=self._cfg.ocr_move_px,
         )
+        return ObjectOcrWorker(
+            ocr,
+            variants=variants,
+            min_confidence=self._cfg.ocr_min_conf,
+            text_presence=self._cfg.ocr_text_presence,
+            timeout_ms=self._cfg.ocr_timeout_ms,
+            min_chars=self._cfg.ocr_min_chars,
+            debug_records=self._cfg.ocr_debug_records,
+            on_result=self._on_object_ocr,
+        )
+
+    def _track_ocr_items(self) -> List:
+        """Aggregate recognised track text into OcrResult-like items.
+
+        The decision engine and HUD only need ``text``/``box``/``confidence``
+        (see ``scene_cues`` — it uses text only), so the store entries are
+        projected onto OcrResult so downstream code is unchanged.
+        """
+        from src.ocr.ocr_engine import OcrResult
+
+        with self._ocr_store_lock:
+            entries = self._track_ocr.history()
+        items = []
+        for entry in entries:
+            box = entry.roi_box or (0, 0, 0, 0)
+            items.append(OcrResult(
+                text=entry.text,
+                confidence=entry.confidence,
+                box=(box[0], box[1], box[2] - box[0], box[3] - box[1]),
+            ))
+        return items
+
+    def _schedule_object_ocr(self, frame, tracks, frame_index: int) -> None:
+        """Inspect eligible tracked objects for text (one per tick).
+
+        A single object per tick keeps OCR cost bounded; the per-track
+        trigger decides which candidate is currently *due* (new / moved /
+        stale), and each accepted ROI goes through the cheap text-presence
+        gate in the worker before the slow OCR call.
+        """
+        cfg = self._cfg
+        if self._ocr_policy is None or self._ocr_worker is None:
+            return
+        eligible = [t for t in tracks if self._ocr_policy.is_eligible(t.label)]
+        ranked = rank_targets(eligible, self._ocr_policy.rank)
+        for track in ranked:
+            reason = self._ocr_trigger.decide(
+                track.track_id, track.label, track.box)
+            if reason is None:
+                continue
+            roi = extract_roi(
+                frame, track.box, cfg.ocr_roi_padding,
+                cfg.ocr_roi_min_w, cfg.ocr_roi_min_h)
+            if roi is None:
+                continue
+            self._ocr_worker.submit(
+                roi=roi.image, track_id=track.track_id,
+                label=track.label, roi_box=roi.box, scale=roi.scale,
+                trigger=reason,
+            )
+            break
+
+        # Bounded housekeeping: drop expired entries and triggers of
+        # tracks that are no longer present.
+        if frame_index % 30 == 0:
+            alive = [t.track_id for t in tracks]
+            with self._ocr_store_lock:
+                self._track_ocr.expire(
+                    max_age=max(cfg.ocr_stale_after_s * 3.0, 15.0),
+                    alive_track_ids=alive)
+            self._ocr_trigger.prune(alive)
+
+    def _on_object_ocr(self, result: ObjectOcrResult) -> None:
+        """Consume a finished object OCR result (worker thread)."""
+        if self._metrics is not None:
+            self._metrics.inc("object_ocr_runs")
+            self._metrics.observe("object_ocr_latency_ms", result.latency_ms)
+            if result.status == "no_text":
+                self._metrics.inc("object_ocr_no_text")
+            if result.status == "timeout":
+                self._metrics.inc("object_ocr_timeouts")
+
+        with self._ocr_store_lock:
+            self._track_ocr.update(result)
+            if result.track_id is not None:
+                self._ocr_trigger.touched(result.track_id)
+        if result.source == "manual" and result.has_text:
+            self._latest_manual = result
+        with self._state_lock:
+            self._state["ocr_text"] = self._current_ocr_text()
+
+        if (self._cfg.ocr_auto_read and result.has_text and
+                result.status in ("ok", "timeout")):
+            self._auto_read(result.text)
+
+    def _auto_read(self, text: str) -> None:
+        now = time.monotonic()
+        last_text, last_time = self._last_auto_read
+        if text == last_text and now - last_time < 8.0:
+            return
+        self._last_auto_read = (text, now)
+        if self._speech_callback is not None:
+            self._speech_callback(f"Text says: {text}")
+
+    def _current_ocr_text(self) -> str:
+        with self._ocr_store_lock:
+            entry = self._track_ocr.latest()
+            text = entry.text if entry is not None else ""
+        if not text and self._latest_manual is not None:
+            text = self._latest_manual.text
+        return text
+
+    # ------------------------------------------------------------------
+    # Object-aware OCR consumers (UI / commands)
+    # ------------------------------------------------------------------
+
+    def read_latest_text(self) -> bool:
+        """READ ALOUD: speak the most recently recognised text.
+
+        Never re-runs OCR — speaks the already-extracted text so a repeat
+        read is instant and does not waste OCR budget.
+        """
+        with self._ocr_store_lock:
+            entry = self._track_ocr.latest()
+            text = entry.text if entry is not None else ""
+        if not text and self._latest_manual is not None:
+            text = self._latest_manual.text
+        if not text:
+            return False
+        if self._speech_callback is not None:
+            self._speech_callback(f"Text says: {text}")
+        return True
+
+    def request_manual_ocr(self) -> bool:
+        """User-requested OCR (e.g. "read this now").
+
+        Prefers the highest-priority eligible tracked object; falls back
+        to reading the whole current frame so a user request always
+        produces an answer.
+        """
+        if self._ocr_worker is None or not self._cfg.ocr_enabled:
+            return False
+        frame = self.latest_frame
+        if frame is None:
+            return False
+        policy = self._ocr_policy or OcrPolicy.defaults()
+        tracks = (self._tracker.active_tracks
+                  if self._tracker is not None else [])
+        eligible = [t for t in tracks if policy.is_eligible(t.label)]
+        ranked = rank_targets(eligible, policy.rank)
+        if ranked:
+            track = ranked[0]
+            roi = extract_roi(
+                frame, track.box, self._cfg.ocr_roi_padding,
+                self._cfg.ocr_roi_min_w, self._cfg.ocr_roi_min_h)
+            if roi is not None:
+                self._ocr_worker.submit(
+                    roi=roi.image, track_id=track.track_id,
+                    label=track.label, roi_box=roi.box, scale=roi.scale,
+                    trigger="user", source="manual")
+                return True
+        self._ocr_worker.submit(roi=frame, trigger="user", source="manual")
+        return True
+
+    def latest_track_ocr(self) -> Optional[Dict]:
+        """The most recently recognised object text (UI display)."""
+        with self._ocr_store_lock:
+            entry = self._track_ocr.latest()
+            if entry is None:
+                return None
+            return {
+                "track_id": entry.track_id,
+                "label": entry.label,
+                "text": entry.text,
+                "confidence": round(entry.confidence, 3),
+                "variant": entry.variant,
+                "latency_ms": round(entry.latency_ms, 1),
+                "stable": entry.stable,
+            }
+
+    def track_ocr_history(self) -> List[Dict]:
+        """History of recognised text, newest first (side panel)."""
+        with self._ocr_store_lock:
+            entries = self._track_ocr.history()
+        return [{
+            "track_id": entry.track_id,
+            "label": entry.label,
+            "text": entry.text,
+            "confidence": round(entry.confidence, 3),
+            "variant": entry.variant,
+        } for entry in entries]
+
+    def ocr_stats(self) -> Dict:
+        """Worker counters for the debug panel."""
+        if self._ocr_worker is None:
+            return {}
+        stats = getattr(self._ocr_worker, "stats", None)
+        if callable(stats):
+            return stats()
+        return {}
+
+    @property
+    def ocr_busy(self) -> bool:
+        """Whether the object OCR worker is currently processing."""
+        return bool(getattr(self._ocr_worker, "is_busy", False))
+
+    def ocr_status(self) -> str:
+        """Status of the most recently finished OCR result (UI hint)."""
+        worker = getattr(self, "_ocr_worker", None)
+        if worker is None:
+            return ""
+        latest = worker.latest()
+        return latest.status if latest is not None else ""
+
+    def camera_geometry(self) -> Dict:
+        """Mirror / rotation applied to the vision frames (debug overlay)."""
+        return {
+            "mirror": self._cfg.camera_mirror,
+            "rotate": self._cfg.camera_rotate,
+        }
+
+    def dump_ocr_debug(self, out_dir: str) -> int:
+        """Write raw OCR records (boxes/confidences/ROI images) to a dir."""
+        worker = getattr(self, "_ocr_worker", None)
+        if worker is None:
+            return 0
+        return worker.dump_debug(out_dir)
+
+    def clear_track_ocr(self) -> None:
+        """Clear the recognised-text history (side panel CLEAR)."""
+        with self._ocr_store_lock:
+            self._track_ocr.clear()
+        self._latest_manual = None
+        with self._state_lock:
+            self._state["ocr_text"] = ""
+        _logger.info("OCR text history cleared")
 
     def _load_detector(self, cfg: PipelineConfig) -> YoloDetector:
         model_path = cfg.model_path
@@ -618,6 +903,7 @@ class AsyncVisionPipeline:
             iou_threshold=cfg.nms_iou_threshold,
             conf_overrides=cfg.conf_overrides,
             filter_tall_laptops=cfg.filter_tall_laptops,
+            reject_box_shape=cfg.reject_box_shape,
         )
 
     def _update_state(self, tracks, ocr_items, phrases, frame) -> None:
@@ -631,7 +917,11 @@ class AsyncVisionPipeline:
                     t, frame.shape[0], self._cfg.vfov_deg), 1),
                 "direction": _track_direction(t, frame.shape[1]),
             })
-        ocr_text = " ".join(r.text for r in ocr_items)
+        if (self._ocr_worker is not None and self._cfg.ocr_enabled and
+                self._cfg.object_ocr_enabled):
+            ocr_text = self._current_ocr_text()
+        else:
+            ocr_text = " ".join(r.text for r in ocr_items)
         with self._state_lock:
             self._state.update(
                 detections=items,

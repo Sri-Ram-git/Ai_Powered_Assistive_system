@@ -9,8 +9,8 @@ Stateless core: `events(tracks, ...)` is a pure function of the current
 tracks + remembered state; the `TrackingMonitor` wrapper stores the
 per-track memory (last distance, last direction, announced set).
 """
-from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Tuple
+from dataclasses import dataclass
+from typing import Dict, List, Optional
 
 from src.navigation.guidance import (
     direction_of,
@@ -141,7 +141,6 @@ class TrackingMonitor:
         frame_h: int,
         now: float,
     ) -> Optional[str]:
-        import time as _time
 
         distance = self._distance_of(track, frame_h)
         direction = direction_of(track.box, frame_w)

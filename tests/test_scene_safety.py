@@ -1,5 +1,4 @@
 """Tests for SceneContext and the SafetyEngine (deterministic, no models)."""
-import pytest
 
 from src.safety import RiskLevel, SafetyEngine
 from src.tracking.tracker import TrackedObject

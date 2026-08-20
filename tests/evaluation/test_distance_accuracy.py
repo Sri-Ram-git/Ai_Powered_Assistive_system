@@ -66,7 +66,6 @@ class TestCalibrateVfov:
         # height that our model derives; solve back and expect ~55.
         import numpy as np
 
-        from src.navigation.guidance import distance_estimate
 
         ref_h, dist, frame_h, fov = 1.7, 2.0, 720.0, 55.0
         # box height that yields the target distance

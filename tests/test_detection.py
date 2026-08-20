@@ -1,7 +1,6 @@
 """Unit tests for the object-detection module (hardware-free)."""
 from pathlib import Path
 
-import cv2
 import numpy as np
 import pytest
 
@@ -10,6 +9,7 @@ from src.detection.detector import (
     DetectionResult,
     YoloDetector,
     _looks_like_false_laptop,
+    _rejects_box_shape,
     label_detections,
 )
 from src.utils.exceptions import DetectionError
@@ -142,3 +142,51 @@ class TestFalseLaptopFilter:
     def test_non_laptop_never_filtered(self):
         assert _looks_like_false_laptop("person", (0, 0, 100, 400)) is False
         assert _looks_like_false_laptop("door", (0, 0, 100, 400)) is False
+
+
+class TestRejectBoxShape:
+    """Per-class shape/size rules stop look-alike confusion (book/remote)."""
+
+    RULES = {"remote": {"min_aspect": 1.8, "max_area_ratio": 0.25}}
+
+    def test_no_rules_never_rejects(self):
+        assert _rejects_box_shape("remote", (0, 0, 300, 400), 1280 * 720) \
+            is False
+
+    def test_unlisted_label_never_rejects(self):
+        assert _rejects_box_shape("book", (0, 0, 300, 400), 1280 * 720,
+                                  self.RULES) is False
+
+    def test_squarish_book_misdetected_as_remote_rejected(self):
+        # A book held up is big and squarish: aspect < 1.8.
+        assert _rejects_box_shape("remote", (0, 0, 400, 360), 1280 * 720,
+                                  self.RULES) is True
+
+    def test_thin_real_remote_kept(self):
+        # A real remote is small and wide: aspect > 1.8.
+        assert _rejects_box_shape("remote", (0, 0, 260, 60), 1280 * 720,
+                                  self.RULES) is False
+
+    def test_large_squarish_box_rejected_by_area(self):
+        # Covers > 25% of the frame and squarish -> not a remote.
+        assert _rejects_box_shape("remote", (0, 0, 900, 800), 1280 * 720,
+                                  self.RULES) is True
+
+    def test_large_but_thin_box_kept(self):
+        # A big real remote (close-up) is still wide, and stays under the
+        # area cap: only the squarish silhouette trips the rule.
+        assert _rejects_box_shape("remote", (0, 0, 800, 250), 1280 * 720,
+                                  self.RULES) is False
+
+    def test_min_aspect_and_max_aspect(self):
+        rules = {"car": {"min_aspect": 1.2, "max_aspect": 4.0}}
+        assert _rejects_box_shape("car", (0, 0, 200, 200), 1280 * 720,
+                                  rules) is True    # square (< 1.2)
+        assert _rejects_box_shape("car", (0, 0, 200, 40), 1280 * 720,
+                                  rules) is True    # too wide (> 4.0)
+        assert _rejects_box_shape("car", (0, 0, 200, 100), 1280 * 720,
+                                  rules) is False   # within range
+
+    def test_degenerate_box_rejected(self):
+        assert _rejects_box_shape("remote", (0, 0, 0, 60), 1280 * 720,
+                                  self.RULES) is True

@@ -2,7 +2,6 @@
 import numpy as np
 
 from src.depth.depth_estimator import (
-    DepthEstimator,
     SyntheticDepthBackend,
     create_depth_estimator,
 )

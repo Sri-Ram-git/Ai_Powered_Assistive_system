@@ -10,8 +10,7 @@ Usage:
     text = engine.text_of(frame)             # " ".join of all text
 """
 from dataclasses import dataclass
-from pathlib import Path
-from typing import List, Sequence, Tuple
+from typing import Dict, List, Sequence, Tuple
 
 import cv2
 import numpy as np
@@ -38,12 +37,20 @@ class OcrEngine:
         self,
         min_confidence: float = 0.4,
         max_boxes: int = 50,
+        det_limit_side_len: int = 736,
+        det_limit_type: str = "max",
     ) -> None:
         """Configure the OCR engine.
 
         Args:
             min_confidence: Drop text lines below this confidence.
             max_boxes: Hard cap on the number of returned lines.
+            det_limit_side_len: Max side length for the detection network.
+            det_limit_type: 'max' = only shrink images whose longest side
+                exceeds ``det_limit_side_len``; 'min' (RapidOCR default)
+                would *upscale* small ROIs to the limit — pathological
+                for object-aware OCR (a 96x24 bottle label becomes a
+                ~3270x736 image and takes >10 s).
 
         Raises:
             OcrError: If the OCR engine cannot be initialised.
@@ -53,10 +60,17 @@ class OcrEngine:
         try:
             from rapidocr_onnxruntime import RapidOCR
 
-            self._engine = RapidOCR()
+            self._engine = RapidOCR(
+                det_model_path=None,
+                det_limit_side_len=int(det_limit_side_len),
+                det_limit_type=str(det_limit_type),
+            )
         except Exception as exc:  # pragma: no cover - env dependent
             raise OcrError(f"Failed to initialise RapidOCR: {exc}") from exc
-        _logger.info("OCR engine ready (min_conf=%.2f)", self._min_conf)
+        _logger.info(
+            "OCR engine ready (min_conf=%.2f, det_limit=%d/%s)",
+            self._min_conf, det_limit_side_len, det_limit_type,
+        )
 
     # ------------------------------------------------------------------
     # Public API
@@ -69,7 +83,8 @@ class OcrEngine:
             image: BGR (or grayscale) numpy image.
 
         Returns:
-            Sorted list of OcrResult, top-most first.
+            Sorted list of OcrResult in reading order: lines top-to-bottom,
+            left-to-right within each line, exact duplicates collapsed.
 
         Raises:
             OcrError: If `image` is not a numpy array or inference fails.
@@ -107,7 +122,7 @@ class OcrEngine:
             if len(results) >= self._max_boxes:
                 break
 
-        results.sort(key=lambda r: r.box[1])  # top-most first
+        results = _order_and_dedupe(results)
         _logger.debug("OCR found %d text line(s)", len(results))
         return results
 
@@ -125,6 +140,56 @@ def _axis_aligned_box(
     x1, y1 = float(pts[:, 0].max()), float(pts[:, 1].max())
     return (int(round(x0)), int(round(y0)),
             int(round(x1 - x0)), int(round(y1 - y0)))
+
+
+def _order_and_dedupe(results: List[OcrResult]) -> List[OcrResult]:
+    """Spatially order recognised lines and drop exact duplicates.
+
+    RapidOCR returns text boxes in *detection* order, which is not
+    guaranteed to be reading order.  Naively joining engine output
+    scrambles words on the same line ("EXIT EMERGENCY" instead of
+    "EMERGENCY EXIT") and mixes lines.  This groups boxes into lines
+    (top-to-bottom by vertical centre) and sorts words left-to-right
+    within each line.  Exact-duplicate lines (the same region detected
+    twice) are collapsed, keeping the higher-confidence copy.
+    """
+    if len(results) < 2:
+        return results
+
+    best_by_text: Dict[str, OcrResult] = {}
+    for r in results:
+        prev = best_by_text.get(r.text)
+        if prev is None or r.confidence > prev.confidence:
+            best_by_text[r.text] = r
+    unique = list(best_by_text.values())
+
+    boxes = [r.box for r in unique]
+    heights = [b[3] for b in boxes if b[3] > 0]
+    med_h = float(np.median(heights)) if heights else 1.0
+    tol = max(6.0, 0.6 * med_h)
+
+    # Sort by vertical centre (primary) then horizontal position.
+    ordered = sorted(
+        unique, key=lambda r: (r.box[1] + r.box[3] / 2.0, r.box[0]))
+
+    lines: List[List[OcrResult]] = []
+    current: List[OcrResult] = [ordered[0]]
+    anchor_y = ordered[0].box[1] + ordered[0].box[3] / 2.0
+    for r in ordered[1:]:
+        cy = r.box[1] + r.box[3] / 2.0
+        if abs(cy - anchor_y) <= tol:
+            current.append(r)
+        else:
+            lines.append(current)
+            current = [r]
+            anchor_y = cy
+    lines.append(current)
+
+    out: List[OcrResult] = []
+    for line in lines:
+        line.sort(key=lambda r: r.box[0])
+        out.extend(line)
+    return out
 
 
 def draw_text_boxes(

@@ -7,7 +7,9 @@ from src.evaluation.assistive_metrics import (
 )
 from src.evaluation.detection_metrics import Box, evaluate_detections
 from src.evaluation.ocr_metrics import (
+    aggregate_ocr_metrics,
     character_error_rate,
+    exact_match,
     text_detection_success,
     word_error_rate,
 )
@@ -55,6 +57,43 @@ class TestOcrMetrics:
 
     def test_wer_perfect(self):
         assert word_error_rate("DO NOT WALK", "DO NOT WALK") == 0.0
+
+    def test_wer_uses_word_tokens_not_characters(self):
+        # One swapped word of three => 1/3.  The old implementation
+        # (character Levenshtein / 3 words) reported ~0.67.
+        assert word_error_rate(
+            "DO NOT WALK", "DO NOT RUN") == pytest.approx(1 / 3)
+
+    def test_wer_single_word_typo(self):
+        # "HELLO" vs "HELLQ": one character typo in a 1-word string is a
+        # full word error.
+        assert word_error_rate("HELLO", "HELLQ") == 1.0
+
+    def test_wer_empty_reference(self):
+        assert word_error_rate("", "") == 0.0
+        assert word_error_rate("", "JUNK") == 1.0
+
+    def test_exact_match(self):
+        assert exact_match("EXIT 3", "EXIT 3") == 1
+        assert exact_match("  EXIT 3 ", "exit 3") == 1
+        assert exact_match("EXIT 3", "EXIT") == 0
+        assert exact_match("", "") == 0
+
+    def test_aggregate(self):
+        # "DO NOT WALK" -> "DO NOT RUN": WALK(4ch) -> RUN(3ch) = 4 char
+        # edits / 11 chars; 1 word swap / 3 words.  "EXIT" is perfect.
+        m = aggregate_ocr_metrics(
+            ["DO NOT WALK", "EXIT"], ["DO NOT RUN", "EXIT"])
+        assert m["cer"] == pytest.approx((4 / 11) / 2)
+        assert m["wer"] == pytest.approx((1 / 3) / 2)
+        assert m["exact_match"] == pytest.approx(0.5)
+        assert m["detection_success"] == pytest.approx(1.0)
+
+    def test_aggregate_empty(self):
+        # detection_success is 1.0 for no references (vacuous success).
+        m = aggregate_ocr_metrics([], [])
+        assert m == {"cer": 0.0, "wer": 0.0, "exact_match": 0.0,
+                     "detection_success": 1.0}
 
     def test_detection_success(self):
         assert text_detection_success(["EXIT"], ["EXIT"]) == 1.0

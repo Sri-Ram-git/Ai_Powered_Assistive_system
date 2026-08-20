@@ -17,7 +17,6 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import List, Optional
 
-from src.safety import RiskLevel
 
 
 class ResponsePriority(IntEnum):

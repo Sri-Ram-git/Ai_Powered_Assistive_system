@@ -34,7 +34,8 @@ def test_manifest_validation_clean():
 def test_manifest_has_words_txt():
     words_txt = os.path.join(os.path.dirname(DEFAULT_MANIFEST), "words.txt")
     assert os.path.exists(words_txt)
-    words = [l for l in open(words_txt, encoding="utf-8") if l.strip()]
+    words = [line for line in open(words_txt, encoding="utf-8")
+             if line.strip()]
     assert len(words) >= 1000
 
 

@@ -1,5 +1,4 @@
 """Shared pytest fixtures/helpers (hardware-free)."""
-from pathlib import Path
 
 import cv2
 import numpy as np

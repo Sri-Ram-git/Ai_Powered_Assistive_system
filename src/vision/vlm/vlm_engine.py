@@ -10,7 +10,7 @@ question.
 """
 import time
 from dataclasses import dataclass
-from typing import Callable, Optional
+from typing import Callable
 
 from src.vision.scene_context import SceneContext
 from src.utils.logger import setup_logger

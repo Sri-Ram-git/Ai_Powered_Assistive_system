@@ -13,7 +13,6 @@ import numpy as np
 from contextlib import contextmanager
 
 from src.core.config import PipelineConfig
-from src.core.pipeline import AsyncVisionPipeline
 
 
 class _StubCamera:

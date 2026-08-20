@@ -103,8 +103,8 @@ def test_pipeline_camera_start_failure_sets_error():
     # Use the factory path so the pipeline opens (and fails to start)
     # the camera itself.
     p = AsyncVisionPipeline(
-        config=cfg, camera_factory=lambda camera_id=0, resolution=(640, 480):
-        ThrowingCamera(resolution=resolution))
+        config=cfg, camera_factory=lambda camera_id=0, resolution=(640, 480),
+        **kwargs: ThrowingCamera(resolution=resolution))
     p.start(timeout=5.0)
     snap = p.state_snapshot()
     assert snap["running"] is False
@@ -131,7 +131,6 @@ def test_ocr_worker_tolerates_engine_failure(monkeypatch):
 
 def test_detector_failure_keeps_loop_alive(monkeypatch):
     from src.detection.detector import YoloDetector
-    from src.server.pipeline import _camera_factory
 
     cfg = PipelineConfig()
     cfg.detect_every = 1

@@ -52,9 +52,9 @@ def test_write_yolo_label_multiple_classes_one_file(tmp_path):
         [("img", [0, 0, 320, 480]), ("img", [320, 0, 640, 480])],
         640, 480,
         classes=[0, 3])
-    lines = [l.split() for l in open(dest, encoding="utf-8").read().strip()
+    lines = [ln.split() for ln in open(dest, encoding="utf-8").read().strip()
              .splitlines()]
-    assert [int(l[0]) for l in lines] == [0, 3]
+    assert [int(ln[0]) for ln in lines] == [0, 3]
     assert len(lines) == 2
 
 

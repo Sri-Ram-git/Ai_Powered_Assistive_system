@@ -112,7 +112,6 @@ def run_live(camera_id: int, model_path: str, conf: float) -> None:
 def run_images(paths, model_path: str, conf: float,
                save_dir: "Path | None" = None) -> None:
     detector = YoloDetector(model_path, conf_threshold=conf)
-    interactive = save_dir is None
     for path in paths:
         img = cv2.imread(str(path))
         if img is None:

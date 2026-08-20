@@ -17,7 +17,6 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.image_processing.processing import threshold  # noqa: E402
 from src.morphology import contour_utils as C  # noqa: E402
 from src.morphology.shape_detector import (  # noqa: E402
     ShapeDetector,

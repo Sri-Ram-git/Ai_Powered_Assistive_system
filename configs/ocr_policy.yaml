@@ -1,0 +1,42 @@
+# Object -> OCR eligibility policy.
+#
+# Only classes supported by the detector (COCO-80) are accepted; anything
+# else is ignored with a warning.  Edit this file without touching code.
+#
+# Tiers:
+#   high_priority    always inspected for text (book, bottle, laptop...)
+#   medium_priority  inspected when a high-priority target is not present
+#   low_priority     inspected last, only when nothing better is available
+#   disabled         never inspected (avoids wasting OCR budget)
+#   default_tier     tier for a supported label not listed anywhere
+#
+# Notes:
+#   - "stop sign" is text-bearing by nature (COCO class).
+#   - person / chair / tables are deliberately disabled: OCR on their
+#     whole box is wasted work (person contains skin/clothing, not text).
+ocr_policy:
+  high_priority:
+    - book
+    - bottle
+    - laptop
+    - cell phone
+    - tv
+    - stop sign
+  medium_priority:
+    - cup
+    - backpack
+    - handbag
+    - suitcase
+    - keyboard
+    - remote
+    - clock
+    - vase
+  low_priority: []
+  disabled:
+    - person
+    - chair
+    - dining table
+    - couch
+    - bed
+    - potted plant
+  default_tier: medium

@@ -20,14 +20,18 @@ from src.evaluation.detection_metrics import (
     mean_average_precision,
 )
 from src.evaluation.ocr_metrics import (
+    aggregate_ocr_metrics,
     character_error_rate,
-    word_error_rate,
+    exact_match,
     text_detection_success,
+    word_error_rate,
 )
 
 __all__ = [
+    "aggregate_ocr_metrics",
     "character_error_rate",
     "evaluate_detections",
+    "exact_match",
     "mean_average_precision",
     "text_detection_success",
     "word_error_rate",

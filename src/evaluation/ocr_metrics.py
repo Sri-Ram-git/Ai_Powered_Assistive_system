@@ -7,7 +7,7 @@ Standard Levenshtein-distance based metrics:
 * detection success = fraction of reference strings that produced at
   least one recognised line with >= 50% of its words correct.
 """
-from typing import List, Sequence
+from typing import Dict, Sequence
 
 
 def _levenshtein(a: str, b: str) -> int:
@@ -40,11 +40,51 @@ def character_error_rate(reference: str, hypothesis: str) -> float:
 
 
 def word_error_rate(reference: str, hypothesis: str) -> float:
-    """WER between two strings, tokenised on whitespace."""
+    """WER between two strings, tokenised on whitespace.
+
+    Levenshtein distance is computed over *word tokens* (not characters)
+    and divided by the reference word count, so e.g. a single swapped
+    word in a 4-word phrase gives 0.25 (not a character-scale value).
+    """
     ref_words = reference.split()
+    hyp_words = hypothesis.split()
     if not ref_words:
-        return 0.0 if not hypothesis.split() else 1.0
-    return _levenshtein(reference, hypothesis) / len(ref_words)
+        return 0.0 if not hyp_words else 1.0
+    return _levenshtein(ref_words, hyp_words) / len(ref_words)
+
+
+def exact_match(reference: str, hypothesis: str) -> int:
+    """1 if the strings match exactly (case/whitespace-insensitive)."""
+    ref = " ".join(reference.lower().split())
+    hyp = " ".join(hypothesis.lower().split())
+    return int(ref == hyp and bool(ref))
+
+
+def aggregate_ocr_metrics(
+    references: Sequence[str],
+    hypotheses: Sequence[str],
+    correct_word_fraction: float = 0.5,
+) -> Dict[str, float]:
+    """Mean CER, WER, exact-match and detection-success over paired texts.
+
+    Args:
+        references: Ground-truth texts.
+        hypotheses: OCR outputs, same length/order as ``references``.
+        correct_word_fraction: Overlap threshold for ``text_detection_success``.
+
+    Returns:
+        dict with "cer", "wer", "exact_match", "detection_success".
+    """
+    cer = [character_error_rate(r, h) for r, h in zip(references, hypotheses)]
+    wer = [word_error_rate(r, h) for r, h in zip(references, hypotheses)]
+    exact = [exact_match(r, h) for r, h in zip(references, hypotheses)]
+    return {
+        "cer": sum(cer) / len(cer) if cer else 0.0,
+        "wer": sum(wer) / len(wer) if wer else 0.0,
+        "exact_match": sum(exact) / len(exact) if exact else 0.0,
+        "detection_success": text_detection_success(
+            references, hypotheses, correct_word_fraction),
+    }
 
 
 def text_detection_success(
